@@ -20,7 +20,7 @@ import download from '@/components/download/download'
 import search from '@/components/search/search'
 import feedPepper from '@/components/feed/feedPepper'
 import person from '@/components/person/person'
-
+import personInfo from '@/components/person/personInfo'
 
 Vue.use(Router)
 let routers=[
@@ -45,7 +45,8 @@ let routers=[
     {path: '/download', name: 'download', component: download},
     {path: '/search', name: 'search', component: search},
     {path: '/feedPepper', name: 'feedPepper', component: feedPepper},
-    {path:'/person',name:'person',component:person}
+    {path:'/person',name:'person',component:person},
+    {path:'/personInfo',name:'personInfo',component:personInfo}
 ]
 const router = new Router({
     routes: routers

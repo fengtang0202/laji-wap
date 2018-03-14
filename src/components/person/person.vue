@@ -1,8 +1,8 @@
 <template>
   <div class='person'>
       <div class='header'>
-         <div>
-             <img src="../../assets/images/back.png" style='vertical-align: middle;' alt="">
+         <div @click="$router.go(-1)">
+             <img src="../../assets/images/back@2x.png" style='width:.4rem;heigh:.4rem;vertical-align: middle;' alt="">
          </div>    
          <div class='title_1'>个人中心</div>
          <div class='title_2'>作者中心</div>
@@ -18,8 +18,9 @@
                   <img class='user_sex' src="../../assets/images/sex_men@2x.png" v-if='!sex' alt="">
               </div>
               <div class='grade_wrap'>
-                 <p class='grade' :style='{width:grade/20*100+"%"}'></p>
-
+                 <p class='grade' :style='{width:grade/20*100+"%"}'>
+                    <span class='grade_icon'>{{grade}}</span>
+                 </p>
               </div>
               <div class='user_fans'>
                   <span>关注{{attentionCount}}</span>
@@ -28,7 +29,7 @@
            </div>
       </div>
       <group class='nav_list'>
-          <cell v-for='li in navList' :title="li.title" :link="li.link">
+          <cell v-for='(li,index) in navList' :title="li.title" :key='index' :link="li.link">
               <img :src="li.img" slot="icon" alt="">
           </cell>
        </group>
@@ -64,6 +65,9 @@
                     {img:require('../../assets/images/grade@2x.png'),title:'等级制度',link:'{path:"/home"}'},
                 ]
             }
+        },
+        methods:{
+        
         }
     }
 </script>
@@ -126,6 +130,19 @@
                   background-color:#75D5F8; 
                   height:.05rem;
                   border-radius:.05rem;
+                  position: relative;
+                  .grade_icon{
+                    width:.17rem;
+                    height:.13rem;
+                    position: absolute;
+                    color:#fff;
+                    border-radius: .02rem;
+                    text-align: center;
+                    line-height: .13rem;
+                    right:0;
+                    top:-.04rem;
+                    background-color:#75D5F8;
+                  }
                 }   
               }
             }   
