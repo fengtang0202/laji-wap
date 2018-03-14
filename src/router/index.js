@@ -21,7 +21,7 @@ import search from '@/components/search/search'
 import feedPepper from '@/components/feed/feedPepper'
 import person from '@/components/person/person'
 import personInfo from '@/components/person/personInfo'
-
+import wechatPay from '@/components/pay/wechatPay'
 Vue.use(Router)
 let routers=[
     {path: '/', name: 'Login', component: Login},
@@ -46,7 +46,8 @@ let routers=[
     {path: '/search', name: 'search', component: search},
     {path: '/feedPepper', name: 'feedPepper', component: feedPepper},
     {path:'/person',name:'person',component:person},
-    {path:'/personInfo',name:'personInfo',component:personInfo}
+    {path:'/personInfo',name:'personInfo',component:personInfo},
+    {path:'/wechatPay',component:wechatPay}
 ]
 const router = new Router({
     routes: routers

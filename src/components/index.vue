@@ -3,7 +3,7 @@
         <loading :show="isShow"></loading>
         <div class="swiper-container swiper" >
             <div class="swiper-wrapper" >
-                <div class="swiper-slide" v-for="item in pictureList">
+                <div class="swiper-slide" v-for="item,index in pictureList">
                     <img :src="item.bookImage" style="width:100%;height:.98rem;" >
                 </div>
             </div>
