@@ -1,6 +1,11 @@
-<template>
+<template> 
   <div class='wechat'>
-      <headerComponent list='list'></headerComponent>
+      <headerComponent :list='topList'></headerComponent>
+      <div class='money_category_wrap'>
+            <div class=' '>
+
+            </div>
+      </div>    
   </div>
 </template>
 <script>
@@ -8,12 +13,12 @@ import headerComponent from '@/components/common/header'
 export default{
   components:{
      headerComponent
-  },
-  data(){
-    return{
-       list:{
+   },
+     data(){
+      return{
+       topList:{
            title_1:"微信支付",
-           title_:"首页",
+           title_2:"首页",
            link:'/home'
        }
     }  

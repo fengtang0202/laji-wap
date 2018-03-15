@@ -1,12 +1,6 @@
 <template>
   <div class='person'>
-      <div class='header'>
-         <div @click="$router.go(-1)">
-             <img src="../../assets/images/back@2x.png" style='width:.4rem;heigh:.4rem;vertical-align: middle;' alt="">
-         </div>    
-         <div class='title_1'>个人中心</div>
-         <div class='title_2'>作者中心</div>
-      </div>
+      <headerComponent :list="topList"></headerComponent>
       <div class="person_info">
            <div class='avatar_wrap'>
                <img :src="avatar" alt="">
@@ -41,14 +35,20 @@
 
 <script>
     import {Group,Cell} from 'vux'
+    import headerComponent from '@/components/common/header'    
     export default {
         name: "person",
         components:{
-          Group,Cell
+          Group,Cell,headerComponent
         },
         data(){
             return {
                 // 用户信息需要从vuex里获取或者用localstorage
+                topList:{
+                  title_1:'个人中心',
+                  title_2:'作者中心',
+                  link:'/home'
+                },
                 avatar:'',
                 userName:'唐锋',
                 sex:false,
