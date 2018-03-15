@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-      <transition :name="transitionName">
+      <!-- <transition :name="transitionName"> -->
       <router-view class="child-view"></router-view>
-      </transition>
+      <!-- </transition> -->
   </div>
 </template>
 
@@ -32,6 +32,8 @@ export default {
   #app {
     width: 100%;
     height:100%;
+    // 移动端字体设置
+    font-family:Helvetica;
     background:#fff;
   .child-view {
       position: absolute;

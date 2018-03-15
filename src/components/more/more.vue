@@ -1,10 +1,11 @@
 <template>
     <div id="more">
-        <loading :show="isShow"></loading>
-        <div class="top_d">
+        <!-- <loading :show="isShow"></loading> -->
+        <!-- <div class="top_d">
            <img src="../../assets/images/back@2x.png" @click="handleBack()">
            <p>小编推荐</p>
-        </div>
+        </div> -->
+        <headerComponent :list='topList'></headerComponent>
         <div class="text_d" v-for="item in moreList" @click="handleGo(item.bookId)">
             <img :src="item.bookImage">
             <div class="con_d">
@@ -33,6 +34,7 @@
 </template>
 <script>
     import { Loading } from 'vux'
+    import headerComponent from '@/components/common/header'
     import { Post_formData2, noParam_Get } from '@/config/services'
     export default {
         name: 'more',
@@ -40,10 +42,15 @@
             return {
                isShow:false,
                moreList:[],
+               topList:{
+                   title_1:"小编推荐",
+                   title_2:'首页',
+                   link:'/home'
+               }
             }
         },
         components: {
-            Loading,
+            Loading,headerComponent
         },
         methods:{
             handleMore(){

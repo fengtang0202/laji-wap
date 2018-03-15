@@ -7,7 +7,6 @@ import 'iview/dist/styles/iview.css';
 import axios from 'axios'
 import FastClick from 'fastclick'
 import  { ToastPlugin ,Cell,Group } from 'vux'
-
 Vue.config.productionTip = false
 Vue.use(iView)
 Vue.use(ToastPlugin,Cell,Group)
@@ -21,5 +20,7 @@ new Vue({
     router,
     store,
     template: '<App/>',
-    components: {App}
+    components: {
+        App
+    }
 })

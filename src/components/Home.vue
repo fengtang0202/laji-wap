@@ -1,8 +1,8 @@
 <template>
     <div id="home">
          <div class="top">
-            <img src="../assets/images/u0.jpg" class="logo_one">
-            <img src="../assets/images/u0.jpg" class="logo_two">
+            <!-- <img src="../assets/images/u0.jpg" class="logo_one"> -->
+            <img src="../assets/images/ico@2x.png" class="logo_two">
             <div class="btn_top" @click="handleDownload()">下载APP</div>
             <p class='userId'>{{userId}}</p>
             <img src="../assets/images/u@2x.png" class="logo_three">
@@ -67,11 +67,11 @@
                 float:left;
             }
             .logo_two{
-                width:.64rem;
-                height:.16rem;
-                margin-top:.14rem;
+                width:.92rem;
+                height:.24rem;
+                margin-top:.1rem;
                 float:left;
-                margin-left:.1rem;
+                vertical-align: middle;
             }
             .btn_top{
                 width:.66rem;
@@ -83,8 +83,6 @@
                 text-align:center;
                 line-height:.24rem;
                 float:left;
-                // margin-right:.14rem;
-                // margin-top:.2rem;
                 margin:.1rem .14rem 0;
             }
             .userId{

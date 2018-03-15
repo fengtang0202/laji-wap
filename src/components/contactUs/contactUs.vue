@@ -3,10 +3,12 @@
          <app-load></app-load>
          <div class="title">联系我们</div>
          <div class="text">
-            <img src='../../assets/images/us@3x.png' class="oImg">
-            <p>工作时间：9:00-18:00</p>
-            <p>咨询热线：0571-85120280</p>
-            <p>客服：1659930228</p>
+             <img src="../../assets/images/erweima@2x.png"  style='border:1px dashed;width:2.15rem;height:2.15rem;' alt="">
+             <p class='weixin_name'>打开微信搜索“辣鸡小说”</p>
+             <p class='text_detail'>
+                 或识别图中二维码关注辣鸡小说公众号可直接咨询您想要了解的问题哦！
+             </p>
+               <img src='../../assets/images/us@3x.png' class="oImg">             
          </div>
     </div>
 </template>
@@ -28,7 +30,7 @@
     #contactUs {
         width:100%;
         height:100%;
-        font-family:'PingFangSC-Regular';
+        text-align: center;
         span{
             display: block;
             font-size:30px;
@@ -47,24 +49,30 @@
         }
         .text{
             width:3.04rem;
-            height:1.47rem;
-            margin:.5rem auto;
+            height:3.77rem;
+            margin:.2rem auto;
             border-radius:7px;
             border:1px solid #FB5E6F;
             font-size:.16rem;
             color:#333;
-            box-sizing:box-border;
-            padding:.25rem  .17rem;
+            box-sizing:border-box;
+            padding:.17rem  .17rem;
             position:relative;
-            p{
-                line-height:.3rem;
-            }
             .oImg{
                 position:absolute;
-                top:-.5rem;
-                left:2.11rem;
+                top:3rem;
+                left:2.2rem;
                 width:1.07rem;
                 height:1.1rem;
+            }
+            .weixin_name{
+                font-size: .18rem;
+            }
+            .text_detail{
+               width:2.24rem;
+               height:.66rem;
+               font-size:.16rem;
+               margin:0 auto;
             }
         }
     }

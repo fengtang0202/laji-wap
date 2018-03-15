@@ -1,8 +1,7 @@
 <template>
    <div id="load">
         <div class="div_top">
-            <img src="../assets/images/u0.jpg" class="logo_one">
-            <img src="../assets/images/u0.jpg" class="logo_two">
+            <img src="../assets/images/ico@2x.png" class="logo_two">
             <div class="btn_top"  @click="handleDownload()">下载APP</div>
         </div>
    </div>
@@ -27,7 +26,7 @@
         background-color: #fff; 
         .div_top{
             width:100%;
-            height:.6rem;
+            height:.5rem;
              .logo_one{
                 width:.24rem;
                 height:.24rem;
@@ -36,24 +35,25 @@
                 float:left;
             }  
             .logo_two{
-                width:.64rem;
-                height:.16rem;
-                margin-top:.24rem;
+                width:.92rem;
+                height:.24rem;
+                margin-top:.1rem;
                 float:left;
-                margin-left:.1rem;
+                vertical-align: middle;
+                margin-left:.14rem;
             }
             .btn_top{
-            width:.66rem;
-            height:.24rem;
+            width:.64rem;
+            height:.26rem;
             border-radius:5px;
             background:#FB5E6F;
             font-size:.14rem;
+            line-height: .26rem;
             color:#fff;
             text-align:center;
-            line-height:.24rem;
             float:right;
             margin-right:.14rem;
-            margin-top:.2rem;
+            margin-top:.14rem;
             }  
         }
   }

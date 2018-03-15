@@ -1,6 +1,22 @@
 <template>
   <div class='person'>
-      <headerComponent :list="topList"></headerComponent>
+      <div class='header'>
+         <div @click="$router.go(-1)">
+             <img src="../../assets/images/back@2x.png" style='width:.4rem;heigh:.4rem;vertical-align: middle;' alt="">
+         </div>    
+         <div class='title_1'>个人中心</div>
+         <div class='title_2' @click='handleAuthorCenter()' v-if="!show">作者中心</div>
+         <div class='title_2' @click='handleAuthorCenter()' v-if='show'>申请作者</div>         
+         <!--click author center dialog  -->
+         <div v-transfer-dom>
+          <confirm v-model="show"
+            color='#333'
+            @on-cancel="onCancel"
+            @on-confirm="onConfirm">
+        <p style="text-align:center;color:#333333;font-size:.16rem;">请下载辣鸡小说app进入<br>作者中心!</p>
+      </confirm>
+    </div>
+     </div>
       <div class="person_info">
            <div class='avatar_wrap'>
                <img :src="avatar" alt="">
@@ -13,7 +29,7 @@
               </div>
               <div class='grade_wrap'>
                  <p class='grade' :style='{width:grade/20*100+"%"}'>
-                    <span class='grade_icon'>{{grade}}</span>
+                    <span class='grade_icon'>{{'Lv'+grade}}</span>
                  </p>
               </div>
               <div class='user_fans'>
@@ -34,25 +50,25 @@
 </template>
 
 <script>
-    import {Group,Cell} from 'vux'
+    import {Group,Cell,TransferDomDirective as TransferDom,Confirm} from 'vux'
     import headerComponent from '@/components/common/header'    
+import { setTimeout } from 'timers';
     export default {
         name: "person",
+        directives: {
+         TransferDom
+       },
         components:{
-          Group,Cell,headerComponent
+          Group,Cell,headerComponent,Confirm
         },
         data(){
             return {
                 // 用户信息需要从vuex里获取或者用localstorage
-                topList:{
-                  title_1:'个人中心',
-                  title_2:'作者中心',
-                  link:'/home'
-                },
+                show:false,
                 avatar:'',
                 userName:'唐锋',
                 sex:false,
-                grade:18,
+                grade:20,
                 attentionCount:10,
                 fans:20,
                 navList:[
@@ -67,16 +83,29 @@
             }
         },
         methods:{
-        
+        handleAuthorCenter(){
+            this.show=true;
+         },
+         onCancel(){
+         },
+         jumpToDownApp(){
+           window.location='mqq:open';
+           setTimeout(()=>{
+            // 跳转app
+               window.location="http://itunes.apple.com/cn/app/qq-2011/id444934666?mt=8"
+           },30)
+         },
+         onConfirm(){
+             this.jumpToDownApp()
+          }
         }
     }
 </script>
 
 <style lang="less" scoped>
      .person{
-         font-family: PingFangSC;
          color:#333333;
-         width:100%;       
+         width:100%;      
         .header{    
             height:.44rem;
             display:flex;
@@ -132,7 +161,6 @@
                   border-radius:.05rem;
                   position: relative;
                   .grade_icon{
-                    width:.17rem;
                     height:.13rem;
                     position: absolute;
                     color:#fff;
