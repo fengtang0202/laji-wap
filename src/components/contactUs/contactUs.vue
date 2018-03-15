@@ -8,7 +8,8 @@
              <p class='text_detail'>
                  或识别图中二维码关注辣鸡小说公众号可直接咨询您想要了解的问题哦！
              </p>
-               <img src='../../assets/images/us@3x.png' class="oImg">             
+               <img src='../../assets/images/us@3x.png' class="oImg">     
+                  <em class='icon'>小辣鸡</em>      
          </div>
     </div>
 </template>
@@ -58,6 +59,7 @@
             box-sizing:border-box;
             padding:.17rem  .17rem;
             position:relative;
+            overflow:hidden;
             .oImg{
                 position:absolute;
                 top:3rem;
@@ -73,6 +75,20 @@
                height:.66rem;
                font-size:.16rem;
                margin:0 auto;
+            }
+            .icon{
+                font-size: 10px;
+                line-height: 11px;
+                position: absolute;
+                left:12px;
+                top: 10px;
+                padding: 2px;
+                -webkit-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+                -webkit-transform-origin: left bottom;
+                transform-origin: left bottom;
+                color: #fff;
+                background-color: blue;
             }
         }
     }

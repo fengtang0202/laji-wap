@@ -37,7 +37,7 @@ export default{
   methods: {
       handelTap(index){
            this.isAddTo=index
-      }
+      },
   }
 }
 </script>

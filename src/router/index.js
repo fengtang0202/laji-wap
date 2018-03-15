@@ -12,6 +12,7 @@ import feed from '@/components/feed/feed'
 import cookie from '@/config/cookie'
 import index from '@/components/index'
 import bookStacks from '@/components/bookStacks'
+import categoryList from '@/components/bookCategory/categoryList'
 import free from '@/components/free'
 import more from '@/components/more/more'
 import bookDetails from '@/components/bookDetail/bookDetails'
@@ -34,10 +35,10 @@ let routers=[
     {path: '/feed', name: 'feed', component:feed},
     {path: '/more', name: 'more', component: more},
     {path: '/bookDetails', name: 'bookDetails', component: bookDetails},
-    {path: '/home', name: 'Home', component: Home,
+    {path: '/home', name: 'home', component: Home,
         children:[//子路由
             {path:'index',component:index},
-            {path:'bookStacks',component:bookStacks},
+            {path: 'categoryList', component:categoryList},
             {path:'free',component:free}
         ]
     },

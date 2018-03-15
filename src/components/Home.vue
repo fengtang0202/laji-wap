@@ -1,7 +1,6 @@
 <template>
     <div id="home">
          <div class="top">
-            <!-- <img src="../assets/images/u0.jpg" class="logo_one"> -->
             <img src="../assets/images/ico@2x.png" class="logo_two">
             <div class="btn_top" @click="handleDownload()">下载APP</div>
             <p class='userId'>{{userId}}</p>
@@ -30,7 +29,7 @@
                isAddTo:0,
                cate:[
                    {name:'首页',res:{path:"/home/index"}},
-                   {name:'书库',res:{path:"/home/bookStacks"}},
+                   {name:'分类',res:{path:"/home/categoryList"}},
                    {name:'限免',res:{path:"/home/free"}}
                ]
             }
