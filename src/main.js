@@ -6,9 +6,11 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css';
 import axios from 'axios'
 import FastClick from 'fastclick'
+import VueTouch from 'vue-touch'
 import  { ToastPlugin ,Cell,Group } from 'vux'
 Vue.config.productionTip = false
 Vue.use(iView)
+Vue.use(VueTouch, {name: 'v-touch'})
 Vue.use(ToastPlugin,Cell,Group)
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 Vue.prototype.$http = axios

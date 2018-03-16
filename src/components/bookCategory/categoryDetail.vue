@@ -17,6 +17,7 @@
             </div>
         </div>
         <div class='filter_wrap'>
+            <v-touch @swipeup='up_1'>    
          <div class='orderList_wrap'  :style="{'height':direction?'1.3rem':'0'}">
           <div class="select" style="height:1.1rem;">          
            <ul>
@@ -25,6 +26,8 @@
            </ul>
         </div>
          </div>
+            </v-touch>
+        <v-touch @swipeup='up'>         
          <div class='orderList_wrap'  :style="{'height':direction1?'3.5rem':'0'}">
              <div class="select" style="height:1.4rem;">          
                 <ul>
@@ -51,6 +54,7 @@
            </ul>
         </div>
          </div>
+        </v-touch>
         </div>
          <div class="book_text" v-for="(item,index) in filterList" :key='index'>
             <img :src="item.bookImage">
@@ -141,6 +145,18 @@ import { setTimeout } from 'timers';
                 this.worksNum = res;
                 this.numRed = index;
                 this.handleFilter();
+            },
+            getTime(res,index){
+                this.worksTime =res;
+                this.timeRed = index;
+                console.log(this.worksTime);
+                this.handleFilter();
+            },
+            up(){
+              this.direction1=false;
+            },
+            up_1(){
+              this.direction=false;
             },
              getStutas(res,index){
                 this.worksStatus = res;
