@@ -30,12 +30,12 @@
         <div class="select" style="height:1.1rem;">          
            <ul>
               <li style="font-size:.18rem;color:#333;width:.73rem;">排行榜</li>
-              <li v-for = '(item,index) in category' :class="{ red:categoryRed == index}" @click="getCategor(item.key,index)"><span v-html="item.name"></span></li>        
+              <li v-for = '(item,index) in category' :class="{ red:categoryRed == index}" @click="getCategory(item.key,index)"><span v-html="item.name"></span></li>        
            </ul>
         </div>
         <div class="line">
         </div>
-        <div class="book_text" v-for="item in filterList">
+        <div class="book_text" v-for="item in filterList"  @click="hanldeGo()">
             <img :src="item.bookImage">
             <div class="con-text">
                <p class="p_one" v-html="item.bookName"></p>
@@ -133,7 +133,7 @@
                 console.log(this.worksTime);
                 this.handleFilter();
             },
-            getCategor(res,index){
+            getCategory(res,index){
                 this.worksCategory = res;
                 this.categoryRed = index;
                 console.log(this.worksCategory);
@@ -243,6 +243,7 @@
                 margin-right:.22rem;
                 height:.2rem;
                 margin-bottom:.1rem;
+                list-style: none;
             }
             .red{
                 color:#FB5E6F;

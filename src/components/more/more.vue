@@ -1,10 +1,6 @@
 <template>
     <div id="more">
-        <!-- <loading :show="isShow"></loading> -->
-        <!-- <div class="top_d">
-           <img src="../../assets/images/back@2x.png" @click="handleBack()">
-           <p>小编推荐</p>
-        </div> -->
+        <loading :show="isShow"></loading>
         <headerComponent :list='topList'></headerComponent>
         <div class="text_d" v-for="item in moreList" @click="handleGo(item.bookId)">
             <img :src="item.bookImage">

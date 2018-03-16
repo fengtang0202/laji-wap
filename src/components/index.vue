@@ -20,8 +20,8 @@
         <div class="text_con">
             <div class="book" v-for="item in bookList" @click="handleGo(item.bookId)" >
                 <img :src="item.bookImage" style="width:.96rem;height:1.27rem;">
-                <p class="p_one" v-html="item.bookName"></p>
-                <p class="p_two" v-html="item.writerName"></p>
+                <p class="p_one">{{item.bookName}}</p>
+                <p class="p_two">{{item.writerName}}</p>
             </div>
         </div>
         <div class="line">
@@ -33,8 +33,8 @@
          <div class="text_con">
             <div class="book" v-for="item in bookList" @click="handleGo(item.bookId)">
                 <img :src="item.bookImage" style="width:.96rem;height:1.27rem;">
-                <p class="p_one" v-html="item.bookName"></p>
-                <p class="p_two" v-html="item.writerName"></p>
+                <p class="p_one" >{{item.bookName}}</p>
+                <p class="p_two">{{item.writerName}}</p>
             </div>
         </div>
         <div class="line">
@@ -265,6 +265,7 @@
                 font-size:.14rem;
                 float:left;
                 margin-left:.3rem;
+                list-style: none;
                 // border:2px solid;
                 // width:.75rem;
             }

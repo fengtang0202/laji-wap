@@ -1,13 +1,13 @@
 <template>
     <div id="home">
          <div class="top">
-            <img src="../assets/images/ico@2x.png" class="logo_two">
-            <div class="btn_top" @click="handleDownload()">下载APP</div>
+            <img src="../assets/images/ico@2x.png" @click='handleTo({path:"/home"})' class="logo_two">
+            <div class="btn_top" @click="handleTo({path:'/download'})">下载APP</div>
             <p class='userId'>{{userId}}</p>
             <img src="../assets/images/u@2x.png" class="logo_three">
          </div>
          <div class="bottom">
-             <input type="text" class='search' @focus="handleSearch()"/>
+             <input type="text" placeholder="搜索作品或作者" class='search' @focus='handleTo({path:"/search"})'/>
              <img src="../assets/images/search@2x.png" class="logo_four">
              <button>搜索</button>
          </div>
@@ -28,7 +28,7 @@
                userId:'未知身份',
                isAddTo:0,
                cate:[
-                   {name:'首页',res:{path:"/home/index"}},
+                   {name:'首页',res:{path:"/home"}},
                    {name:'分类',res:{path:"/home/categoryList"}},
                    {name:'限免',res:{path:"/home/free"}}
                ]
@@ -39,11 +39,8 @@
                 this.isAddTo = index;
                 this.$router.push(res);
             },
-            handleDownload(){
-                 this.$router.push({path:"/download"});
-            },
-            handleSearch(){
-                this.$router.push({path:"/search"});
+            handleTo(res){
+                 this.$router.push(res);
             }
         }
     }

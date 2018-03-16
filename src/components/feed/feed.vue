@@ -1,7 +1,6 @@
 <template>
     <div id="feed">
         <div class="page_mcbg" @click="handleClose()" v-show="backShow"></div>
-       
         <div class="glod_div"  v-show="dilogShow">
             <div class='goldpepper'>投喂金椒</div>
             <p class='computerd'>您的金椒余额:{{num}}</p>
@@ -124,6 +123,7 @@
                         border-radius:25px;
                         background:#F77583;
                         text-align:center;
+                        outline: none;
                         line-height:.3rem;
                         font-size:.14rem;
                         color:#fff;

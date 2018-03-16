@@ -13,6 +13,7 @@ import cookie from '@/config/cookie'
 import index from '@/components/index'
 import bookStacks from '@/components/bookStacks'
 import categoryList from '@/components/bookCategory/categoryList'
+import categoryDetail from '@/components/bookCategory/categoryDetail'
 import free from '@/components/free'
 import more from '@/components/more/more'
 import bookDetails from '@/components/bookDetail/bookDetails'
@@ -35,9 +36,10 @@ let routers=[
     {path: '/feed', name: 'feed', component:feed},
     {path: '/more', name: 'more', component: more},
     {path: '/bookDetails', name: 'bookDetails', component: bookDetails},
+    {path:'/categoryDetail',component:categoryDetail},
     {path: '/home', name: 'home', component: Home,
         children:[//子路由
-            {path:'index',component:index},
+            {path:'/',component:index},
             {path: 'categoryList', component:categoryList},
             {path:'free',component:free}
         ]
@@ -48,7 +50,8 @@ let routers=[
     {path: '/feedPepper', name: 'feedPepper', component: feedPepper},
     {path:'/person',name:'person',component:person},
     {path:'/personInfo',name:'personInfo',component:personInfo},
-    {path:'/wechatPay',component:wechatPay}
+    {path:'/wechatPay',component:wechatPay},
+    {path:'/bookStacks',component:bookStacks}
 ]
 const router = new Router({
     routes: routers

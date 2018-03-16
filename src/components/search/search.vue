@@ -81,7 +81,7 @@
                  this.$router.push({path:"/download"});
             },
             handleBack(){
-                 this.$router.push({path:"/home/index"});
+                 this.$router.push({path:"/home"});
             },
             handleGo(id){
                  this.$router.push({path:'/bookDetails',query:{bookId:id}});
@@ -167,7 +167,7 @@
             input{
                 width:3rem;
                 height:.36rem;
-                border-radius:18.5px;
+                border-radius:8px;
                 border:1px solid #979797;
                 outline:none;
                 box-sizing:border-box;

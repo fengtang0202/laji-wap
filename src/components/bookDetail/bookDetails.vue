@@ -6,7 +6,7 @@
           <div class="top">
               <img src="../../assets/images/back@2x.png" @click="handleBack()">
               <span class="detail">书籍详情</span>
-              <span class="index"  @click="handleGo({path:'/Home/index'})">首页</span>
+              <span class="index"  @click="handleGo({path:'/Home'})">首页</span>
           </div>
           <div class="text">
               <img :src="infoList.bookImage" class="oImg">
@@ -185,7 +185,6 @@
                 })
             },
             handleSwiper(){
-                console.log(this.classId)
                 // this.isShow = true;
                 let options ={
                      startpage:1,

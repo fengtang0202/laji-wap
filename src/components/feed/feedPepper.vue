@@ -59,7 +59,7 @@
 <style lang="less">
     #feedPepper {
         width:100%;
-        height:100%;
+        // height:100%;
         .page_mcbg{
             width: 3.75rem;;
             height:100%; 

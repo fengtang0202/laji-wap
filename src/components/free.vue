@@ -25,7 +25,7 @@
                </div>
             </div>
         </div>
-        <infinite-loading :on-infinite="onInfinite" ref="infiniteLoading">
+        <infinite-loading @infinite="onInfinite" ref="infiniteLoading">
           <span slot="no-more">
             加载完
           </span>
@@ -66,7 +66,7 @@
             handleGo(id){
                 this.$router.push({path:'/bookdetails',query:{bookId:id}})
             },
-            onInfinite(){
+            onInfinite($state){
                  let self = this;
                  function load(){
                         noParam_Get(self,'/api/sys-freetimelimit',res=>{
@@ -74,9 +74,11 @@
                                 let lists = res.data.data;
                                 self.freeList = self.freeList.concat(lists);
                                 if(res.data.data.length>0){                                   
-                                    self.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+                                    // self.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+                                    $state.loaded()
                                 }else {
-                                    self.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+                                    // self.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+                                    $state.complete()
                                 }
                             // }
                         })
