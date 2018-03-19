@@ -24,6 +24,8 @@ import feedPepper from '@/components/feed/feedPepper'
 import person from '@/components/person/person'
 import personInfo from '@/components/person/personInfo'
 import wechatPay from '@/components/pay/wechatPay'
+import bookRack from '@/components/bookReadManage/bookRack'
+import bookEdit from '@/components/bookReadManage/bookEdit'
 Vue.use(Router)
 let routers=[
     {path: '/', name: 'Login', component: Login},
@@ -51,7 +53,9 @@ let routers=[
     {path:'/person',name:'person',component:person},
     {path:'/personInfo',name:'personInfo',component:personInfo},
     {path:'/wechatPay',component:wechatPay},
-    {path:'/bookStacks',component:bookStacks}
+    {path:'/bookStacks',component:bookStacks},
+    {path:'/bookRack',component:bookRack},
+    {path:'/bookEdit',component:bookEdit}
 ]
 const router = new Router({
     routes: routers

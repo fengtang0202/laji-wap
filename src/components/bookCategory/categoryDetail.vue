@@ -2,11 +2,12 @@
     <div class='categoryDetail_wrap'>
         <loading :show="isShow"></loading>        
          <headerComponent :list="topList"></headerComponent>
-         <div class="search_top">
-           <input type="text" placeholder="搜索作者或者作品" v-model="keyword" >
-           <img src="../../assets/images/search@2x.png">
-        </div>
-        <div class='filter_nav'>
+         <div class='fixbar'>
+            <div class="search_top">
+            <input type="text" placeholder="搜索作者或者作品" v-model="keyword" >
+            <img src="../../assets/images/search@2x.png">
+            </div>
+         <div class='filter_nav' :class="searchBarFixed == true ? 'isFixed' :''">
             <div class='filter_btn_wrap'  @click='handleOrder()'>
              <span>排行</span>
               <img src="../../assets/images/d-38@3x.png" :style="{ 'transform':direction?'rotate(0deg)':'rotate(180deg)'}" alt="">
@@ -56,11 +57,16 @@
          </div>
         </v-touch>
         </div>
+        </div>
          <div class="book_text" v-for="(item,index) in filterList" :key='index'>
             <img :src="item.bookImage">
             <div class="con-text">
                <p class="p_one" v-html="item.bookName"></p>
-               <p class="p_two"><span>作者 : </span><span  v-html="item.writerName" style="margin-left:.05rem;margin-right:.15rem;"></span><span v-html="item.classificationName"></span></p>
+               <p class="p_two"><span>作者 : </span>
+               <span  v-html="item.writerName" style="margin-left:.05rem;margin-right:.05rem;"></span>
+               <span v-html="item.classificationName"></span>
+               <span style='color:#57B0FF;margin-left:.03rem;'>{{item.bookStatus===0?'连载中':''}}</span>
+               </p>
                <p class="p_three" v-html="item.bookIntroduction"></p>
             </div>
         </div> 
@@ -78,7 +84,7 @@ import { setTimeout } from 'timers';
         data(){
             return{
                 topList:{
-                    title_1:'动漫幻想',
+                    title_1:this.$route.query.classificationName,
                     title_2:'首页',
                     link:'/home'
                 },
@@ -94,6 +100,7 @@ import { setTimeout } from 'timers';
                 numRed:0,
                 timeRed:0,
                 isShow:false,
+                searchBarFixed:false,
                 classList:[],
                 category:[ 
                     {name:"不限",key:0},
@@ -239,11 +246,21 @@ import { setTimeout } from 'timers';
                             this.$vux.toast.text(res.msg);
                         }                            
                 })
-            }
+            },
+            handleScroll () {
+               let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+               let offsetTop = document.querySelector('.fixbar').offsetTop
+                 if (scrollTop > offsetTop) {
+                    this.searchBarFixed = true
+                    } else {
+                     this.searchBarFixed = false
+                 }
+             }
         },
         mounted(){
             this.handleFilter()
             this.handleClass()
+            window.addEventListener('scroll', this.handleScroll)
         }
     }
 </script>
@@ -318,13 +335,12 @@ import { setTimeout } from 'timers';
                 height:.2rem;
                 margin-bottom:.1rem;
                 list-style: none;
-            }
-            .red{
+               }
+             .red{
                 color:#FB5E6F;
+               }
+              }          
             }
-        }          
-            }
-            
         }
         .book_text{
             height:1.3rem;
@@ -348,6 +364,14 @@ import { setTimeout } from 'timers';
                 font-size:.12rem;
                 color:#999;
                 margin-bottom:.12rem;
+                span:not(:first-child):not(:last-child):after{
+                   content:'';
+                   display: inline-block;
+                   width:.02rem;
+                   height:.1rem;
+                   margin-left:.1rem;
+                   background-color: #FFAAAA;
+                }
             }
             .p_three{
                 width:2.47rem;
@@ -359,6 +383,12 @@ import { setTimeout } from 'timers';
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
             }
+        }
+        .isFixed{
+            position: fixed;
+            top:0;
+            width:100%;
+            background-color: #fff;
         }
    }
 </style>

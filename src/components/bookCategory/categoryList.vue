@@ -1,7 +1,7 @@
 <template>
   <div class='category_wrap'>
      <loading :show="isShow"></loading>
-     <div class="category_item_wrap" @click='handleToDetail(item.id)' v-for="item in categoryList">
+     <div class="category_item_wrap" @click='handleToDetail(item.id,item.classificationName)' :key='index' v-for="(item,index) in categoryList">
          <img  class='categoryPic' :src="item.classificationIco" alt="">
          <span>{{item.classificationName}}</span>
      </div>
@@ -32,8 +32,8 @@
              })
            },
          methods: {
-             handleToDetail(res){
-                this.$router.push({path:'/categoryDetail',query:{categoryId:res}})
+             handleToDetail(res,name){
+                this.$router.push({path:'/categoryDetail',query:{categoryId:res,classificationName:name}})
              }
           }
        }

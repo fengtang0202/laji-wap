@@ -34,6 +34,8 @@ export default {
     height:100%;
     // 移动端字体设置
     font-family:Helvetica;
+    font-size:.16rem;
+    color:#333;
     background:#fff;
   .child-view {
       position: absolute;
