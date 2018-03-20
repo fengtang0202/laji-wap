@@ -1,15 +1,23 @@
 <template>
     <div id="directory">
         <loading :show="isShow"></loading>
-        <!-- <div class="d_top">
-              <img src="../../assets/images/back@2x.png" @click="handleBack()"> 
-              <span>目录</span>
-        </div> -->
         <headerComponent :list='topList'></headerComponent>
-        <div class="d_text">
+        <!-- <div class="d_text">
             <p class="d_text_p" v-for="item in resultList">
                <span class="d_text_span" v-html="item.chapterTitle"></span>
             </p>
+        </div> -->
+        <div style='border-bottom:1px solid #EFEFEF'>
+             <cell
+                :title="1"
+                is-link
+                :border-intent="true"
+                :arrow-direction="showContent ? 'up' : 'down'"
+                @click.native="showContent = !showContent"
+                ></cell>
+            <template v-if="showContent" style='margin-top:0'>
+                <cell-box @click.native='handle()' :key='index' v-for='(item,index) in list' >{{item}}</cell-box>
+            </template>
         </div>
         <div class="page">
             <span class="page_l">上一页</span>
@@ -21,7 +29,7 @@
     </div>
 </template>
 <script>   
-    import { Loading,Group,Cell } from 'vux'
+    import { Loading,Group,Cell,CellBox } from 'vux'
     import { Post_formData2, noParam_Get } from '@/config/services'
     import headerComponent from '@/components/common/header'
     export default {
@@ -29,9 +37,13 @@
         data () {
             return {
                 pageNum:1,
+                list:[
+                    1,2,3,4,5
+                ],
                 id:this.$route.query.bookId,
                 resultList:[],
                 isShow:false,
+                showContent:false,
                 topList:{
                     title_1:'目录',
                     title_2:'首页',
@@ -40,7 +52,7 @@
             }
         },
         components: {
-            Loading,headerComponent,Group,Cell
+            Loading,headerComponent,Group,Cell,CellBox
         },
         methods:{
             handleGo(){
@@ -48,6 +60,9 @@
             },
             handleBack(){
                  window.history.go(-1);
+            },
+            handle(){
+               console.log(1)
             },
             handleInit(){
                 this.isShow = true;
