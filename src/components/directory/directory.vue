@@ -1,10 +1,11 @@
 <template>
     <div id="directory">
         <loading :show="isShow"></loading>
-        <div class="d_top">
+        <!-- <div class="d_top">
               <img src="../../assets/images/back@2x.png" @click="handleBack()"> 
               <span>目录</span>
-        </div>
+        </div> -->
+        <headerComponent :list='topList'></headerComponent>
         <div class="d_text">
             <p class="d_text_p" v-for="item in resultList">
                <span class="d_text_span" v-html="item.chapterTitle"></span>
@@ -20,8 +21,9 @@
     </div>
 </template>
 <script>   
-    import { Loading } from 'vux'
+    import { Loading,Group,Cell } from 'vux'
     import { Post_formData2, noParam_Get } from '@/config/services'
+    import headerComponent from '@/components/common/header'
     export default {
         name: 'directory',
         data () {
@@ -30,10 +32,15 @@
                 id:this.$route.query.bookId,
                 resultList:[],
                 isShow:false,
+                topList:{
+                    title_1:'目录',
+                    title_2:'首页',
+                    link:'/home'
+                }
             }
         },
         components: {
-            Loading,
+            Loading,headerComponent,Group,Cell
         },
         methods:{
             handleGo(){
@@ -46,6 +53,7 @@
                 this.isShow = true;
                 noParam_Get(this,'/api/books-volumeChapterList/'+this.id+'/',res=>{
                         this.isShow = false;
+                        console.log(res)
                         if(res.returnCode==200){
                             this.resultList = res.data.chapterInfo[0].resultList;                            
                         }

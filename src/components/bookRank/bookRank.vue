@@ -79,7 +79,7 @@ import {Post_formData2} from '@/config/services'
                      if(res.data[this.dayType]!==undefined){
                         this.rankBookList=res.data[this.dayType].list
                      }else{
-                        console.log('没有数据')
+                        return this.rankBookList
                    }
                 })
              },

@@ -27,6 +27,7 @@ import wechatPay from '@/components/pay/wechatPay'
 import bookRack from '@/components/bookReadManage/bookRack'
 import bookEdit from '@/components/bookReadManage/bookEdit'
 import bookRank from '@/components/bookRank/bookRank'
+import readHistory from '@/components/person/readHistory'
 Vue.use(Router)
 let routers=[
     {path: '/', name: 'Login', component: Login},
@@ -57,7 +58,8 @@ let routers=[
     // {path:'/bookStacks',component:bookStacks},
     {path:'/bookRack',component:bookRack},
     {path:'/bookEdit',component:bookEdit},
-    {path:'/bookRank',component:bookRank}
+    {path:'/bookRank',component:bookRank},
+    {path:'/readHistory',component:readHistory}   
 ]
 const router = new Router({
     routes: routers

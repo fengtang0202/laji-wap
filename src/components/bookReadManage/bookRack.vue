@@ -12,7 +12,7 @@
     </div>
     <div class='commendRead'>
          <p>推荐阅读{{`(${commendReadList.length})`}}</p>
-         <div class='commend_book_wrap' v-for='item in commendReadList'>
+         <div class='commend_book_wrap' @click="handleBookDetail(item.bookId)" v-for='item in commendReadList'>
             <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
             <p style='font-size:.16rem;'>{{item.bookName|bookName}}</p>   
             <p class='is_update' :style="{ 'color': item.bookStatus==0?'#FF6F00':'#47B2D8' }">{{item.isUpdate==0?'已完结':'连载中'}}</p>         

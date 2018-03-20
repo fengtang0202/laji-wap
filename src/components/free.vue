@@ -21,7 +21,7 @@
                     <span :style="{color:i.bookColor,border:'1px solid'}" v-for="i in item.booklableList" v-html="i.bookLableName"></span>
                </div>
                <div class="text_four" v-html="item.bookIntroduction">
-                  
+                    
                </div>
             </div>
         </div>

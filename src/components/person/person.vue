@@ -77,7 +77,7 @@
                     {img:require('../../assets/images/personCenter@2x.png'),title:'我的书架',link:'/bookRack'},
                     {img:require('../../assets/images/wallet@2x@2x.png'),title:'我的钱包',link:'/home'},
                     {img:require('../../assets/images/cz@2x.png'),title:'充值',link:'/home'},
-                    {img:require('../../assets/images/reader@3x@2x.png'),title:'阅读记录',link:'path:/home'},
+                    {img:require('../../assets/images/reader@3x@2x.png'),title:'阅读记录',link:'/readHistory'},
                     {img:require('../../assets/images/details_button_jinjiao_default copy 4@2x.png'),title:'消息',link:'/home'},
                     {img:require('../../assets/images/contactUs2@2x.png'),title:'联系客服',link:'/home'},
                     {img:require('../../assets/images/grade@2x.png'),title:'等级制度',link:'/home'},

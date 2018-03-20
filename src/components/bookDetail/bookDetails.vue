@@ -55,14 +55,14 @@
                     </div>
               </div>
           </div>
-          <div class="directory">
-             <span>目录</span>
-             <span style="margin-left:.5rem;">共章</span>
-             <img src="../../assets/images/d-58@3x.png"  @click="handleGo({path:'/directory',query:{bookId:infoList.bookId}})">
+          <div class="directory" @click="handleGo({path:'/directory',query:{bookId:id}})">
+             <span style='font-size:.18rem;color:#333'>目录</span>
+             <span style="margin-left:.5rem;color:#999;">共{{chapterCount}}章</span>
+             <img src="../../assets/images/d-58@3x.png"  >
           </div>
           <div class="comments">
               <p class="top_p">评论区</p>
-              <div class="comments_d" v-for="i in commentList">
+              <div class="comments_d" :key='index' v-for="(i,index) in commentList">
                   <div style="overflow:hidden;height:100%;margin-top:.1rem;">
                         <img :src="i.userHeadPortraitURL" class="oImg">
                         <img src="../../assets/images/crown@3x.png" class="t-img">
@@ -96,13 +96,9 @@
                 <span>同类热门书籍</span>
              </div>
              <div class="similar-swiper">
-                  <div class="swiper-container spots-list">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide swiperdiv" v-for="item in swiperList">
-                           <img :src="item.bookImage">
-                        </div>
+                           <img  :src="item.bookImage"  :key="item.bookId" v-for="item in swiperList" @click='handleToBookDetail(item.bookId)'>
                     </div>
-                  </div>
              </div>
           </div>
     </div>
@@ -112,7 +108,7 @@
     import AppFeedpepper from '@/components/feed/feedPepper.vue'
     import { Loading } from 'vux'
     import headerComponent from '@/components/common/header'
-    import { Post_formData2, noParam_Get } from '@/config/services'
+    import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
     export default {
         name: 'bookDetails',
         data () {
@@ -120,6 +116,7 @@
                 id:this.$route.query.bookId,
                 isShow:false,
                 isActive:0,
+                width:0,
                 topList:{
                    title_1:"书籍详情",
                    title_2:'首页',
@@ -132,11 +129,13 @@
                 ],
                 labelList:[],
                 infoList:[],
+                sectionCount:0,
                 lookShow:true,
                 isAdd:true,
                 commentList:[],
                 classId:'',
                 swiperList:[],
+                chapterCount:0
             }
         },
         components: {
@@ -160,15 +159,15 @@
                  this.$router.push(res);
             },
             handleInit(){
-                this.isShow = true;
+                this.isShow = true; 
                 Post_formData2(this,{bookid:this.id},'/api/book-bookInfo',res=>{
                     this.isShow = false;
+                    this.chapterCount=res.data.chapterCount
                     if(res.returnCode==200){
                         this.infoList = res.data.bookListInfo;
                         this.classId = res.data.bookListInfo.bookClassificationId;
                         this.labelList = res.data.bookLable;
-                        this.handleSwiper();
-                        // console.log(this.classId);
+                        this.swiperList=res.data.similarRecommendation
                     }else{
                         this.$vux.toast.text(res.msg);
                     }
@@ -188,41 +187,21 @@
                     if(res.returnCode==200){
                          this.commentList = res.data;
                     }else{
-                        this.$vux.toast.text(res.msg);
+                        // this.$vux.toast.text('暂无评论!')
                     }
                 })
             },
-            handleSwiper(){
-                // this.isShow = true;
-                let options ={
-                     startpage:1,
-                     classid:this.classId
-                }
-                Post_formData2(this,options,'/api/book-similarrecommendation',res=>{
-                    // this.isShow = false;
-                    if(res.returnCode==200){
-                        this.swiperList = res.data.list;
-                    }else{
-                        this.$vux.toast.text(res.msg);
-                    }
-                })
+            handleToBookDetail(bookId){
+                 this.id=bookId
+                 this.handleInit()
+                 this.handleComments()
+
             }
         },
         mounted(){
             let self = this;
             self.handleInit();
             self.handleComments();
-            let  mySwiper = new Swiper('.swiper-container', {
-                // spaceBetween:5,
-                slidesPerView : 4,
-                slidesOffsetAfter : 15,
-                slidesOffsetBefore : 15,
-                observer:true,
-                observeParents:true,
-            });
-            setTimeout(()=>{
-                document.getElementsByClassName('swiper-wrapper')[0].style.transform = "translate3d(0px,0px,0px)";   
-            },500);
         }
     }
 </script>
@@ -481,6 +460,7 @@
                     width:.77rem;
                     height:.19rem;
                     color:#fff;
+                    font-size:.12rem;
                     background:#F77583;
                     border-radius:18px;
                     text-align:center;
@@ -501,18 +481,13 @@
             width:100%;
             height:1.28rem;
             margin-bottom:.3rem;
-            .spots-list{
-                width:100%;
-                height:100%;
-                overflow:hidden;
-            }
-            .swiperdiv{
-                float:left;
-                margin-right:.1rem;
-            }
+            overflow-x: auto;
+            -webkit-overflow-scrolling:touch; 
             img{
                 width:.96rem;
                 height:1.28rem;
+                margin-right:.05rem;
+                box-shadow: 0 0 .01rem rgba(0,0,0,.5)
             }
         }
     }

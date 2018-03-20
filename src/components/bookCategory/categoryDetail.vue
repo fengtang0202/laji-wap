@@ -58,7 +58,7 @@
         </v-touch>
         </div>
         </div>
-         <div class="book_text" v-for="(item,index) in filterList" :key='index'>
+         <div class="book_text" @click='handleToBookDetail(item.bookId)' v-for="(item,index) in filterList" :key='index'>
             <img :src="item.bookImage">
             <div class="con-text">
                <p class="p_one" v-html="item.bookName"></p>
@@ -247,7 +247,9 @@ import { setTimeout } from 'timers';
                         }                            
                 })
             },
-             
+             handleToBookDetail(bookId){
+                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
+            }
         },
         mounted(){
             this.handleFilter()

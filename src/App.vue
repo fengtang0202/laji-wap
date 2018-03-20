@@ -56,10 +56,5 @@ export default {
           transform: translate(-30px, 0);
       }
   }
-.isFixed{
-            position: fixed;
-            top:0;
-            width:100%;
-            background-color: #fff;
-        }
+
 </style>
