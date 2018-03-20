@@ -19,17 +19,17 @@
      </div>
       <div class="person_info">
            <div class='avatar_wrap'>
-               <img :src="avatar" alt="">
+               <img :src="avatar" alt="" style='width:.52rem;height:.52rem'>
            </div>
            <div class='person_info_detail'>
               <div>
                   <span class='user_name'>{{userName}}</span>
-                  <img class='user_sex' src="../../assets/images/sex_women@2x.png" v-if="sex" alt="">
-                  <img class='user_sex' src="../../assets/images/sex_men@2x.png" v-if='!sex' alt="">
+                  <img class='user_sex' src="../../assets/images/sex_women@2x.png" v-if="sex===0?true:false" alt="">
+                  <img class='user_sex' src="../../assets/images/sex_men@2x.png" v-if='sex===1?true:false' alt="">
               </div>
               <div class='grade_wrap'>
-                 <p class='grade' :style='{width:grade/20*100+"%"}'>
-                    <span class='grade_icon'>{{'Lv'+grade}}</span>
+                 <p class='grade' :style='{width:vipGrade/20*100+"%"}'>
+                    <span class='grade_icon'>{{'Lv'+vipGrade}}</span>
                  </p>
               </div>
               <div class='user_fans'>
@@ -40,7 +40,7 @@
       </div>
       <group class='nav_list'>
           <cell v-for='(li,index) in navList' :title="li.title" :key='index' :link="li.link">
-              <img :src="li.img" slot="icon" alt="">
+              <img :src="li.img"  slot="icon" alt="">
           </cell>
        </group>
        <div class='loginOut_wrap'>
@@ -52,7 +52,9 @@
 <script>
     import {Group,Cell,TransferDomDirective as TransferDom,Confirm} from 'vux'
     import headerComponent from '@/components/common/header'    
-import { setTimeout } from 'timers';
+    import { setTimeout } from 'timers';
+    import {mapState} from 'vuex'
+    import {Param_Get,Param_Get_Resful} from '@/config/services'
     export default {
         name: "person",
         directives: {
@@ -61,16 +63,16 @@ import { setTimeout } from 'timers';
         components:{
           Group,Cell,headerComponent,Confirm
         },
+        computed:{
+           ...mapState(['userName','avatar','sex','vipGrade','userId'])
+        },
         data(){
             return {
                 // 用户信息需要从vuex里获取或者用localstorage
                 show:false,
-                avatar:'',
-                userName:'唐锋',
-                sex:false,
-                grade:20,
                 attentionCount:10,
                 fans:20,
+                type:0,
                 navList:[
                     {img:require('../../assets/images/personCenter@2x.png'),title:'我的书架',link:'/bookRack'},
                     {img:require('../../assets/images/wallet@2x@2x.png'),title:'我的钱包',link:'/home'},
@@ -87,7 +89,8 @@ import { setTimeout } from 'timers';
             this.show=true;
          },
          onCancel(){
-         },
+             
+        },
          jumpToDownApp(){
            window.location='mqq:open';
            setTimeout(()=>{
@@ -97,7 +100,16 @@ import { setTimeout } from 'timers';
          },
          onConfirm(){
              this.jumpToDownApp()
-          }
+          },
+          getFansAndFollowCount(type=1){
+            Param_Get_Resful(this,`/api/fans-followCount/1082/${type}`,res=>{
+                 console.log(res)   
+                })
+            }
+        },
+        mounted(){
+            this.getFansAndFollowCount()
+            this.getFansAndFollowCount(0)
         }
     }
 </script>
@@ -162,6 +174,7 @@ import { setTimeout } from 'timers';
                   position: relative;
                   .grade_icon{
                     height:.13rem;
+                    font-size:.09rem;
                     position: absolute;
                     color:#fff;
                     border-radius: .02rem;

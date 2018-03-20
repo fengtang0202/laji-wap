@@ -3,26 +3,28 @@
     <headerComponent :list='topList'></headerComponent>
     <div class='readNow'>
          <p>正在阅读{{`(${readNowList.length})`}}</p>
-         <div class='book_detail_wrap' v-for='item in readNowList'>
-            <img :src="item.img" style='width:1.04rem;height:1.35rem' alt="">
+         <div class='book_detail_wrap' v-for='item in bookRack' @click="handleBookDetail(item.bookId)">
+            <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
             <span style='font-size:.16rem;'>{{item.bookName|bookName}}</span>
-            <span class='icon_update'>更新</span>
+            <span class='icon_update' v-if='item.bookStatus==0?true:false'>更新</span>
          </div>
          <div class='add_book'></div>         
     </div>
     <div class='commendRead'>
          <p>推荐阅读{{`(${commendReadList.length})`}}</p>
          <div class='commend_book_wrap' v-for='item in commendReadList'>
-            <img :src="item.img" style='width:1.04rem;height:1.35rem' alt="">
+            <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
             <p style='font-size:.16rem;'>{{item.bookName|bookName}}</p>   
-            <p class='is_update' :style="{ 'color': item.isUpdate==0?'#FF6F00':'#47B2D8' }">{{item.isUpdate==0?'已完结':'连载中'}}</p>         
+            <p class='is_update' :style="{ 'color': item.bookStatus==0?'#FF6F00':'#47B2D8' }">{{item.isUpdate==0?'已完结':'连载中'}}</p>         
          </div>    
     </div>
  </div>
 </template>
 <script>
-    import headerComponent from '@/components/common/header'
+import headerComponent from '@/components/common/header'
+import { Post_formData2,Post_formData} from '@/config/services'
 import { join } from 'path';
+import {mapActions,mapState} from 'vuex'
     export default {
         components:{
            headerComponent
@@ -40,18 +42,35 @@ import { join } from 'path';
                     {bookName:'老公晚上请温柔',img:require('../../assets/images/test.png')},
                     {bookName:'老公晚上请温柔',img:require('../../assets/images/test.png')}
                 ],
-                commendReadList:[
-                    {bookName:'老公晚上请温柔',img:require('../../assets/images/test.png'),isUpdate:0},
-                    {bookName:'老公晚上请温柔',img:require('../../assets/images/test.png'),isUpdate:1},
-                    {bookName:'老公晚上请温柔',img:require('../../assets/images/test.png'),isUpdate:1},
-                    {bookName:'老公晚上请温柔',img:require('../../assets/images/test.png'),isUpdate:0}
-                ]
+                commendReadList:[]
             }
         },
+        computed:{
+            ...mapState(['bookRack','userId'])
+        },
         filters:{
-            bookName(name){
-               return name.length>6&&(name.slice(0,5)+'....')
+            bookName:name=>name.length>6?(name.slice(0,5)+'....'):name
+        },
+        methods: {
+            ...mapActions(['getBookRack']),
+            getCommendBook(){
+                Post_formData2(this,'','/api/bookshelf-recommendPosition',res=>{
+                    this.commendReadList=res.data
+                })
+            },
+            getReadNow(){
+                // userId是我随意找的一个
+                Post_formData(this,{userid:1082,startpage:1},'./api/bookshelf-getuserbookshelf',res=>{
+                    this.getBookRack(res.data.list)
+                })
+            },
+            handleBookDetail(bookId){
+                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
             }
+        },
+        mounted(){
+            this.getCommendBook()
+            this.getReadNow()
         }
     }
 </script>
@@ -61,6 +80,8 @@ import { join } from 'path';
       .readNow{
           margin-left:.18rem;
           margin-top:.12rem;
+          margin-bottom:.12rem;
+          overflow: hidden;
          .book_detail_wrap{
              width:1.04rem;
              float: left;

@@ -20,6 +20,7 @@
     import { Post_formData2, Param_Get } from '@/config/services'
     import cookie from '@/config/cookie'
     import AppLoad from '@/components/Load.vue'
+    import { mapActions,mapState } from 'vuex' 
     export default {
         name: 'login',
         components: {
@@ -35,7 +36,13 @@
               show:true
             }
         },
+         computed: {
+            ...mapState(['isLogin','userName','avatar','userId','sex','vipGrade','fans'])
+        },
         methods:{
+            ...mapActions(['loginAction','updateName',
+            'updateAvatar','updateUserId','getSex','getvipGrade','setFans'
+            ]),
             handleRouter:function(res){
                 this.$router.push(res)
             },
@@ -74,18 +81,26 @@
                         }
                         Post_formData2(this,options,'/api/person-login',res=>{
                                 if(res.returnCode==200){
+                                      let userInfo=res.data
+                                      console.log(userInfo)
+                                    this.updateName(userInfo.pseudonym)
+                                    this.updateAvatar(userInfo.userHeadPortraitURL)
+                                    this.updateUserId(userInfo.userId)
+                                    // 登录状态改变0 是未登录 1 是登录
+                                    this.loginAction(1)
+                                    this.getSex(userInfo.userSex)
+                                    this.getvipGrade(userInfo.vipGrade)
                                      weui.toast('登录成功', {//loading
                                         className: 'custom-classname',
                                         duration: 2000,
                                         callback: function(){
-                                            self.$router.push({path:'/home/index'})
+                                            self.$router.push({path:'/home'})
                                         }
                                     });
-
                                 }else if(res.returnCode==500){
                                     this.$vux.toast.text(res.msg);
-                                }
-                        })
+                              }
+                          })
                     }else if(!checkPhone.test(this.phone)){
                          this.$vux.toast.text('请输入正确的手机号')
                     }else if(!checkPassword.test(this.password)){

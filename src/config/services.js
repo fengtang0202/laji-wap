@@ -40,3 +40,10 @@ export function Param_Get(_this, options, url, cb) {
         cb({status: 404})
     })
 }
+export function Param_Get_Resful(_this,url,cb){
+    _this.$http.get(encodeURI(url)).then(response=>{
+        cb(response.data)
+    },response=>{
+        cb({status:404})
+    })
+}

@@ -22,7 +22,7 @@
              <span>男</span>
            </div>
         </div>
-        <div class="register" @click="handleRegister()">快速注册</div>
+        <div class="register" @click="handleCheckRegister()">快速注册</div>
    </div>
 </template>
 <script>
@@ -65,11 +65,10 @@
                 }
             },
             handleRegister:function(){
-                console.log(this.sex)
                 let checkPhone = /^1(3|4|5|7|8)\d{9}$/;
                 let checkPassword = /^.{6,20}$/;
                 let checkName = /^.{1,20}$/;
-                    if(checkPhone.test(this.phone)&&checkPassword.test(this.pwd)&&checkName.test(this.name)&&this.sex!=''){
+                    if(checkPhone.test(this.phone)&&checkPassword.test(this.pwd)&&checkName.test(this.name)&&this.sex!==''){
                             noParam_Get(this,'/api/person-checkNickPhone/'+this.phone,res=>{
                                 if(res.returnCode==200){
                                     this.handleCheckname();
@@ -83,7 +82,7 @@
                         this.$vux.toast.text('请输入6-20位的密码');
                     }else if(!checkName.test(this.name)){
                         this.$vux.toast.text('请输入小于20位的昵称');
-                    }else if(this.sex ==''){
+                    }else if(this.sex ===''){
                         this.$vux.toast.text('请选择性别');
                     }
             },
@@ -118,7 +117,7 @@
                     return false;
                 }
                 let that = this,
-                    time = 10;
+                    time = 60;
                 var sendTimer = setInterval(function(){
                     that.isOvertime = true;
                     that.iscode = true;

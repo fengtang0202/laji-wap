@@ -1,13 +1,14 @@
 <template>
     <div id="bookDetails">
            <loading :show="isShow"></loading>
-            <app-feed  ref="child"  @click="handleClosefeed()"></app-feed>
-            <app-feedpepper  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper>
-          <div class="top">
+            <!-- <app-feed  ref="child"  @click="handleClosefeed()"></app-feed> -->
+            <!-- <app-feedpepper  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper> -->
+          <!-- <div class="top">
               <img src="../../assets/images/back@2x.png" @click="handleBack()">
               <span class="detail">书籍详情</span>
               <span class="index"  @click="handleGo({path:'/Home'})">首页</span>
-          </div>
+          </div> -->
+          <headerComponent :list="topList"></headerComponent>
           <div class="text">
               <img :src="infoList.bookImage" class="oImg">
               <div class="con">
@@ -110,6 +111,7 @@
     import AppFeed from '@/components/feed/feed.vue'
     import AppFeedpepper from '@/components/feed/feedPepper.vue'
     import { Loading } from 'vux'
+    import headerComponent from '@/components/common/header'
     import { Post_formData2, noParam_Get } from '@/config/services'
     export default {
         name: 'bookDetails',
@@ -118,6 +120,11 @@
                 id:this.$route.query.bookId,
                 isShow:false,
                 isActive:0,
+                topList:{
+                   title_1:"书籍详情",
+                   title_2:'首页',
+                   link:'/home'
+                },
                 cate:[
                     {name:'立即阅读'},
                     {name:'订阅全本'},
@@ -135,7 +142,8 @@
         components: {
             Loading,
             AppFeed,
-            AppFeedpepper
+            AppFeedpepper,
+            headerComponent
         },
         methods:{
             handleRead(index){
@@ -251,6 +259,7 @@
             box-sizing:border-box;
             padding:0 .14rem;
             width:100%;
+            margin-top:.1rem;
             height:1.32rem;
             overflow:hidden;
             .oImg{

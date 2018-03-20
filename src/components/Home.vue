@@ -3,8 +3,8 @@
          <div class="top">
             <img src="../assets/images/ico@2x.png" @click='handleTo({path:"/home"})' class="logo_two">
             <div class="btn_top" @click="handleTo({path:'/download'})">下载APP</div>
-            <p class='userId'>{{userId}}</p>
-            <img src="../assets/images/u@2x.png" @click="handleTo({path:'/person'})" class="logo_three">
+            <p class='userId'>{{userName}}</p>
+            <img :src="avatar" @click="handleTo({path:'/person'})" class="logo_three">
          </div>
          <div class="bottom">
              <input type="text" placeholder="搜索作品或作者" class='search' @focus='handleTo({path:"/search"})'/>
@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-
+ import {mapState} from 'vuex'
     export default {
         name: 'home',
         data () {
@@ -33,6 +33,9 @@
                    {name:'限免',res:{path:"/home/free"}}
                ]
             }
+        },
+        computed: {
+            ...mapState(["userName","avatar"])
         },
         methods:{
             handleGo(res,index){

@@ -11,7 +11,7 @@ import contactUs from '@/components/contactUs/contactUs'
 import feed from '@/components/feed/feed'
 import cookie from '@/config/cookie'
 import index from '@/components/index'
-import bookStacks from '@/components/bookStacks'
+// import bookStacks from '@/components/bookStacks'
 import categoryList from '@/components/bookCategory/categoryList'
 import categoryDetail from '@/components/bookCategory/categoryDetail'
 import free from '@/components/free'
@@ -26,6 +26,7 @@ import personInfo from '@/components/person/personInfo'
 import wechatPay from '@/components/pay/wechatPay'
 import bookRack from '@/components/bookReadManage/bookRack'
 import bookEdit from '@/components/bookReadManage/bookEdit'
+import bookRank from '@/components/bookRank/bookRank'
 Vue.use(Router)
 let routers=[
     {path: '/', name: 'Login', component: Login},
@@ -53,9 +54,10 @@ let routers=[
     {path:'/person',name:'person',component:person},
     {path:'/personInfo',name:'personInfo',component:personInfo},
     {path:'/wechatPay',component:wechatPay},
-    {path:'/bookStacks',component:bookStacks},
+    // {path:'/bookStacks',component:bookStacks},
     {path:'/bookRack',component:bookRack},
-    {path:'/bookEdit',component:bookEdit}
+    {path:'/bookEdit',component:bookEdit},
+    {path:'/bookRank',component:bookRank}
 ]
 const router = new Router({
     routes: routers

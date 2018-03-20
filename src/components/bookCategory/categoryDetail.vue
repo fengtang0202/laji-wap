@@ -247,20 +247,11 @@ import { setTimeout } from 'timers';
                         }                            
                 })
             },
-            handleScroll () {
-               let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-               let offsetTop = document.querySelector('.fixbar').offsetTop
-                 if (scrollTop > offsetTop) {
-                    this.searchBarFixed = true
-                    } else {
-                     this.searchBarFixed = false
-                 }
-             }
+             
         },
         mounted(){
             this.handleFilter()
             this.handleClass()
-            window.addEventListener('scroll', this.handleScroll)
         }
     }
 </script>
@@ -345,7 +336,8 @@ import { setTimeout } from 'timers';
         .book_text{
             height:1.3rem;
             box-sizing:border-box;
-            padding:.14rem;
+            margin-top:.14rem;
+            margin-left:.14rem;
             img{
                 width:.8rem;
                 height:1.02rem;
@@ -383,12 +375,6 @@ import { setTimeout } from 'timers';
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
             }
-        }
-        .isFixed{
-            position: fixed;
-            top:0;
-            width:100%;
-            background-color: #fff;
         }
    }
 </style>

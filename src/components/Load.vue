@@ -16,7 +16,6 @@
         methods:{
             handleTo(res){
                  this.$router.push(res);
-                 console.log(res)
             }
         }
    }
