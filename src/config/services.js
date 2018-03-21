@@ -47,4 +47,13 @@ export function Param_Get_Resful(_this,url,cb){
         cb({status:404})
     })
 }
+export function handleScroll(_this,element,val) {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+    let offsetTop = document.querySelector(element).offsetTop
+    if (scrollTop > offsetTop) {
+        _this.val = true
+    } else {
+        _this.val = false
+    }
+}
 

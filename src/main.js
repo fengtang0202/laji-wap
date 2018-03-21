@@ -14,7 +14,6 @@ Vue.use(VueTouch, {name: 'v-touch'})
 Vue.use(ToastPlugin,Cell,Group)
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 Vue.prototype.$http = axios
-
 FastClick.attach(document.body)
 /* eslint-disable no-new */
 new Vue({

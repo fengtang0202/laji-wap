@@ -4,7 +4,7 @@
         <div class="swiper-container swiper" >
             <div class="swiper-wrapper" >
                 <div class="swiper-slide" v-for="item,index in pictureList">
-                    <img :src="item.bookImage" style="width:100%;height:.98rem;" >
+                    <img  :src="item.bookImage" style="width:100%;height:.98rem;" >
                 </div>
             </div>
             <div class="swiper-pagination"></div>
@@ -19,7 +19,7 @@
         </div>
         <div class="text_con">
             <div class="book" v-for="item in bookList" @click="handleGo(item.bookId)" >
-                <img :src="item.bookImage" style="width:.96rem;height:1.27rem;">
+                <img  :src='item.bookImage' style="width:.96rem;height:1.27rem;">
                 <p class="p_one">{{item.bookName}}</p>
                 <p class="p_two">{{item.writerName}}</p>
             </div>
@@ -32,7 +32,7 @@
         </div>
          <div class="text_con">
             <div class="book" v-for="item in bookList" @click="handleGo(item.bookId)">
-                <img :src="item.bookImage" style="width:.96rem;height:1.27rem;">
+                <img :src='item.bookImage' style="width:.96rem;height:1.27rem;">
                 <p class="p_one" >{{item.bookName}}</p>
                 <p class="p_two">{{item.writerName}}</p>
             </div>

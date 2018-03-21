@@ -10,6 +10,7 @@
 <script>
     import AppLoad from '@/components/Load.vue'
     import { Post_formData2, noParam_Get } from '@/config/services'
+    import md5  from 'js-md5'      
     export default {
         name: 'resetPassword',
         data () {
@@ -27,14 +28,14 @@
                if(checkpwd.test(this.pwd)){
                    if(this.pwd == this.repwd){
                         let options ={
-                            newPwd:this.repwd,
+                            newPwd:md5(this.repwd),
                             code:this.$store.state.code,
                             phoneId:this.$store.state.phone,
                         }
                         Post_formData2(this,options,'/api/person-pwdRetrieval',res=>{
                                 if(res.returnCode==200){
                                     this.$vux.toast.text('密码重置成功');
-                                    this.$router.push({path:'/home'});
+                                    this.$router.push({path:'/'});
                                 }else{
                                     this.$vux.toast.text(res.msg);
                                 }                      

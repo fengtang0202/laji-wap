@@ -21,6 +21,7 @@
     import cookie from '@/config/cookie'
     import AppLoad from '@/components/Load.vue'
     import { mapActions,mapState } from 'vuex' 
+    import md5  from 'js-md5'      
     export default {
         name: 'login',
         components: {
@@ -76,7 +77,7 @@
                     if (checkPhone.test(this.phone)&&checkPassword.test(this.password)) {
                         let options={
                             userName:this.phone,
-                            userPassword:this.password,
+                            userPassword:md5(this.password),
                             terminal:3
                         }
                         Post_formData2(this,options,'/api/person-login',res=>{

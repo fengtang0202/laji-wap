@@ -2,23 +2,23 @@
     <div id="directory">
         <loading :show="isShow"></loading>
         <headerComponent :list='topList'></headerComponent>
-        <!-- <div class="d_text">
-            <p class="d_text_p" v-for="item in resultList">
-               <span class="d_text_span" v-html="item.chapterTitle"></span>
-            </p>
-        </div> -->
-        <div style='border-bottom:1px solid #EFEFEF'>
+        <div class='readVolumeList' style='border-bottom:1px solid #EFEFEF;' :key='index' v-for='(item,index) in volumeList'>
              <cell
-                :title="1"
+                :title="item.volumeName"
                 is-link
                 :border-intent="true"
-                :arrow-direction="showContent ? 'up' : 'down'"
-                @click.native="showContent = !showContent"
-                ></cell>
-            <template v-if="showContent" style='margin-top:0'>
-                <cell-box @click.native='handle()' :key='index' v-for='(item,index) in list' >{{item}}</cell-box>
+                :arrow-direction="showContent!==index? 'up' : 'down'"
+                @click.native="handleTapvolume(index,item.id)">
+                </cell>
+            <template v-if="showContent===index?true:false">
+                <cell-box class='chapterTitle'  :class='{Vip:item.chapterIsvip==1}'  @click.native='handle(item.chapterIsvip,item.id)' :key='index' v-for='(item,index) in chapterList'>
+                    <span>{{item.chapterTitle}}</span>
+                    <img src="../../assets/images/vip@3x.png" class='vip_icon' alt="">
+                 <span class='words'>{{item.chapterLength}}</span>                                    
+                </cell-box>
             </template>
         </div>
+        <div style='width:100%;height:.2rem;'></div>
         <div class="page">
             <span class="page_l">上一页</span>
             <span class="page_n">下一页</span>  
@@ -37,13 +37,11 @@
         data () {
             return {
                 pageNum:1,
-                list:[
-                    1,2,3,4,5
-                ],
                 id:this.$route.query.bookId,
-                resultList:[],
+                chapterList:[],
+                volumeList:[],//所有卷
                 isShow:false,
-                showContent:false,
+                showContent:-1,
                 topList:{
                     title_1:'目录',
                     title_2:'首页',
@@ -61,17 +59,35 @@
             handleBack(){
                  window.history.go(-1);
             },
-            handle(){
-               console.log(1)
+            handle(isvip,chapterId){
+            //    console.log(isvip)
+            //    console.log(chapterId)
+            //首页判读是否阅读的是会员 访问章节 进行页面的选择
+             this.$router.push({path:'/bookRead',query:{chapterId:chapterId}});            
+               Post_formData2(this,{chapterId:chapterId,readType:1},'/api/book-read',res=>{
+                   console.log(res.data.chapterInfo.chapterContent)
+               })
+            },
+             handleTapvolume(index,volumeId){
+                 this.showContent!==index?this.showContent=index:this.showContent=-1
+                 if(!this.showContent){
+                     this.chapterList=[]
+                  }
+                   Post_formData2(this,{volumeid:volumeId},'/api/books-getVolumeById',res=>{
+                       this.chapterList=res.data
+                       console.log(this.chapterList)  
+                      if (res.data==null) {
+                         this.chapterList=[]
+                       }
+                   })
             },
             handleInit(){
                 this.isShow = true;
-                noParam_Get(this,'/api/books-volumeChapterList/'+this.id+'/',res=>{
+                Post_formData2(this,{bookId:this.id},'/api/books-getvolume',res=>{
                         this.isShow = false;
-                        console.log(res)
                         if(res.returnCode==200){
-                            this.resultList = res.data.chapterInfo[0].resultList;                            
-                        }
+                            this.volumeList=res.data
+                    }
                 })
             }
         },
@@ -88,44 +104,24 @@
         height:100%;
         box-sizing:border-box;
         font-family:'PingFangSC-Regular';
-        .d_top{
-            height:.43rem;
-            line-height:.43rem;
-            color:#333;
-            font-size:.18rem;
-             box-sizing:border-box;
-             padding:0 .14rem;
-             border-bottom:1px solid #e9e9e9;
-            img{
-                width:.25rem;
-                height:.25rem;
-                float:left;
-                margin-top:.1rem;
-            }
-            span{
-                margin-left:1.35rem;
-            }
-        }
-        .d_text{
-             box-sizing:border-box;
-             font-size:.14rem;
-             color:#333;
-             .d_text_p{
-                 box-sizing:border-box;
-                 padding:0 .14rem;
-                 height:.41rem;
-                 line-height:.41rem;
-                 border-bottom:1px solid #e9e9e9;
-             }
-             .d_text_span{
-                 margin-left:.1rem;
-             }
+        .readVolumeList{
+           .chapterTitle{
+               font-size:.14rem;
+               .vip_icon{
+                   width:.15rem;
+                   height:.15rem;
+                   margin-left:.2rem;
+               }
+           }
+           .Vip{
+              color:#999;  
+          }
         }
         .page{
             width:100%;
             height:.62rem;
             border:1px solid;
-            position:absolute;
+            position:fixed;
             bottom:0;
             left:0;
             background:#fff;
@@ -165,6 +161,15 @@
             .page_num{
                 color:#999;
             }
+        }
+        .words{
+            color:#F77583;
+            border:1px solid #F77583;
+            border-radius:.1rem;
+            position: absolute;
+            padding:0 .04rem;
+            right:.3rem;
+            top:.1rem;
         }
     }
 </style>

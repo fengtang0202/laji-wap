@@ -28,6 +28,7 @@
 <script>
     import AppLoad from '@/components/Load.vue'
     import { Post_formData2, noParam_Get } from '@/config/services'
+    import md5  from 'js-md5'  
     export default {
         name: 'register',
         data () {
@@ -99,7 +100,7 @@
                 let options ={
                     code:this.verificationCode,
                     pseudonym:this.name,
-                    userPassword:this.pwd,
+                    userPassword:md5(this.pwd),
                     userSex:this.sex,
                     userPhone:this.phone
                 }

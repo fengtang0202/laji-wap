@@ -28,6 +28,7 @@ import bookRack from '@/components/bookReadManage/bookRack'
 import bookEdit from '@/components/bookReadManage/bookEdit'
 import bookRank from '@/components/bookRank/bookRank'
 import readHistory from '@/components/person/readHistory'
+import bookRead from '@/components/bookRead/bookRead'
 Vue.use(Router)
 let routers=[
     {path: '/', name: 'Login', component: Login},
@@ -59,7 +60,8 @@ let routers=[
     {path:'/bookRack',component:bookRack},
     {path:'/bookEdit',component:bookEdit},
     {path:'/bookRank',component:bookRank},
-    {path:'/readHistory',component:readHistory}   
+    {path:'/readHistory',component:readHistory},  
+    {path:'/bookRead',component:bookRead} 
 ]
 const router = new Router({
     routes: routers

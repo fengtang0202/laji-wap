@@ -23,7 +23,7 @@
 </template>
 <script>
 import headerComponent from '@/components/common/header'
-import {Post_formData2} from '@/config/services'
+import {Post_formData2,handleScroll} from '@/config/services'
     export default{
         components:{
             headerComponent
@@ -83,25 +83,17 @@ import {Post_formData2} from '@/config/services'
                    }
                 })
              },
-              handleScroll () {
-               let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-               let offsetTop = document.querySelector('.nav').offsetTop
-                 if (scrollTop > offsetTop) {
-                    this.searchBarFixed = true
-                    } else {
-                     this.searchBarFixed = false
-                 }
-             },
+              
              handleToDetail(bookId){
                  this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
-             }
+             },
         },
         mounted () {
             this.hanleRankBook()
-            window.addEventListener('scroll',this.handleScroll)
+            window.addEventListener('scroll',()=>{ handleScroll(this,'.nav',"searchBarFixed")})
         },
         destroyed () {
-            window.removeEventListener('scroll',this.handleScroll)
+            window.removeEventListener('scroll',()=>{ handleScroll(this,'.nav',"searchBarFixed")})
         }
     }
 </script>
