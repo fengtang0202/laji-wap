@@ -1,13 +1,8 @@
 <template>
-    <div id="bookDetails">
+    <div id="bookDetails" ref='content'>
            <loading :show="isShow"></loading>
             <!-- <app-feed  ref="child"  @click="handleClosefeed()"></app-feed> -->
             <!-- <app-feedpepper  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper> -->
-          <!-- <div class="top">
-              <img src="../../assets/images/back@2x.png" @click="handleBack()">
-              <span class="detail">书籍详情</span>
-              <span class="index"  @click="handleGo({path:'/Home'})">首页</span>
-          </div> -->
           <headerComponent :list="topList"></headerComponent>
           <div class="text">
               <img :src="infoList.bookImage" class="oImg">
@@ -55,7 +50,7 @@
                     </div>
               </div>
           </div>
-          <div class="directory" @click="handleGo({path:'/directory',query:{bookId:id}})">
+          <div class="directory" @click="handleGo({path:'/directory'})">
              <span style='font-size:.18rem;color:#333'>目录</span>
              <span style="margin-left:.5rem;color:#999;">共{{chapterCount}}章</span>
              <img src="../../assets/images/d-58@3x.png"  >
@@ -87,7 +82,7 @@
                         </div>
                   </div>
               </div>
-              <div class="more">
+              <div class="more" @click="handleGo({path:'/bookComment'})">
                   <p>更多书评</p>
               </div>
           </div>
@@ -109,11 +104,11 @@
     import { Loading } from 'vux'
     import headerComponent from '@/components/common/header'
     import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
+    import {mapState,mapActions} from 'vuex'
     export default {
         name: 'bookDetails',
         data () {
             return {
-                id:this.$route.query.bookId,
                 isShow:false,
                 isActive:0,
                 width:0,
@@ -144,7 +139,11 @@
             AppFeedpepper,
             headerComponent
         },
+        computed:{
+          ...mapState(['readBookId'])
+        },
         methods:{
+            ...mapActions(['setReadBookId']),
             handleRead(index){
                  this.isActive = index;
             },
@@ -158,9 +157,9 @@
             handleGo(res){
                  this.$router.push(res);
             },
-            handleInit(){
+            handleInit () {
                 this.isShow = true; 
-                Post_formData2(this,{bookid:this.id},'/api/book-bookInfo',res=>{
+                Post_formData2(this,{bookid:this.readBookId},'/api/book-bookInfo',res=>{
                     this.isShow = false;
                     this.chapterCount=res.data.chapterCount
                     if(res.returnCode==200){
@@ -182,7 +181,7 @@
             },
             handleComments(){
                 this.isShow = true;
-                Post_formData2(this,{bookid:this.id},'/api/comm-HotCommentInfo',res=>{
+                Post_formData2(this,{bookid:this.readBookId},'/api/comm-HotCommentInfo',res=>{
                     this.isShow = false;
                     if(res.returnCode==200){
                          this.commentList = res.data;
@@ -194,8 +193,9 @@
             handleToBookDetail(bookId){
                  this.id=bookId
                  this.handleInit()
+                 this.setReadBookId(bookId)
                  this.handleComments()
-
+                 this.$refs.content.scrollIntoView();
             }
         },
         mounted(){

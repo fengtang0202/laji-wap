@@ -12,6 +12,8 @@ Vue.use(Vuex);
         userName:'未知用户',
         avatar:require('../assets/images/u@2x.png'),
         userId:0,
+        readBookId:0,
+        chapterId:0,
         bookRack:[],
         sex:0,
         vipGrade:0,
@@ -61,6 +63,12 @@ Vue.use(Vuex);
         },
         setBookRack(state,bookRack){
             state.bookRack=bookRack
+        },
+        setReadBookId(state,readBookId){
+            state.readBookId=readBookId
+        },
+        setChapterId(state,chapterId){
+            state.chapterId=chapterId
         }
     }
     const actions = {
@@ -87,6 +95,12 @@ Vue.use(Vuex);
         },
         getBookRack({commit,state},bookReck){
             commit('setBookRack',bookReck)
+        },
+        setReadBookId({commit},readBookId){
+           commit('setReadBookId',readBookId)
+        },
+        setChapterId({commit},chapterId){
+            commit('setChapterId',chapterId)
         }
     }
 export default new Vuex.Store({

@@ -47,13 +47,36 @@ export function Param_Get_Resful(_this,url,cb){
         cb({status:404})
     })
 }
-export function handleScroll(_this,element,val) {
+export function handleScroll(_this,element) {
     let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
     let offsetTop = document.querySelector(element).offsetTop
     if (scrollTop > offsetTop) {
-        _this.val = true
+        _this.searchBarFixed = true
     } else {
-        _this.val = false
+        _this.searchBarFixed = false
     }
 }
+export function formatDate (date, fmt) {
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+  }
+  let o = {
+    'M+': date.getMonth() + 1,
+    'd+': date.getDate(),
+    'h+': date.getHours(),
+    'm+': date.getMinutes(),
+    's+': date.getSeconds()
+  };
+  for (let k in o) {
+    if (new RegExp(`(${k})`).test(fmt)) {
+      let str = o[k] + '';
+      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str));
+    }
+  }
+  return fmt;
+};
+
+function padLeftZero (str) {
+  return ('00' + str).substr(str.length);
+};
 

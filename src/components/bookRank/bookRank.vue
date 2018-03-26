@@ -90,10 +90,10 @@ import {Post_formData2,handleScroll} from '@/config/services'
         },
         mounted () {
             this.hanleRankBook()
-            window.addEventListener('scroll',()=>{ handleScroll(this,'.nav',"searchBarFixed")})
+            window.addEventListener('scroll',()=>{ handleScroll(this,'.nav')})
         },
         destroyed () {
-            window.removeEventListener('scroll',()=>{ handleScroll(this,'.nav',"searchBarFixed")})
+            window.removeEventListener('scroll',()=>{ handleScroll(this,'.nav')})
         }
     }
 </script>

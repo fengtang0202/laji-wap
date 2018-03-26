@@ -13,31 +13,31 @@
             <template v-if="showContent===index?true:false">
                 <cell-box class='chapterTitle'  :class='{Vip:item.chapterIsvip==1}'  @click.native='handle(item.chapterIsvip,item.id)' :key='index' v-for='(item,index) in chapterList'>
                     <span>{{item.chapterTitle}}</span>
-                    <img src="../../assets/images/vip@3x.png" class='vip_icon' alt="">
+                    <img src="../../assets/images/vip@3x.png" v-if='item.chapterIsvip==1?true:false' class='vip_icon' alt="">
                  <span class='words'>{{item.chapterLength}}</span>                                    
                 </cell-box>
             </template>
         </div>
-        <div style='width:100%;height:.2rem;'></div>
+        <!-- <div style='width:100%;height:.2rem;'></div>
         <div class="page">
             <span class="page_l">上一页</span>
             <span class="page_n">下一页</span>  
             <input type="text" class="page_i" v-model="pageNum">
             <p class="page_p">跳转</p>
             <span class="page_num">1/20</span>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>   
     import { Loading,Group,Cell,CellBox } from 'vux'
     import { Post_formData2, noParam_Get } from '@/config/services'
     import headerComponent from '@/components/common/header'
+    import {mapState,mapActions} from 'vuex'
     export default {
         name: 'directory',
         data () {
             return {
                 pageNum:1,
-                id:this.$route.query.bookId,
                 chapterList:[],
                 volumeList:[],//所有卷
                 isShow:false,
@@ -52,7 +52,11 @@
         components: {
             Loading,headerComponent,Group,Cell,CellBox
         },
+        computed: {
+            ...mapState(['readBookId','chapterId'])   
+        },
         methods:{
+            ...mapActions(['setChapterId']),
             handleGo(){
                  this.$router.push({path:'/Home'});
             },
@@ -63,19 +67,19 @@
             //    console.log(isvip)
             //    console.log(chapterId)
             //首页判读是否阅读的是会员 访问章节 进行页面的选择
-             this.$router.push({path:'/bookRead',query:{chapterId:chapterId}});            
-               Post_formData2(this,{chapterId:chapterId,readType:1},'/api/book-read',res=>{
-                   console.log(res.data.chapterInfo.chapterContent)
-               })
+             this.$router.push({path:'/bookRead'});  
+             this.setChapterId(chapterId)          
+            //    Post_formData2(this,{chapterId:chapterId,readType:1},'/api/book-read',res=>{
+            //        console.log(res.data.chapterInfo.chapterContent)
+            //    })
             },
              handleTapvolume(index,volumeId){
                  this.showContent!==index?this.showContent=index:this.showContent=-1
-                 if(!this.showContent){
+                //  if(!this.showContent){
                      this.chapterList=[]
-                  }
+                //   }
                    Post_formData2(this,{volumeid:volumeId},'/api/books-getVolumeById',res=>{
                        this.chapterList=res.data
-                       console.log(this.chapterList)  
                       if (res.data==null) {
                          this.chapterList=[]
                        }
@@ -83,7 +87,7 @@
             },
             handleInit(){
                 this.isShow = true;
-                Post_formData2(this,{bookId:this.id},'/api/books-getvolume',res=>{
+                Post_formData2(this,{bookId:this.readBookId},'/api/books-getvolume',res=>{
                         this.isShow = false;
                         if(res.returnCode==200){
                             this.volumeList=res.data
@@ -91,9 +95,8 @@
                 })
             }
         },
-        mounted(){
-            let self = this;
-            self.handleInit();
+        mounted () {
+            this.handleInit();
         }
     }
 </script>

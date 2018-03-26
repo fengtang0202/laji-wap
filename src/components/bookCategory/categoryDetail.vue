@@ -77,6 +77,7 @@ import headerComponent from '@/components/common/header'
 import { Post_formData2, noParam_Get } from '@/config/services'
 import { Loading } from 'vux'
 import { setTimeout } from 'timers';
+import {mapActions} from 'vuex'
     export default {
         components:{
            headerComponent,Loading
@@ -137,6 +138,7 @@ import { setTimeout } from 'timers';
             }
         },
         methods:{
+            ...mapActions(['setReadBookId']),
             handleOrder(){
                 (this.direction=!this.direction)&&(this.direction1=false)        
             },
@@ -248,7 +250,8 @@ import { setTimeout } from 'timers';
                 })
             },
              handleToBookDetail(bookId){
-                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
+                 this.setReadBookId(bookId)
+                 this.$router.push({path:'/bookDetails'});
             }
         },
         mounted(){

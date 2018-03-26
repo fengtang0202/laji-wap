@@ -39,6 +39,7 @@
     import { Loading } from 'vux'
     import InfiniteLoading from 'vue-infinite-loading';
     import { Post_formData2, noParam_Get } from '@/config/services'
+    import {mapActions} from 'vuex'
     export default {
         name: 'free',
         data () {
@@ -52,6 +53,7 @@
             InfiniteLoading,
         },
         methods:{
+            ...mapActions(['setReadBookId']),
             handleMore(){
             //    this.isShow = true;
                 noParam_Get(this,'/api/sys-freetimelimit',res=>{
@@ -64,7 +66,8 @@
                 })
             },
             handleGo(id){
-                this.$router.push({path:'/bookdetails',query:{bookId:id}})
+                this.$router.push({path:'/bookdetails'})
+                this.setReadBookId(id)
             },
             onInfinite($state){
                  let self = this;

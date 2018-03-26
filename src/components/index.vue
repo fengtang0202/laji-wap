@@ -3,8 +3,8 @@
         <loading :show="isShow"></loading>
         <div class="swiper-container swiper" >
             <div class="swiper-wrapper" >
-                <div class="swiper-slide" v-for="item,index in pictureList">
-                    <img  :src="item.bookImage" style="width:100%;height:.98rem;" >
+                <div class="swiper-slide" v-for="(item,index) in pictureList">
+                    <img  :src="item.bookImage" @click='handleGo(item.bookId)' style="width:100%;height:.98rem;" >
                 </div>
             </div>
             <div class="swiper-pagination"></div>
@@ -66,6 +66,7 @@
 <script>
     import { Loading } from 'vux'
     import { Post_formData2, noParam_Get } from '@/config/services'
+    import {mapState,mapActions} from 'vuex'
     export default {
         name: 'index',
         data () {
@@ -81,7 +82,11 @@
         components: {
             Loading,
         },
+        computed: {
+          ...mapState(['readBookId'])  
+        },
         methods:{
+            ...mapActions(['setReadBookId']),
             handleGetbook(){
                 this.isShow = true;
                 noParam_Get(this,'/api/hot/homePageRecommended',res=>{
@@ -109,7 +114,8 @@
                 this.$router.push({path:"/more"});
             },
             handleGo(id){
-                 this.$router.push({path:'/bookDetails',query:{bookId:id}});
+                 this.setReadBookId(id)
+                 this.$router.push({path:'/bookDetails'});
             }
         },
         mounted(){

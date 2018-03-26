@@ -12,7 +12,7 @@
              <button>搜索</button>
          </div>
          <div class="tap">
-             <div class="btn" v-for="(item,index) in cate"  :class="{isAdd:isAddTo===index}" @click="handleGo(item.res,index)">
+             <div class="btn" v-for="(item,index) in cate"  :key='index' :class="{isAdd:isAddTo===index}" @click="handleGo(item.res,index)">
                 <span v-html="item.name"></span>
              </div>
          </div>
