@@ -2,17 +2,17 @@
  <div class='book_rcak_wrap'>
     <headerComponent :list='topList'></headerComponent>
     <div class='readNow'>
-         <p>正在阅读{{`(${readNowList.length})`}}</p>
+         <p>正在阅读{{`(${bookRack.length})`}}</p>
          <div class='book_detail_wrap' v-for='item in bookRack' @click="handleBookDetail(item.bookId)">
             <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
             <span style='font-size:.16rem;'>{{item.bookName|bookName}}</span>
             <span class='icon_update' v-if='item.bookStatus==0?true:false'>更新</span>
          </div>
-         <div class='add_book'></div>         
+         <div class='add_book' @click="handleGo()"></div>         
     </div>
     <div class='commendRead'>
          <p>推荐阅读{{`(${commendReadList.length})`}}</p>
-         <div class='commend_book_wrap' @click="handleBookDetail(item.bookId)" v-for='item in commendReadList'>
+         <div class='commend_book_wrap'  @click="handleBookDetail(item.bookId)" v-for='item in commendReadList'>
             <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
             <p style='font-size:.16rem;'>{{item.bookName|bookName}}</p>   
             <p class='is_update' :style="{ 'color': item.bookStatus==0?'#FF6F00':'#47B2D8' }">{{item.isUpdate==0?'已完结':'连载中'}}</p>         
@@ -36,12 +36,6 @@ import {mapActions,mapState} from 'vuex'
                     title_2:'编辑',
                     link:'/bookEdit'
                 },
-                readNowList:[
-                    {bookName:'老公晚上请温柔',img:require('../../assets/images/test.png')},
-                    {bookName:'老公晚上请温柔',img:require('../../assets/images/test.png')},
-                    {bookName:'老公晚上请温柔',img:require('../../assets/images/test.png')},
-                    {bookName:'老公晚上请温柔',img:require('../../assets/images/test.png')}
-                ],
                 commendReadList:[]
             }
         },
@@ -52,20 +46,23 @@ import {mapActions,mapState} from 'vuex'
             bookName:name=>name.length>6?(name.slice(0,5)+'....'):name
         },
         methods: {
-            ...mapActions(['getBookRack']),
+            ...mapActions(['getBookRack','setReadBookId']),
             getCommendBook(){
                 Post_formData2(this,'','/api/bookshelf-recommendPosition',res=>{
                     this.commendReadList=res.data
                 })
             },
             getReadNow(){
-                // userId是我随意找的一个
-                Post_formData(this,{userid:1082,startpage:1},'./api/bookshelf-getuserbookshelf',res=>{
-                    this.getBookRack(res.data.list)
+                Post_formData(this,{userid:this.userId,startpage:1},'./api/bookshelf-getuserbookshelf',res=>{
+                   res.returnCode==200&&this.getBookRack(res.data.list)
                 })
             },
             handleBookDetail(bookId){
-                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
+                 this.setReadBookId(bookId)
+                 this.$router.push({path:'/bookDetails'});
+            },
+            handleGo(){
+                this.$router.push({path:'/more'})
             }
         },
         mounted(){

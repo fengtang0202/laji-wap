@@ -12,7 +12,7 @@
          <li v-for='item in navList' @click='handleTap(item.key)'>{{item.text}}</li>
      </ul>
     <ul class='share_list' :class='{show:shareShow}'>
-        <li v-for='(item,index) in shareList' :key='index'>
+        <li v-for='(item,index) in shareList'  @click='handleShare(index)' :key='index'>
             <img :src="item.img" alt="">
             <p>{{item.text}}</p>
         </li>
@@ -48,10 +48,11 @@
          </div> -->
          <div v-transfer-dom>
           <confirm v-model="ConfirmShow"
-            color='#333'
+            color='#000'
+            :title='messageTitle'
             @on-cancel="onCancel"
             @on-confirm="onConfirm">
-          <p style="text-align:center;color:#333333;font-size:.16rem;">{{message}}</p>
+          <p style="text-align:center;color:#333333;font-size:.13rem;">{{message}}</p>
           </confirm>
       </div>
     </div>
@@ -80,6 +81,7 @@ import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
 import { setTimeout } from 'timers';
 import {TransferDomDirective as TransferDom,Confirm} from 'vux'
 import {mapState,mapActions} from 'vuex'
+var wx = require('weixin-js-sdk');
      export default{
          data(){
             return{
@@ -91,12 +93,15 @@ import {mapState,mapActions} from 'vuex'
                message:'',
                ConfirmShow:false,
                chapterIdNum:0,
+               bookName:'',
+               messageTitle:'',
                touchstartX:0,
                touchstartY:0,
                chapterList:[],
                bottomShow:false,
                shareShow:false,
                navShow:false,
+               confirmKey:0,
                preNextShow:false,
                feedList:[
                    {img:require('../../assets/images/Group 3@3x.png')},
@@ -132,13 +137,19 @@ import {mapState,mapActions} from 'vuex'
              Confirm
          },
          computed: {
-             ...mapState(['readBookId','chapterId']),              
+             ...mapState(['readBookId','chapterId','userName']),              
          },
          directives: {
              TransferDom
          },
          methods:{
              ...mapActions(['setChapterId']),
+             handleShare(index){
+                     index==2&&this.handleShareWX()
+             },
+             handleShareWX(){
+                  console.log(1)
+             },
              getTouchStartXY(){
                  this.touchstartX=event.touches[0].pageX
                  this.touchstartY=event.touches[0].pageY
@@ -162,12 +173,15 @@ import {mapState,mapActions} from 'vuex'
                      if(res.returnCode==200){
                          this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
                          this.preNextShow=true
+                         this.bookName=res.data.bookInfo.bookName
+                         this.chapterName=res.data.chapterInfo.chapterTitle
+                        //  console.log(res.data.chapterInfo.chapterTitle)
                    }
               })    
              },
-             onConfirm(){
+             onConfirm(res){
                  //确定以后的操作
-               console.log(0)
+                res==1&&this.addBookRack()
             },
             onCancel(){
                 //取消以后的操作
@@ -184,6 +198,7 @@ import {mapState,mapActions} from 'vuex'
                   }) 
              },  
              getNextChapterText () {
+                   this.confirmKey=0
                   let n=this.chapterList.length-1
                    this.chapterIdNum++                  
                   if(this.chapterIdNum<n){
@@ -191,23 +206,43 @@ import {mapState,mapActions} from 'vuex'
                     this.setChapterId(this.chapterList[this.chapterIdNum].id)
                     this.getBookText()
                     this.$refs.content.scrollIntoView();
-                    console.log(this.chapterIdNum)
                   }else{
-                    this.message='目前最后一章'
+                    this.messageTitle='目前最后一章'
                     this.ConfirmShow=true
                   }
              },
             getPreChapterText () {
+                   this.confirmKey=0                
                  if(this.chapterIdNum>0){
                     this.chapterIdNum--  
                     this.setChapterId(this.chapterList[this.chapterIdNum].id) 
                     this.getBookText()
                     this.$refs.content.scrollIntoView();
-                    console.log(this.chapterIdNum)                                       
                  }else{
-                     this.message='第一章了'
+                     this.messageTitle='第一章了'
                      this.ConfirmShow=true  
                  }
+            },
+            addBookRack(){
+                    //  this.confirmKey=1
+                       Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
+                             if(res.returnCode==500){
+                                 this.$vux.toast.text(res.msg)
+                                 return;    
+                             } else {
+                       Post_formData2(this,{userName:this.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
+                            // this.ConfirmShow=true
+                            this.messageTitle='收藏书籍'
+                            this.message='这本书还没有加入书架，现在帮您加入书架吗？'
+                            if (res.returnCode==200) {   
+                                 this.$vux.toast.text(res.msg)
+                            } else if (res.returnCode==400) {
+                                this.messageTitle=res.msg
+                                this.$router.push('/')
+                            }
+                         })
+                        }
+                  })
             },
              handleTap(res){
                  if (res===6) {
@@ -220,6 +255,9 @@ import {mapState,mapActions} from 'vuex'
                  if(res==2){
                      this.$router.push({path:'bookComment'})
                  }
+                 if(res==3){
+                    this.addBookRack()  
+                 } 
                  if(res==10){
                      this.getNextChapterText()
                  }
@@ -241,12 +279,25 @@ import {mapState,mapActions} from 'vuex'
              },
               change (status) {
                 // this.$Message.info('开关状态：' + status);
+            },
+            addReadHistory(){
+                let options={
+                    userName:this.userName,
+                    bookId:this.readBookId,
+                    bookName:this.bookName,
+                    chapterId:this.chapterId,
+                    chapterName:this.chapterName
+                    }
+               Post_formData2(this,options,'/api/person-addBookReadRecord',res=>{
+                    // console.log(res)
+               }) 
             }
          },
          mounted(){
             this.getBookText()
             this.getNowChapterId()
-            console.log(this.chapterIdNum)
+            this.addReadHistory()
+            // console.log(this.chapterIdNum)
          }
      }
 </script>

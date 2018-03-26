@@ -30,7 +30,7 @@
             加载完
           </span>
           <span slot="no-results">
-            暂无评论
+            暂无书籍
           </span>
         </infinite-loading>
     </div>

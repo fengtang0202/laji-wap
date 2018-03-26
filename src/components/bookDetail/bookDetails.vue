@@ -23,7 +23,7 @@
               </div>
           </div>
           <div class="check_d">              
-              <div class="reader" v-for="(item,index) in cate" :class="{addCate:isActive===index}" @click="handleRead(index)"><span v-html="item.name"></span></div>
+              <div class="reader" v-for="(item,index) in cate"  :key='index' :class="{addCate:isActive===index}" @click="handleRead(index)"><span v-html="item.name"></span></div>
           </div>
           <div class="pepper">
              <div class="feed" @click="handleClosefeed()">
@@ -144,8 +144,10 @@
         },
         methods:{
             ...mapActions(['setReadBookId']),
-            handleRead(index){
+            handleRead (index) {
                  this.isActive = index;
+                 index==2&&this.addBookRack()
+                 index==0&&this.$router.push('/bookRead')
             },
             handleClosefeed(){
                 // this.$refs.child.$emit('handleClose')
@@ -161,12 +163,13 @@
                 this.isShow = true; 
                 Post_formData2(this,{bookid:this.readBookId},'/api/book-bookInfo',res=>{
                     this.isShow = false;
-                    this.chapterCount=res.data.chapterCount
                     if(res.returnCode==200){
+                        this.chapterCount=res.data.chapterCount                        
                         this.infoList = res.data.bookListInfo;
                         this.classId = res.data.bookListInfo.bookClassificationId;
                         this.labelList = res.data.bookLable;
                         this.swiperList=res.data.similarRecommendation
+                        this.$refs.content.scrollIntoView();
                     }else{
                         this.$vux.toast.text(res.msg);
                     }
@@ -178,6 +181,27 @@
             handleLook(){
                 this.isAdd = !this.isAdd;
                 this.lookShow = !this.lookShow;
+            },
+             addBookRack(){
+                    //  this.confirmKey=1
+                       Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
+                             if(res.returnCode==500){
+                                 this.$vux.toast.text(res.msg)
+                                 return;    
+                             } else {
+                       Post_formData2(this,{userName:this.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
+                            // this.ConfirmShow=true
+                            this.messageTitle='收藏书籍'
+                            this.message='这本书还没有加入书架，现在帮您加入书架吗？'
+                            if (res.returnCode==200) {   
+                                 this.$vux.toast.text(res.msg)
+                            } else if (res.returnCode==400) {
+                                this.messageTitle=res.msg
+                                this.$router.push('/')
+                            }
+                         })
+                        }
+                  })
             },
             handleComments(){
                 this.isShow = true;
@@ -195,7 +219,6 @@
                  this.handleInit()
                  this.setReadBookId(bookId)
                  this.handleComments()
-                 this.$refs.content.scrollIntoView();
             }
         },
         mounted(){

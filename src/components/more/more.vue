@@ -32,6 +32,7 @@
     import { Loading } from 'vux'
     import headerComponent from '@/components/common/header'
     import { Post_formData2, noParam_Get } from '@/config/services'
+    import {mapState,mapActions} from 'vuex'
     export default {
         name: 'more',
         data () {
@@ -49,6 +50,7 @@
             Loading,headerComponent
         },
         methods:{
+            ...mapActions(['setReadBookId']),
             handleMore(){
                 this.isShow = true;
                 Post_formData2(this,{},'/api/book-xiaobiantuijian',res=>{
@@ -61,15 +63,15 @@
                 })
             },
             handleGo(id){
-                 this.$router.push({path:'/bookDetails',query:{bookId:id}});
+                 this.setReadBookId(id)
+                 this.$router.push({path:'/bookDetails'});
             },
             handleBack(){
                  window.history.go(-1);
             }
         },
         mounted(){
-            let self = this;
-            self.handleMore();
+            this.handleMore();
         }
     }
 </script>
