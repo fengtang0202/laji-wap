@@ -31,7 +31,6 @@
 <script>   
     import { Loading,Group,Cell,CellBox } from 'vux'
     import { Post_formData2, noParam_Get } from '@/config/services'
-    import headerComponent from '@/components/common/header'
     import {mapState,mapActions} from 'vuex'
     export default {
         name: 'directory',
@@ -50,7 +49,7 @@
             }
         },
         components: {
-            Loading,headerComponent,Group,Cell,CellBox
+            Loading,Group,Cell,CellBox
         },
         computed: {
             ...mapState(['readBookId','chapterId'])   

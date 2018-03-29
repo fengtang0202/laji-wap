@@ -15,7 +15,6 @@
          <box  gap="10px 10px">
             <x-button  show-loading  class="btn">申请</x-button>
          </box>
-
     </div>
 </template>
 <script>

@@ -30,7 +30,6 @@
 </template>
 <script>
     import { Loading } from 'vux'
-    import headerComponent from '@/components/common/header'
     import { Post_formData2, noParam_Get } from '@/config/services'
     import {mapState,mapActions} from 'vuex'
     export default {
@@ -47,7 +46,7 @@
             }
         },
         components: {
-            Loading,headerComponent
+            Loading
         },
         methods:{
             ...mapActions(['setReadBookId']),

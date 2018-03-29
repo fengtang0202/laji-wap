@@ -2,20 +2,17 @@
   <div class='wechat'>
       <headerComponent :list='topList'></headerComponent>
       <div class='pay_category_wrap'>
-            <div class='pay_category'  v-for="(item,index) in payCategoryList" :class="{isAdd:isAddTo===index}" @click='handelTap(index)'>
+            <div class='pay_category' :key='index'  v-for="(item,index) in payCategoryList" :class="{isAdd:isAddTo===index}" @click='handelTap(index)'>
                  <p class='price'>{{item.price+'元'}}</p>
                  <p class='price'>{{item.price*100+'小辣椒'}}</p>
-                 <p class='gift'>{{item.gift}}</p>    
+                 <p class='gift'>{{item.gift}}</p> 
+                 <span class='icon' v-if='item.gift?true:false'>赠送</span>         
             </div>
       </div>    
   </div>
 </template>
 <script>
-import headerComponent from '@/components/common/header'
 export default{
-    components:{
-          headerComponent
-    },
      data(){
       return{
        topList:{
@@ -58,12 +55,28 @@ export default{
            text-align: center;
            border:.01rem solid #FB5E6F;
            border-radius: .05rem;
+           position: relative;
            margin-top:.3rem;
            padding-top:.3rem;
+           overflow: hidden;
            .gift{
                font-size:.12rem;
                color:#FB5E6F;
            }
+           .icon{
+                font-size: .1rem;
+                position: absolute;
+                right:-.2rem;
+                top: -.17rem;
+                width:.6rem;
+                height:.15rem;
+                -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+                -webkit-transform-origin: left bottom;
+                transform-origin: left bottom;
+                color: #fff;
+                background-color: #FB5E6F;
+            }
          }
          .isAdd{
              background-color:#FB5E6F;

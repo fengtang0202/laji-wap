@@ -1,9 +1,9 @@
 <template>
     <div id="bookDetails" ref='content'>
            <loading :show="isShow"></loading>
-            <!-- <app-feed  ref="child"  @click="handleClosefeed()"></app-feed> -->
-            <!-- <app-feedpepper  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper> -->
-          <headerComponent :list="topList"></headerComponent>
+            <app-feed  ref="child"  @click="handleClosefeed()"></app-feed>
+            <app-feedpepper  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper>
+          <headerComponent :list="topList" ref='headerComponent'></headerComponent>
           <div class="text">
               <img :src="infoList.bookImage" class="oImg">
               <div class="con">
@@ -57,7 +57,7 @@
           </div>
           <div class="comments">
               <p class="top_p">评论区</p>
-              <div class="comments_d" :key='index' v-for="(i,index) in commentList">
+              <div class="comments_d" @click='handleCommentDetail(i)' :key='index' v-for="(i,index) in commentList">
                   <div style="overflow:hidden;height:100%;margin-top:.1rem;">
                         <img :src="i.userHeadPortraitURL" class="oImg">
                         <img src="../../assets/images/crown@3x.png" class="t-img">
@@ -92,7 +92,10 @@
              </div>
              <div class="similar-swiper">
                     <div class="swiper-wrapper">
-                           <img  :src="item.bookImage"  :key="item.bookId" v-for="item in swiperList" @click='handleToBookDetail(item.bookId)'>
+                        <div v-for="item in swiperList" @click='handleToBookDetail(item.bookId)' :key="item.bookId">
+                           <img  :src="item.bookImage">
+                           <span>{{item.bookName|bookName}}</span>
+                         </div>
                     </div>
              </div>
           </div>
@@ -102,7 +105,6 @@
     import AppFeed from '@/components/feed/feed.vue'
     import AppFeedpepper from '@/components/feed/feedPepper.vue'
     import { Loading } from 'vux'
-    import headerComponent from '@/components/common/header'
     import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
     import {mapState,mapActions} from 'vuex'
     export default {
@@ -137,17 +139,23 @@
             Loading,
             AppFeed,
             AppFeedpepper,
-            headerComponent
         },
         computed:{
           ...mapState(['readBookId'])
         },
+        filters:{
+            bookName:name=>name.length>6?(name.slice(0,5)+'....'):name
+        },
         methods:{
-            ...mapActions(['setReadBookId']),
+            ...mapActions(['setReadBookId','setReadCommentInfo']),
             handleRead (index) {
                  this.isActive = index;
                  index==2&&this.addBookRack()
                  index==0&&this.$router.push('/bookRead')
+            },
+            handleCommentDetail(item){
+                this.setReadCommentInfo(item)
+                this.$router.push('/bookCommentDetail')
             },
             handleClosefeed(){
                 // this.$refs.child.$emit('handleClose')
@@ -162,8 +170,8 @@
             handleInit () {
                 this.isShow = true; 
                 Post_formData2(this,{bookid:this.readBookId},'/api/book-bookInfo',res=>{
-                    this.isShow = false;
                     if(res.returnCode==200){
+                    this.isShow = false;                        
                         this.chapterCount=res.data.chapterCount                        
                         this.infoList = res.data.bookListInfo;
                         this.classId = res.data.bookListInfo.bookClassificationId;
@@ -215,9 +223,8 @@
                 })
             },
             handleToBookDetail(bookId){
-                 this.id=bookId
+                 this.setReadBookId(bookId)                 
                  this.handleInit()
-                 this.setReadBookId(bookId)
                  this.handleComments()
             }
         },
@@ -344,7 +351,7 @@
                 font-size:.12rem;
                 text-align:center;
                 img{
-                    width:.22rem;
+                    width:.16rem;
                     height:.22rem;
                     margin-top:.05rem;
                     float:left;
@@ -483,8 +490,8 @@
                     width:.77rem;
                     height:.19rem;
                     color:#fff;
-                    font-size:.12rem;
-                    background:#F77583;
+                    font-size:.14rem;
+                    color:#F77583;
                     border-radius:18px;
                     text-align:center;
                     line-height:.19rem;
@@ -493,7 +500,7 @@
             }
         }
         .similar-text{
-            height:.48rem;
+            height: 0.5rem;
             padding:0 .14rem;
             box-sizing:border-box;
             font-size:.16rem;
@@ -502,15 +509,19 @@
         }
         .similar-swiper{
             width:100%;
-            height:1.28rem;
+            height:1.6rem;
             margin-bottom:.3rem;
             overflow-x: auto;
+            text-align: center;
             -webkit-overflow-scrolling:touch; 
             img{
                 width:.96rem;
                 height:1.28rem;
                 margin-right:.05rem;
                 box-shadow: 0 0 .01rem rgba(0,0,0,.5)
+            }
+            span{
+                font-size: .14rem;
             }
         }
     }

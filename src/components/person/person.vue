@@ -43,7 +43,7 @@
               <img :src="li.img"  slot="icon" alt="">
           </cell>
        </group>
-       <div class='loginOut_wrap'>
+       <div class='loginOut_wrap' @click='loginOut()'>
             <span class="loginOut">退出登录</span>
        </div>
   </div>
@@ -54,7 +54,8 @@
     import headerComponent from '@/components/common/header'    
     import { setTimeout } from 'timers';
     import {mapState} from 'vuex'
-    import {Param_Get,Param_Get_Resful} from '@/config/services'
+    import {Param_Get,Param_Get_Resful,Post_formData2} from '@/config/services'
+    import {mapActions} from 'vuex'
     export default {
         name: "person",
         directives: {
@@ -64,29 +65,47 @@
           Group,Cell,headerComponent,Confirm
         },
         computed:{
-           ...mapState(['userName','avatar','sex','vipGrade','userId'])
+           ...mapState(['userId','userName','avatar','sex','vipGrade','userId'])
         },
         data(){
             return {
                 // 用户信息需要从vuex里获取或者用localstorage
                 show:false,
-                attentionCount:10,
-                fans:20,
+                attentionCount:0,
+                fans:0,
                 type:0,
                 navList:[
                     {img:require('../../assets/images/personCenter@2x.png'),title:'我的书架',link:'/bookRack'},
                     {img:require('../../assets/images/wallet@2x@2x.png'),title:'我的钱包',link:'/home'},
-                    {img:require('../../assets/images/cz@2x.png'),title:'充值',link:'/home'},
+                    {img:require('../../assets/images/cz@2x.png'),title:'充值',link:'/payMoney'},
                     {img:require('../../assets/images/reader@3x@2x.png'),title:'阅读记录',link:'/readHistory'},
                     {img:require('../../assets/images/details_button_jinjiao_default copy 4@2x.png'),title:'消息',link:'/home'},
-                    {img:require('../../assets/images/contactUs2@2x.png'),title:'联系客服',link:'/home'},
+                    {img:require('../../assets/images/contactUs2@2x.png'),title:'联系客服',link:'/contactUs'},
                     {img:require('../../assets/images/grade@2x.png'),title:'等级制度',link:'/home'},
                 ]
             }
         },
         methods:{
+            ...mapActions(['loginAction',"updateName",'updateAvatar']),
         handleAuthorCenter(){
             this.show=true;
+         },
+         loginOut(){
+               let self=this
+               console.log(self)
+               Post_formData2(this,'','/api/person-ClearUserInfo',res=>{
+                   if(res.returnCode==200){
+                       weui.toast('退出成功', {//loading
+                                        className: 'custom-classname',
+                                        duration: 2000,
+                                        callback: function(){
+                                            self.$router.push({path:'/home'})
+                                            self.loginAction(false)                       
+                                            self.updateName('未登录')
+                                        }
+                                    });
+                   }
+               })
          },
          onCancel(){
              
@@ -102,7 +121,7 @@
              this.jumpToDownApp()
           },
           getFansAndFollowCount(type=1){
-            Param_Get_Resful(this,`/api/fans-followCount/1082/${type}`,res=>{
+            Param_Get_Resful(this,`/api/fans-followCount/${this.userId}/${type}`,res=>{
                  console.log(res)   
                 })
             }

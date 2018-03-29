@@ -5,16 +5,20 @@ Vue.use(Vuex);
     const state={
         subName: '首',
         itemName: '页',
+        homeIndex:0,
         showConnect:false,
         token:'',
-        userInfo:{},
-        isLogin:0,
+        userInfo:{
+            
+        },
+        isLogin:false,
         userName:'未知用户',
         avatar:require('../assets/images/u@2x.png'),
         userId:0,
         readBookId:0,
         chapterId:0,
         bookRack:[],
+        readCommentInfo:{},
         sex:0,
         vipGrade:0,
         fans:0,
@@ -24,6 +28,9 @@ Vue.use(Vuex);
         changeMenuName (state, name) {
             state.subName=name.subName
             state.itemName=name.itemName
+        },
+        changeIndex(state,index){
+            state.homeIndex=index
         },
         changeConnect(state){
             state.showConnect=true
@@ -69,11 +76,17 @@ Vue.use(Vuex);
         },
         setChapterId(state,chapterId){
             state.chapterId=chapterId
+        },
+        setReadCommentInfo(state,readCommentInfo){
+            state.readCommentInfo=readCommentInfo
         }
     }
     const actions = {
         loginAction({commit},status){
             commit('changeLogin',status)
+        },
+        changeIndex({commit},index){
+            commit('changeIndex',index)    
         },
         updateName({commit},name){
             commit('changeName',name)
@@ -90,7 +103,7 @@ Vue.use(Vuex);
         updateUserId({commit},userId){
             commit('setUserId',userId)
         },
-        setFans(){
+        setFans({commit},fans){
             commit('setFans',fans)
         },
         getBookRack({commit,state},bookReck){
@@ -101,6 +114,9 @@ Vue.use(Vuex);
         },
         setChapterId({commit},chapterId){
             commit('setChapterId',chapterId)
+        },
+        setReadCommentInfo({commit},readCommentInfo){
+            commit('setReadCommentInfo',readCommentInfo)
         }
     }
 export default new Vuex.Store({

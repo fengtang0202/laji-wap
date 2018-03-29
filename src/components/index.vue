@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="text_con">
-            <div class="book" v-for="item in bookList" @click="handleGo(item.bookId)" >
+            <div class="book" v-for="item in bookList"  @click="handleGo(item.bookId)">
                 <img  :src='item.bookImage' style="width:.96rem;height:1.27rem;">
                 <p class="p_one">{{item.bookName}}</p>
                 <p class="p_two">{{item.writerName}}</p>
@@ -31,7 +31,7 @@
             <span class='le_p'>新书推荐</span>
         </div>
          <div class="text_con">
-            <div class="book" v-for="item in bookList" @click="handleGo(item.bookId)">
+            <div class="book" :key='index' v-for="(item,index) in bookList" @click="handleGo(item.bookId)">
                 <img :src='item.bookImage' style="width:.96rem;height:1.27rem;">
                 <p class="p_one" >{{item.bookName}}</p>
                 <p class="p_two">{{item.writerName}}</p>
@@ -43,9 +43,9 @@
             <img src='../assets/images/new@3x.png' class="left_img">
             <span class='le_p'>最新小说</span>
         </div>
-        <div class="newBook_d" v-for="i in newList">
+        <div class="newBook_d" v-for="i  in newList"  @click='handleGo(i.bookId)'>
             <p class="op"></p>
-            <span class="span_one" v-html="i.classificationName"></span>
+            <span class="span_one">{{i.classificationName|className}}</span>
             <span class="span_two" v-html="i.bookName"></span>
             <img src="../assets/images/vip@3x.png">
         </div>
@@ -57,7 +57,7 @@
                 <li>客户端</li>
                 <li>联系我们</li>
             </ul>
-            <p style="margin-top:.5rem;margin-bottom:.1rem;">Copyright (C) 华夏天空小说网 2004-2017</p>
+            <p style="margin-top:.5rem;margin-bottom:.1rem;">Copyright (C) 辣鸡小说网 2004-2017</p>
             <p>浙ICP备12010638号-1</p>
         </div>
     </div>
@@ -82,6 +82,14 @@
         components: {
             Loading,
         },
+        filters: {
+          className(res){
+             if(res==='GLBL'){
+                 return `${res}+1`
+             }
+             return res
+          }  
+        },
         computed: {
           ...mapState(['readBookId'])  
         },
@@ -105,13 +113,14 @@
                         this.isShow= false;
                         if(res.returnCode==200){
                             this.newList = res.data.list;
+                            console.log(res)
                         }else{
                             this.$vux.toast.text(res.msg);
                         }
                 })
             },
             handleMore(){
-                this.$router.push({path:"/more"});
+                this.$router.push({path:"/editorRecommend"});
             },
             handleGo(id){
                  this.setReadBookId(id)
@@ -234,7 +243,6 @@
             text-align:left;
             margin-top:.1rem;
             .op{
-                color:#FB5E6F;
                 width:.15rem;
                 height:.14rem;
                 font-size:.14rem;

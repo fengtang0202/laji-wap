@@ -60,6 +60,7 @@
 <script>
     import { Loading } from 'vux'
     import { Post_formData2, noParam_Get } from '@/config/services'
+import { mapActions } from 'vuex';
    export default {
         name: 'search',
         data () {
@@ -77,6 +78,7 @@
             Loading,
         },
         methods:{
+             ...mapActions(['setReadBookId']),
             handleDownload(){
                  this.$router.push({path:"/download"});
             },
@@ -84,7 +86,8 @@
                  this.$router.push({path:"/home"});
             },
             handleGo(id){
-                 this.$router.push({path:'/bookDetails',query:{bookId:id}});
+                 this.setReadBookId(id)
+                 this.$router.push({path:'/bookDetails'});
             },
             handleInit(){
                  this.isShow = true;

@@ -7,7 +7,7 @@
               <div class='avatar'>
                   <img  :src="item.userHeadPortraitURL" alt="">
               </div>
-              <div class='book_comment_item_detail' @click='handleCommentDetail(item.id)'>
+              <div class='book_comment_item_detail' @click='handleCommentDetail(item)'>
                 <div class='i_one'>
                     <div style='float: left;'>
                         <span style='font-size:.16rem;'>{{item.pseudonym}}</span>
@@ -19,11 +19,50 @@
                         <span style='font-size:.12rem;'>{{item.commentDateTime|formatDate}}</span>
                       </div>
                 </div>
-                 <p class='bookName'>《{{item.bookName}}》</p>  
+                 <!-- <p class='bookName'>《{{item.bookName}}》</p>   -->
                  <p class='content'>{{item.commentContext|content}}</p> 
                  <div class='zhan'>
                      <p>
-                     <img src="../../assets/images/zan@3x.png" alt="">
+                     <img v-if='item.isthumbs===0?true:false' @click='handelLike(item)' src="../../assets/images/zan@3x.png" alt="">
+                     <img v-if='item.isthumbs===1?true:false' @click='handelLike(item)' src="../../assets/images/goodzan@3x.png" alt="">
+                     <span>{{item.thumbsCount}}</span>
+                     </p>
+                     <p>
+                     <img @click='handlereplyDetail(item.id)' src="../../assets/images/message@3x.png" alt="">
+                     <span>{{item.replyCount}}</span>
+                     </p>
+                 </div>             
+              </div>
+            </div>  
+        </div>
+        <div class='more'>
+            <span>更多热评</span>
+        </div>
+        <!-- 最新评论 -->
+        <div class='book_hot_comment'>
+              <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>最新评论({{newCommentcount}})</p>
+            <div class='book_comment_item'  :key='index' v-for='(item,index) in newCommentList'>
+              <div class='avatar'>
+                  <img  :src="item.userHeadPortraitURL" alt="">
+              </div>
+              <div class='book_comment_item_detail' @click='handleCommentDetail(item)'>
+                <div class='i_one'>
+                    <div style='float: left;'>
+                        <span style='font-size:.16rem;'>{{item.pseudonym}}</span>
+                        <img src="../../assets/images/sex-03@3x.png" v-if='item.userSex==0?true:false' alt="">
+                        <img src="../../assets/images/sex-02_03@3x.png" v-if='item.userSex==1?true:false' alt="">                     
+                        <span class='grade'>&nbsp;LV{{item.userGrade}}&nbsp;</span>
+                     </div>
+                     <div style='float:right'>
+                        <span style='font-size:.12rem;'>{{item.commentDateTime|formatDate}}</span>
+                      </div>
+                </div>
+                 <!-- <p class='bookName'>《{{item.bookName}}》</p>   -->
+                 <p class='content'>{{item.commentContext|content}}</p> 
+                 <div class='zhan'>
+                     <p>
+                     <img v-if='item.isthumbs===0?true:false'   @click='handelLike(item)' src="../../assets/images/zan@3x.png" alt="">
+                     <img v-if='item.isthumbs===1?true:false'   @click='handelLike(item)'  src="../../assets/images/goodzan@3x.png" alt="">
                      <span>{{item.thumbsCount}}</span>
                      </p>
                      <p>
@@ -34,32 +73,56 @@
               </div>
             </div>  
         </div>
-        <div class='more'>
-            <span>更多热评</span>
+        <div class='bottom_x'>
+
         </div>
+        <div class='replyInput'>
+            <span @click='handleShow()'>发表评价</span>
+        </div>
+        <div v-transfer-dom>
+            <popup v-model="show">
+                <div style='height:1.5rem;font-size:.16rem;background-color:#fff;'>
+                    <div  style='border-bottom:1px solid #E9E9E9;overflow:hidden;padding:.08rem .2rem'>
+                        <p style='float:left' @click='canlce()'>取消</p>
+                        <p style='color:#F77583;float:right' @click='handleMakeComment()'>发表</p>
+                    </div>
+                    <div class='text_box'>
+                       <textarea  v-model='replyText' style='width:100%;height:1.2rem;border:0;outline:none;padding:.1rem' ></textarea>
+                    </div>
+                </div>
+            </popup>
+       </div>
    </div>
 </template>
 <script>
-import headerComponent from '@/components/common/header'
-import {Post_formData2,formatDate} from '@/config/services'
-import {mapState} from 'vuex'
+import {Post_formData2,formatDate,Post_formData} from '@/config/services'
+import {mapState,mapActions} from 'vuex'
+import {Popup,TransferDom} from 'vux'
 export default {
     components:{
-        headerComponent
+      Popup
     },
-    data(){
+     directives: {
+        TransferDom
+    },
+    data () {
         return{
           topList:{
               title_1:'评论',
               title_2:'首页',
               link:'/home'
           },
+          show:false,
+          replyText:'',
           hotCommentList:[],
-          hotCommentcount:0, 
+          hotCommentcount:0,
+          newCommentList:[],
+          newCommentcount:0,
+          bookName:''
         }
     },
     computed: {
-      ...mapState(['readBookId'])  
+      ...mapState(['readBookId','userName','avatar','vipGrade','isLogin'])  
     },
      filters:{
       formatDate(time){
@@ -67,23 +130,101 @@ export default {
         return formatDate(data,'yyyy-MM-dd');
       },
       content(str){
-        return str.length>36?str.slice(0,37)+'...':str 
+              return str.length>36?str.slice(0,37)+'...':str 
       }
     },
     methods:{
-          getHotComment(){
+        ...mapActions(['setReadCommentInfo']),
+            canlce(){
+               this.show=false;
+            },
+          getHotComment () {
               Post_formData2(this,{bookid:this.readBookId},'/api/comm-HotCommentInfo',res=>{
                   if(res.returnCode==200){
                       this.hotCommentList=res.data
+                    //   console.log(res)
                       this.hotCommentcount=res.data.length
+                      console.log(this.hotCommentList)
                   }else{
-
+                  this.$vux.toast.text(res.msg)                     
                   }
               }) 
-          }
+          },
+          handleMakeComment () {
+              let fontCountLength = this.replyText.length
+              console.log(fontCountLength)
+              if(fontCountLength>0&&fontCountLength<50){
+                  let options={
+                      bookId:this.readBookId,
+                      commentContext:this.replyText,
+                      userName:this.userName,
+                      bookName:this.bookName	
+                  }
+                    Post_formData2(this,options,'/api/add-getcomminfo',res=>{
+                         if(res.returnCode==200){
+                             this.$vux.toast.text('发表成功!')
+                             this.show=false
+                             options.isthumbs=0
+                             options.thumbsCount=0
+                             options.replyCount=0
+                             options.userHeadPortraitURL=this.avatar
+                             options.pseudonym=this.userName
+                             options.userGrade=this.vipGrade
+                             options.commentDateTime=new Date()
+                             this.newCommentList.unshift(options)
+                         }
+                     })
+              } else {
+                  this.$vux.toast.text('字数不够')
+              }
+          },
+          getNewComment(){
+               Post_formData2(this,{id:this.readBookId,type:1,startPage:1},'/api/comm-getcomminfo',res=>{
+                  if(res.returnCode==200){
+                      this.newCommentList=res.data.list
+                      this.newCommentcount=res.data.list.length
+                      this.bookName=res.data.list[0].bookName
+                    //   console.log(this.bookName)
+                  }else{
+                       
+                  }
+              }) 
+          },
+          handlereplyDetail(id){
+              console.log(id)
+          },
+          handleCommentDetail(item){
+              this.setReadCommentInfo(item)
+            //   this.$router.push({path:'/bookCommentDetail'})   
+           },
+           handelLike(item){
+               Post_formData2(this,{commentId:item.id},'/api/comm-GiveThumbs',res=>{
+                   if(res.returnCode==200) {
+                       if (item.isthumbs==0) {
+                            item.isthumbs=1
+                            item.thumbsCount+=1
+                        } else {
+                            item.thumbsCount-=1                   
+                            item.isthumbs=0                 
+                        }
+                   }
+              })
+           },
+           handleShow(){
+               if(this.isLogin){
+                   this.show=!this.show
+               }else{
+                  this.$router.push('/')
+               }
+           }
     },
     mounted() {
         this.getHotComment()
+        this.getNewComment()
+        
+        // Post_formData2(this,"",'/api/person-checkLoginState',res=>{
+        //     console.log(res)
+        // })
     }
 }
 </script>
@@ -94,7 +235,7 @@ export default {
              vertical-align: middle;
             }
         .book_hot_comment {
-           padding:.1rem;
+           padding:.1rem .1rem 0 .1rem;
            .book_comment_item {
                margin-top:.1rem;
                border-bottom:1px solid #EFEFEF;
@@ -116,7 +257,7 @@ export default {
                   float: left;
                   margin-left:.2rem;
                   width:2.7rem;
-                  .i_one{
+                  .i_one {
                           color:#666;
                           overflow: hidden;                   
                       img {
@@ -135,6 +276,7 @@ export default {
                   }
                   .content{
                       font-size: .14rem;
+                      margin:.02rem 0;
                   }
                   .zhan{
                       overflow: hidden;
@@ -154,6 +296,21 @@ export default {
               }
            }
         }
+        .bottom_x{
+             width:100%;
+             height:.4rem;
+        }
+        .replyInput{
+               width:100%;
+               border-top:1px solid #EFEFEF;
+               height:.4rem;
+               background-color: #fff;
+               position:fixed;
+               bottom:0;
+               line-height: .4rem;
+               color:#F77583;
+               text-align: center;
+           }
         .more{
             font-size:.16rem;
             color:#F77583;

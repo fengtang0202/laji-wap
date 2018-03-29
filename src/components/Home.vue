@@ -3,16 +3,17 @@
          <div class="top">
             <img src="../assets/images/ico@2x.png" @click='handleTo({path:"/home"})' class="logo_two">
             <div class="btn_top" @click="handleTo({path:'/download'})">下载APP</div>
-            <p class='userId'>{{userName}}</p>
-            <img :src="avatar" @click="handleTo({path:'/person'})" class="logo_three">
+            <span class='userId' @click='handleTo({path:"/bookRank"})' >排行榜</span>
+            <img   v-if='isLogin' :src="avatar" @click="handleTo({path:'/person'})" class="logo_three">
+            <img v-if='!isLogin' @click="handleTo({path:'/person'})" class="logo_three" src='../assets/images/user@3x.png'>
          </div>
          <div class="bottom">
              <input type="text" placeholder="搜索作品或作者" class='search' @focus='handleTo({path:"/search"})'/>
              <img src="../assets/images/search@2x.png" class="logo_four">
-             <button>搜索</button>
+             <!-- <button>搜索</button> -->
          </div>
          <div class="tap">
-             <div class="btn" v-for="(item,index) in cate"  :key='index' :class="{isAdd:isAddTo===index}" @click="handleGo(item.res,index)">
+             <div class="btn" v-for="(item,index) in cate"  :key='index' :class="{isAdd:homeIndex===index}" @click="handleGo(item.res,index)">
                 <span v-html="item.name"></span>
              </div>
          </div>
@@ -20,12 +21,11 @@
     </div>
 </template>
 <script>
- import {mapState} from 'vuex'
+ import {mapState,mapActions} from 'vuex'
     export default {
         name: 'home',
         data () {
             return {
-               userId:'未知身份',
                isAddTo:0,
                cate:[
                    {name:'首页',res:{path:"/home"}},
@@ -35,11 +35,12 @@
             }
         },
         computed: {
-            ...mapState(["userName","avatar"])
+            ...mapState(["userName","avatar",'homeIndex','isLogin'])
         },
         methods:{
+            ...mapActions(['changeIndex']),
             handleGo(res,index){
-                this.isAddTo = index;
+                this.changeIndex(index)
                 this.$router.push(res);
             },
             handleTo(res){
@@ -85,12 +86,11 @@
                 margin:.1rem .14rem 0;
             }
             .userId{
-                width:.64rem;
                 font-size:.16rem;
                 color:#FB5E6F;
                 margin-top:.1rem;
                 float:left;
-                margin-left:.2rem;
+                margin-left:.6rem;
             }
             .logo_three{
                 width:.34rem;
@@ -106,7 +106,7 @@
             position:relative;
             .search{
                 float:left;
-                width:2.5rem;
+                width:3.48rem;
                 height:.36rem;
                 border:1px solid #979797;
                 border-radius:4px;

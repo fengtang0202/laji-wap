@@ -4,17 +4,27 @@
              <img src="../../assets/images/back@2x.png" style='width:.4rem;heigh:.4rem;vertical-align: middle;' alt="">
          </div>    
          <div class='title_1'>{{list.title_1}}</div>
-         <router-link class='title_2' :to='list.link'>{{list.title_2}}</router-link>
+         <router-link class='title_2' @click='hanldeIndex()' :to='list.link'>{{list.title_2}}</router-link>
      </div>
 </template>
 <script>
+import {mapActions} from 'vuex'
       export default {
            data(){
                return{
                  
                }
            },
-           props:["list"]
+           props:["list"],
+           methods:{
+               ...mapActions(['changeIndex']),
+              hanldeIndex(){
+                  
+              } 
+           },
+           mounted () {
+              
+           }
       }
 </script>
 <style lang='less' scoped >

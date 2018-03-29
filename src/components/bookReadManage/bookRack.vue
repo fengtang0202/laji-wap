@@ -62,7 +62,7 @@ import {mapActions,mapState} from 'vuex'
                  this.$router.push({path:'/bookDetails'});
             },
             handleGo(){
-                this.$router.push({path:'/more'})
+                this.$router.push({path:'/editorRecommend'})
             }
         },
         mounted(){

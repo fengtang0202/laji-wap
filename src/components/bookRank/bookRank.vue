@@ -4,7 +4,7 @@
        <div class='day'>
            <span class='day_btn' v-for='(item,index) in dayList' :key='item.key' :style='{"color":changeDayColor===index?"#FE5C6C":"#000"}' @click='handleTapDay(index,item.key)'>{{item.day}}</span>
        </div>
-       <div class='nav' :class="searchBarFixed == true ? 'isFixed' :''">
+       <div class='nav' id='nav'  :class="searchBarFixed == true ? 'isFixed' :''">
           <ul>
               <li v-for='(item,index) in rankList' @click='handleTapItem(index,item.key)' :class='{isAdd:index===changeItemColor}' :key='item.key'><span>{{item.name}}</span></li>
           </ul>
@@ -24,6 +24,7 @@
 <script>
 import headerComponent from '@/components/common/header'
 import {Post_formData2,handleScroll} from '@/config/services'
+import {mapActions} from 'vuex'
     export default{
         components:{
             headerComponent
@@ -64,6 +65,7 @@ import {Post_formData2,handleScroll} from '@/config/services'
             }
         },
         methods:{
+            ...mapActions(['setReadBookId']),
             handleTapDay(index,key){
                 this.changeDayColor=index
                 this.dayType=key
@@ -85,21 +87,29 @@ import {Post_formData2,handleScroll} from '@/config/services'
              },
               
              handleToDetail(bookId){
-                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
+                 this.setReadBookId(bookId)
+                 this.$router.push({path:'/bookDetails'});
              },
+             handleScroll(){
+                 handleScroll(this,'#nav')
+             }
         },
         mounted () {
             this.hanleRankBook()
-            window.addEventListener('scroll',()=>{ handleScroll(this,'.nav')})
+            let self=this
+            this.$nextTick(()=>{
+                window.addEventListener('scroll',this.handleScroll)
+            })
         },
         destroyed () {
-            window.removeEventListener('scroll',()=>{ handleScroll(this,'.nav')})
+            window.removeEventListener('scroll',this.handleScroll)
         }
     }
 </script>
 <style lang='less' scoped>
    .bookRank_wrap {
        width:100%;
+      -webkit-overflow-scrolling:touch;        
      .day{
          height:.44rem;
          text-align: right;

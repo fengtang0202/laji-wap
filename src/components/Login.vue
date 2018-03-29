@@ -44,13 +44,13 @@
             ...mapActions(['loginAction','updateName',
             'updateAvatar','updateUserId','getSex','getvipGrade','setFans'
             ]),
-            handleRouter:function(res){
+            handleRouter(res){
                 this.$router.push(res)
             },
-            handleLogin:function(){
+            handleLogin(){
                 this.$vux.toast.text('网络异常，请稍后再试')
             },
-            handleCheck:function(){
+            handleCheck(){
                 this.show = !this.show;
                 if(!this.show){
                     cookie.set({
@@ -88,7 +88,7 @@
                                     this.updateAvatar(userInfo.userHeadPortraitURL)
                                     this.updateUserId(userInfo.userId)
                                     // 登录状态改变0 是未登录 1 是登录
-                                    this.loginAction(1)
+                                    this.loginAction(true)
                                     this.getSex(userInfo.userSex)
                                     this.getvipGrade(userInfo.vipGrade)
                                      weui.toast('登录成功', {//loading
@@ -113,11 +113,10 @@
 
         },
         mounted(){
-            var self =this;
             if(cookie.get().userPhone){
-               self.phone = cookie.get().userPhone;
-               self.password = cookie.get().userPassword;
-               self.show=false;
+               this.phone = cookie.get().userPhone;
+               this.password = cookie.get().userPassword;
+               this.show=false;
             }
         }
     }

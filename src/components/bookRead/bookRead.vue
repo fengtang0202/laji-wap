@@ -1,4 +1,5 @@
 <template>
+    <v-touch @press='up' @touchmove.native='handlea()' @touchstart='getTouchStartXY(e)'>
   <div class='bookRead'>
      <div class='feed' :class='{show:navShow}'>
             <div style='float:left'>
@@ -59,10 +60,8 @@
     <!-- <div style='text-align:center;padding-top:.1rem;' v-if='preShow'>
          <button  class='next_btn' @click='getPreChapterText()'>加载上一章</button>
     </div> -->
-    <v-touch @press='up' @touchmove.native='handlea()' @touchstart='getTouchStartXY(e)'>
       <div class='book_content' ref='content' :style='{"fontSize":fontSize+"px","backgroundColor":backgroundColor,"color":fontColor}' v-html='bookText' :class='{changeColor:show}'>
       </div>
-    </v-touch>
          <!-- <button  class='next_btn' @click='getNextChapterText()'>加载下一章</button> -->
           <div class='last_nav' v-if='preNextShow'>
               <ul>
@@ -75,13 +74,13 @@
               </ul>
          </div>
     </div>
+    </v-touch>
 </template>
 <script>
 import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
 import { setTimeout } from 'timers';
 import {TransferDomDirective as TransferDom,Confirm} from 'vux'
 import {mapState,mapActions} from 'vuex'
-var wx = require('weixin-js-sdk');
      export default{
          data(){
             return{
@@ -124,7 +123,7 @@ var wx = require('weixin-js-sdk');
                    {text:'微信收藏',img:require('../../assets/images/wechatfavorite @3x.png')},
                    {text:'QQ',img:require('../../assets/images/qqshare@3x.png')},                   
                ],
-               colorList:['#F7F7F7','#E5DFCA','#C3D3E9','#C2D9BE','#E5CAC2','#000'],
+               colorList:['#F7F7F7','#E5DFCA','#C3D3E9','#C2D9BE','#E5CAC2','#1F263A'],
                bottomNavList:[
                    {img:require('../../assets/images/pre@3x.png'),text:'上一章',key:7},
                    {img:require('../../assets/images/Combined Shape@3x.png'),text:'目录',key:8},
@@ -145,10 +144,26 @@ var wx = require('weixin-js-sdk');
          methods:{
              ...mapActions(['setChapterId']),
              handleShare(index){
-                     index==2&&this.handleShareWX()
+                    //  index==2&&this.handleShareWX()
              },
-             handleShareWX(){
-                  console.log(1)
+            handleShareWX(){
+            wx.onMenuShareAppMessage({  
+            title: '1', // 分享标题  
+            desc: '2', // 分享描述  
+            link: window.location.href, // 分享链接  
+            imgUrl: '', // 分享图标  
+            type: 'link', // 分享类型,music、video或link，不填默认为link  
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空  
+            success: function () {   
+                // 用户确认分享后执行的回调函数  
+                //alert('已分享');  
+                //window.location.href = "https://www.baidu.com";  
+            },  
+            cancel: function () {   
+                // 用户取消分享后执行的回调函数  
+                //alert('已取消');  
+            }  
+        });  
              },
              getTouchStartXY(){
                  this.touchstartX=event.touches[0].pageX
@@ -162,10 +177,10 @@ var wx = require('weixin-js-sdk');
              },
              changebgColor(color){
                 this.backgroundColor=color
-                if(color=="#000"){
+                if(color=="#1F263A"){
                 this.fontColor='#fff'
                 }else{
-                    this.fontColor='#000'
+                    this.fontColor='#5C6A78'
                 }
              },
              getBookText(){
@@ -252,19 +267,22 @@ var wx = require('weixin-js-sdk');
                  if(res===1){
                  this.$router.push({path:'/bookDetails'});
                  }
-                 if(res==2){
+                 if(res===2){
                      this.$router.push({path:'bookComment'})
                  }
-                 if(res==3){
+                 if(res===3){
                     this.addBookRack()  
                  } 
-                 if(res==10){
+                 if(res===9){
+                    this.bottomShow=!this.bottomShow
+                 }
+                 if(res===10){
                      this.getNextChapterText()
                  }
-                 if(res==7){
+                 if(res===7){
                      this.getPreChapterText()
                  }
-                 if(res==8){
+                 if(res===8){
                      this.$router.push({path:'/directory'})
                  }
              },
@@ -480,6 +498,9 @@ var wx = require('weixin-js-sdk');
              background-color: #3D3D3D;
              overflow: hidden;
              color:#FFF;
+             width:100%;
+            //  position: fixed;
+            //  bottom:0;
                img{
                    width:.36rem;
                    height:.36rem;

@@ -62,8 +62,8 @@
 
 <style lang="less">
     #feed {
-        width:3.75rem;
-        height:100%;
+        width:100%;
+        // height:100%;
         .page_mcbg{
             width: 3.75rem;;
             height:100%; 

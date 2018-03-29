@@ -15,7 +15,7 @@ import index from '@/components/index'
 import categoryList from '@/components/bookCategory/categoryList'
 import categoryDetail from '@/components/bookCategory/categoryDetail'
 import free from '@/components/free'
-import more from '@/components/more/more'
+import editorRecommend from '@/components/editorRecommend/editorRecommend'
 import bookDetails from '@/components/bookDetail/bookDetails'
 import directory from '@/components/directory/directory'
 import download from '@/components/download/download'
@@ -30,6 +30,9 @@ import bookRank from '@/components/bookRank/bookRank'
 import readHistory from '@/components/person/readHistory'
 import bookRead from '@/components/bookRead/bookRead'
 import bookComment from '@/components/bookComment/bookComment'
+import bookCommentDetail from '@/components/bookComment/bookCommentDetail'
+import buyChapter from '@/components/pay/buyChapter'
+import payMoney from '@/components/pay/payMoney'
 Vue.use(Router)
 let routers=[
     {path: '/', name: 'Login', component: Login},
@@ -39,11 +42,15 @@ let routers=[
     {path: '/noAuthor', name: 'noAuthor', component: noAuthor},
     {path: '/appAuthor', name: 'appAuthor', component: appAuthor},
     {path: '/contactUs', name: 'contactUs', component: contactUs},
-    {path: '/feed', name: 'feed', component:feed},
-    {path: '/more', name: 'more', component: more},
+    {path: '/feed', name: 'feed', component:feed, 
+    meta: {
+        requireAuth: true,
+      }
+    },
+    {path: '/editorRecommend',component: editorRecommend},
     {path: '/bookDetails', name: 'bookDetails', component: bookDetails},
     {path:'/categoryDetail',component:categoryDetail},
-    {path: '/home', name: 'home', component: Home,
+    {path: '/home',component: Home,
         children:[//子路由
             {path:'/',component:index},
             {path: 'categoryList', component:categoryList},
@@ -53,28 +60,54 @@ let routers=[
     {path: '/directory', name: 'directory', component: directory},
     {path: '/download', name: 'download', component: download},
     {path: '/search', name: 'search', component: search},
-    {path: '/feedPepper', name: 'feedPepper', component: feedPepper},
-    {path:'/person',name:'person',component:person},
-    {path:'/personInfo',name:'personInfo',component:personInfo},
-    {path:'/wechatPay',component:wechatPay},
+    {path: '/feedPepper', name: 'feedPepper', component: feedPepper,
+    meta: {
+        requireAuth: true,
+      }
+    },
+    {path:'/person',name:'person',component:person, 
+    meta: {
+        requireAuth: true,
+      }
+    },
+    {path:'/personInfo',name:'personInfo',component:personInfo,
+     meta: {
+        requireAuth: true,
+      }
+    },
+    {path:'/wechatPay',component:wechatPay,
+    meta: {
+        requireAuth: true,
+      }
+    },
     // {path:'/bookStacks',component:bookStacks},
-    {path:'/bookRack',component:bookRack},
-    {path:'/bookEdit',component:bookEdit},
+    {path:'/bookRack',component:bookRack, meta: {
+        requireAuth: true
+      }
+    },
+    {path:'/bookEdit',component:bookEdit, meta: {
+        requireAuth: true
+      }
+    },
     {path:'/bookRank',component:bookRank},
-    {path:'/readHistory',component:readHistory},  
+    {path:'/readHistory',component:readHistory, meta: {
+        requireAuth: true
+      }
+    },  
     {path:'/bookRead',component:bookRead} ,
-    {path:'/bookComment',component:bookComment}
+    {path:'/bookComment',component:bookComment},
+    {path:'/bookCommentDetail',component:bookCommentDetail},
+    {path:'/buyChapter',component:buyChapter,meta:{
+        requireAuth: true
+    }
+    },
+     {
+      path:'/payMoney',component:payMoney,meta:{
+        requireAuth:true
+     }
+    }
 ]
 const router = new Router({
     routes: routers
 })
-// router.beforeEach((to, from, next) => {
-//     if (cookie.get().token) {
-//         next()
-//     } else {
-//         if (from.path!='/') {
-//             next({path:'/'})
-//         }
-//     }
-// })
 export default router

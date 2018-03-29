@@ -1,7 +1,7 @@
 <template>  
     <div id="feedPepper">
-        <div class="page_mcbg" v-show="backpepperShow" @click="handleClosepepper()"></div>
-        <div class="container"  v-show="dilogpepperShow">
+        <div class="page_mcbg" v-if="backpepperShow" @click="handleClosepepper()"></div>
+        <div class="container"  v-if="dilogpepperShow">
                 <div class="paypepper">打赏辣椒</div>
                 <div class='con'>
                     <div class="lajiao">
@@ -9,7 +9,7 @@
                         <div class="btn">充值</div>
                     </div>
                     <div class="check">
-                        <div class="laNum" v-bind:class="{active:iscode===index}" v-for="(item,index) in pepperList" @click="handleCheck(item.key,index)">
+                        <div class="laNum" :key='index' :class="{active:iscode===index}" v-for="(item,index) in pepperList" @click="handleCheck(item.key,index)">
                             <img :src="item.url" >
                             <p v-html="item.name"></p>
                         </div>
