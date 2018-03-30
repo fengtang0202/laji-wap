@@ -10,11 +10,11 @@
             <div class="swiper-pagination"></div>
         </div>
         <div class="edit">
-            <img src='../assets/images/recommend@3x.png' class="left_img">
+            <img src='../../assets/images/recommend@3x.png' class="left_img">
             <p class='le_p'>小编推荐</p>
             <div cLass="r_d" @click="handleMore()">
                 <p class='ri_p'>更多</p>
-                <img src="../assets/images/more@3x.png">
+                <img src="../../assets/images/more@3x.png">
             </div>
         </div>
         <div class="text_con">
@@ -27,7 +27,7 @@
         <div class="line">
         </div>
         <div class="edit_d">
-            <img src='../assets/images/newbook@3x.png' class="left_img">
+            <img src='../../assets/images/newbook@3x.png' class="left_img">
             <span class='le_p'>新书推荐</span>
         </div>
          <div class="text_con">
@@ -40,14 +40,14 @@
         <div class="line">
         </div>
         <div class="edit_d">
-            <img src='../assets/images/new@3x.png' class="left_img">
+            <img src='../../assets/images/new@3x.png' class="left_img">
             <span class='le_p'>最新小说</span>
         </div>
         <div class="newBook_d" v-for="i  in newList"  @click='handleGo(i.bookId)'>
             <p class="op"></p>
             <span class="span_one">{{i.classificationName|className}}</span>
             <span class="span_two" v-html="i.bookName"></span>
-            <img src="../assets/images/vip@3x.png">
+            <img src="../../assets/images/vip@3x.png">
         </div>
         <div class="bottom_d">
             <ul>

@@ -12,13 +12,13 @@
         <input type="text" class="oInput" placeholder="请输入昵称" v-model.trim="name">
         <div class="sex">
            <div class="sex_img_l">
-             <img src="../assets/images/w.png" class="oImg" v-if="women" @click="handleWomen()">
-             <img src="../assets/images/w_select.png" class="oImg" v-if="!women" @click="handleWomen()">
+             <img src="../../assets/images/w.png" class="oImg" v-if="women" @click="handleWomen()">
+             <img src="../../assets/images/w_select.png" class="oImg" v-if="!women" @click="handleWomen()">
              <span>女</span>
            </div>
            <div class="sex_img_r">
-             <img src="../assets/images/m.png" class="oImg" v-if="man" @click="handleMan()">
-             <img src="../assets/images/m_select.png" class="oImg" v-if="!man" @click="handleMan()">
+             <img src="../../assets/images/m.png" class="oImg" v-if="man" @click="handleMan()">
+             <img src="../../assets/images/m_select.png" class="oImg" v-if="!man" @click="handleMan()">
              <span>男</span>
            </div>
         </div>
@@ -26,7 +26,6 @@
    </div>
 </template>
 <script>
-    import AppLoad from '@/components/Load.vue'
     import { Post_formData2, noParam_Get } from '@/config/services'
     import md5  from 'js-md5'  
     export default {
@@ -46,9 +45,6 @@
                verificationCode:'',
                iscode:false
             }
-        },
-        components: {
-            AppLoad
         },
         methods:{
             handleWomen:function(){

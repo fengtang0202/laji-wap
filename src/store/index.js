@@ -8,26 +8,22 @@ Vue.use(Vuex);
         homeIndex:0,
         showConnect:false,
         token:'',
-        userInfo:{
-            
-        },
+        userInfo:null,
         isLogin:false,
-        userName:'未知用户',
-        avatar:require('../assets/images/u@2x.png'),
-        userId:0,
         readBookId:0,
         chapterId:0,
         bookRack:[],
         readCommentInfo:{},
-        sex:0,
-        vipGrade:0,
         fans:0,
-        follow:0
+        fllows:0
     }
     const mutations = {
         changeMenuName (state, name) {
             state.subName=name.subName
             state.itemName=name.itemName
+        },
+        getUserInfo(state,userInfo){
+             state.userInfo=userInfo
         },
         changeIndex(state,index){
             state.homeIndex=index
@@ -38,35 +34,17 @@ Vue.use(Vuex);
         checkToken(state,token){
             state.token=token;
         },
-        setvipGrade(state, vipGrade){
-            state.vipGrade = vipGrade
-        },
-        setUserName(state,Nickname){
-             state.userInfo.Nickname=Nick           
-        },
-        setUserPhone(state,phone){
-            state.phone=phone;
-        },
         setUserCode(state,code){
             state.code=code;
         } ,
         changeLogin(state, status) {
             state.isLogin = status;
         },
-        changeName(state,name){
-            state.userName=name
-        },
-        setUserId(state,userId){
-             state.userId=userId
-        },
-        changeAvatar(state,avatar){
-            state.avatar=avatar    
-        },
-        setSex(state,sex){
-             state.sex=sex   
-        },
         setFans(state,fans){
             state.fans=fans
+        },
+        setFllows(state,fllows){
+            state.fllows=fllows
         },
         setBookRack(state,bookRack){
             state.bookRack=bookRack
@@ -88,23 +66,11 @@ Vue.use(Vuex);
         changeIndex({commit},index){
             commit('changeIndex',index)    
         },
-        updateName({commit},name){
-            commit('changeName',name)
-        },
-        updateAvatar({commit},avatar){
-            commit('changeAvatar',avatar)
-        },
-        getSex({commit},sex){
-            commit('setSex',sex)
-        },
-        getvipGrade({ commit }, vipGrade){
-            commit('setvipGrade',vipGrade)
-        },
-        updateUserId({commit},userId){
-            commit('setUserId',userId)
-        },
         setFans({commit},fans){
             commit('setFans',fans)
+        },
+        setFllows({commit},fllows){
+            commit('setFllows',fllows)
         },
         getBookRack({commit,state},bookReck){
             commit('setBookRack',bookReck)
@@ -117,6 +83,9 @@ Vue.use(Vuex);
         },
         setReadCommentInfo({commit},readCommentInfo){
             commit('setReadCommentInfo',readCommentInfo)
+        },
+        getUserInfo({commit},userInfo){
+            commit('getUserInfo',userInfo)
         }
     }
 export default new Vuex.Store({

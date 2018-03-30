@@ -17,23 +17,23 @@
       </confirm>
     </div>
      </div>
-      <div class="person_info">
+      <div class="person_info" @click='handleGo()'>
            <div class='avatar_wrap'>
-               <img :src="avatar" alt="" style='width:.52rem;height:.52rem'>
+               <img :src="userInfo.userHeadPortraitURL" alt="" style='width:.52rem;height:.52rem'>
            </div>
            <div class='person_info_detail'>
               <div>
-                  <span class='user_name'>{{userName}}</span>
-                  <img class='user_sex' src="../../assets/images/sex_women@2x.png" v-if="sex===0?true:false" alt="">
-                  <img class='user_sex' src="../../assets/images/sex_men@2x.png" v-if='sex===1?true:false' alt="">
+                  <span class='user_name'>{{userInfo.pseudonym}}</span>
+                  <img class='user_sex' src="../../assets/images/sex_women@2x.png" v-if="userInfo.userSex===0?true:false" alt="">
+                  <img class='user_sex' src="../../assets/images/sex_men@2x.png" v-if='userInfo.userSex===1?true:false' alt="">
               </div>
               <div class='grade_wrap'>
-                 <p class='grade' :style='{width:vipGrade/20*100+"%"}'>
-                    <span class='grade_icon'>{{'Lv'+vipGrade}}</span>
+                 <p class='grade' :style='{width:userInfo.userGrade/20*100+"%"}'>
+                    <span class='grade_icon'>{{'Lv'+userInfo.userGrade}}</span>
                  </p>
               </div>
               <div class='user_fans'>
-                  <span>关注{{attentionCount}}</span>
+                  <span>关注{{fllows}}</span>
                   <span>粉丝{{fans}}</span>
               </div>
            </div>
@@ -65,28 +65,26 @@
           Group,Cell,headerComponent,Confirm
         },
         computed:{
-           ...mapState(['userId','userName','avatar','sex','vipGrade','userId'])
+           ...mapState(['userInfo','fans','fllows'])
         },
         data(){
             return {
                 // 用户信息需要从vuex里获取或者用localstorage
                 show:false,
-                attentionCount:0,
-                fans:0,
                 type:0,
                 navList:[
                     {img:require('../../assets/images/personCenter@2x.png'),title:'我的书架',link:'/bookRack'},
-                    {img:require('../../assets/images/wallet@2x@2x.png'),title:'我的钱包',link:'/home'},
+                    {img:require('../../assets/images/wallet@2x@2x.png'),title:'我的钱包',link:'/myWallet'},
                     {img:require('../../assets/images/cz@2x.png'),title:'充值',link:'/payMoney'},
                     {img:require('../../assets/images/reader@3x@2x.png'),title:'阅读记录',link:'/readHistory'},
-                    {img:require('../../assets/images/details_button_jinjiao_default copy 4@2x.png'),title:'消息',link:'/home'},
+                    {img:require('../../assets/images/details_button_jinjiao_default copy 4@2x.png'),title:'消息',link:'/MessageManage'},
                     {img:require('../../assets/images/contactUs2@2x.png'),title:'联系客服',link:'/contactUs'},
-                    {img:require('../../assets/images/grade@2x.png'),title:'等级制度',link:'/home'},
+                    {img:require('../../assets/images/grade@2x.png'),title:'等级制度',link:'/gradeSystem'},
                 ]
             }
         },
         methods:{
-            ...mapActions(['loginAction',"updateName",'updateAvatar']),
+            ...mapActions(['loginAction','setFans','setFllows']),
         handleAuthorCenter(){
             this.show=true;
          },
@@ -103,7 +101,7 @@
                                             self.loginAction(false)                       
                                             self.updateName('未登录')
                                         }
-                                    });
+                          });
                    }
                })
          },
@@ -121,9 +119,12 @@
              this.jumpToDownApp()
           },
           getFansAndFollowCount(type=1){
-            Param_Get_Resful(this,`/api/fans-followCount/${this.userId}/${type}`,res=>{
-                 console.log(res)   
+            Param_Get_Resful(this,`/api/fans-followCount/${this.userInfo.userId}/${type}`,res=>{
+                 type==1?this.setFans(res.data):this.setFllows(res.data)  
                 })
+            },
+           handleGo () {
+               this.$router.push("/personInfo")
             }
         },
         mounted(){

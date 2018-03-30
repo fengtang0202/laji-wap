@@ -510,7 +510,7 @@
         .similar-swiper{
             width:100%;
             height:1.6rem;
-            margin-bottom:.3rem;
+            margin-bottom:.1rem;
             overflow-x: auto;
             text-align: center;
             -webkit-overflow-scrolling:touch; 

@@ -5,8 +5,8 @@
         <input type="text" class="oInput" placeholder="请输入手机号" v-model.trim="phone">
         <input type="password" class="oInput" placeholder="请输入密码"  v-model.trim="password">
         <div class="re_radio">
-            <img src="../assets/images/login.png" class="left_d" v-if="show" @click="handleCheck()">
-            <img src="../assets/images/select_login.png" class="left_d" v-if="!show" @click="handleCheck()">
+            <img src="../../assets/images/login.png" class="left_d" v-if="show" @click="handleCheck()">
+            <img src="../../assets/images/select_login.png" class="left_d" v-if="!show" @click="handleCheck()">
             <p>自动登录</p>
             <div class="right_d" @click="handleRouter({path:'/password'})">忘记密码</div>
         </div>
@@ -19,7 +19,6 @@
     import { Group,XInput } from 'vux'
     import { Post_formData2, Param_Get } from '@/config/services'
     import cookie from '@/config/cookie'
-    import AppLoad from '@/components/Load.vue'
     import { mapActions,mapState } from 'vuex' 
     import md5  from 'js-md5'      
     export default {
@@ -27,7 +26,6 @@
         components: {
             Group,
             XInput,
-            AppLoad
         },
         data () {
             return {
@@ -42,7 +40,7 @@
         },
         methods:{
             ...mapActions(['loginAction','updateName',
-            'updateAvatar','updateUserId','getSex','getvipGrade','setFans'
+            'updateAvatar','updateUserId','getSex','getvipGrade','setFans','getUserInfo',"changeUserPhone",'getUserMoney'
             ]),
             handleRouter(res){
                 this.$router.push(res)
@@ -84,16 +82,12 @@
                                 if(res.returnCode==200){
                                       let userInfo=res.data
                                       console.log(userInfo)
-                                    this.updateName(userInfo.pseudonym)
-                                    this.updateAvatar(userInfo.userHeadPortraitURL)
-                                    this.updateUserId(userInfo.userId)
                                     // 登录状态改变0 是未登录 1 是登录
                                     this.loginAction(true)
-                                    this.getSex(userInfo.userSex)
-                                    this.getvipGrade(userInfo.vipGrade)
+                                    this.getUserInfo(userInfo)
                                      weui.toast('登录成功', {//loading
                                         className: 'custom-classname',
-                                        duration: 2000,
+                                        duration: 1000,
                                         callback: function(){
                                             self.$router.push({path:'/home'})
                                         }

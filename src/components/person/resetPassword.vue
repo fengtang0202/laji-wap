@@ -8,7 +8,6 @@
     </div>
 </template>
 <script>
-    import AppLoad from '@/components/Load.vue'
     import { Post_formData2, noParam_Get } from '@/config/services'
     import md5  from 'js-md5'      
     export default {
@@ -18,9 +17,6 @@
                 pwd:'',
                 repwd:'',
             }
-        },
-        components: {
-            AppLoad
         },
         methods:{
            handleSubmit:function(){

@@ -1,7 +1,7 @@
 <template>
    <div id="load">
         <div class="div_top">
-            <img src="../assets/images/ico@2x.png" @click="handleTo({path:'/home'})" class="logo_two">
+            <img src="../../assets/images/ico@2x.png" @click="handleTo({path:'/home'})" class="logo_two">
             <div class="btn_top"  @click="handleTo({path:'/download'})">下载APP</div>
         </div>
    </div>

@@ -1,39 +1,42 @@
 <template>
     <div class='user_info'>
-       <div class='header'>
-         <div @click="$router.go(-1)">
-             <img src="../../assets/images/back@2x.png" style='width:.4rem;heigh:.4rem;vertical-align: middle;' alt="">
-         </div>    
-         <div class='title_1'>个人资料</div>
-       </div>
+       <headerComponent :list='topList'></headerComponent>
        <group class='user_info_list'>
           <cell title="头像" link='{path:"/home"}'>
-          <img src="../../assets/images/d-28@3x.png"   alt="" >
+          <img :src="userInfo.userHeadPortraitURL" style='width:.52rem;height:.52rem;'  alt="" >
           </cell>
-          <cell title="昵称">{{personInfo.nike}}</cell>
-          <cell title="性别">{{personInfo.sex}}</cell>
-          <cell title="个性签名" link='{path:"/home"}'>{{personInfo.signature}}</cell>
-          <cell title="账号" link='{path:"/home"}'>{{personInfo.phone}}</cell>
-          <cell title="邮箱" link='{path:"/home"}'>{{personInfo.email}}</cell>
+          <cell title="昵称">{{userInfo.pseudonym}}</cell>
+          <cell title="性别">
+              <img v-if='userInfo.userSex==0' src="../../assets/images/sex-02_03@3x.png" style='width:.3rem;height:.3rem' alt="">
+              <img v-if='userInfo.userSex==1' src="../../assets/images/sex-03@3x.png" style='width:.3rem;height:.3rem' alt="">
+          </cell>
+          <cell title="个性签名" link='{path:"/home"}'>{{userInfo.userAutograph}}</cell>
+          <cell title="账号" link='{path:"/home"}'>{{userInfo.userPhone}}</cell>
+          <cell title="邮箱" link='{path:"/home"}'>{{userInfo.userEmail}}</cell>
        </group>
     </div>
 </template>
 <script>
  import {Group,Cell} from 'vux'
+ import {mapState} from 'vuex'
  export default {
     components:{
         Group,Cell
     },
+    computed : {
+        ...mapState(['userInfo'])
+    },
     data(){
         return{
-          personInfo:{
-              nike:'小辣椒',
-              sex:'男',
-              signature:'小辣椒的个性签名',
-              phone:'18888888888',
-              email:'990959@gmail.com'
+          topList:{
+              title_1:'个人信息',
+              title_2:'首页',
+              link:'/home'
           }
         }
+    },
+    mounted () {
+        console.log(this.userInfo)
     }
  }
     
@@ -45,6 +48,9 @@
         font-size: .16rem;
         color:#333333;
         width:100%;
+        img{
+            vertical-align: middle;
+        }
         .header{
             height:.4rem;
             display:flex;

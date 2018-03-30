@@ -4,10 +4,10 @@
         <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>热门评论({{hotCommentcount}})</p>
             <div class='book_comment_item'  :key='index' v-for='(item,index) in hotCommentList'>
-              <div class='avatar'>
+              <div class='avatar' @click='handleCommentDetail(item)'>
                   <img  :src="item.userHeadPortraitURL" alt="">
               </div>
-              <div class='book_comment_item_detail' @click='handleCommentDetail(item)'>
+              <div class='book_comment_item_detail' >
                 <div class='i_one'>
                     <div style='float: left;'>
                         <span style='font-size:.16rem;'>{{item.pseudonym}}</span>
@@ -35,17 +35,17 @@
               </div>
             </div>  
         </div>
-        <div class='more'>
+        <!-- <div class='more'>
             <span>更多热评</span>
-        </div>
+        </div> -->
         <!-- 最新评论 -->
         <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>最新评论({{newCommentcount}})</p>
             <div class='book_comment_item'  :key='index' v-for='(item,index) in newCommentList'>
-              <div class='avatar'>
+              <div class='avatar' @click='handleCommentDetail(item)'>
                   <img  :src="item.userHeadPortraitURL" alt="">
               </div>
-              <div class='book_comment_item_detail' @click='handleCommentDetail(item)'>
+              <div class='book_comment_item_detail' >
                 <div class='i_one'>
                     <div style='float: left;'>
                         <span style='font-size:.16rem;'>{{item.pseudonym}}</span>
@@ -95,7 +95,7 @@
    </div>
 </template>
 <script>
-import {Post_formData2,formatDate,Post_formData} from '@/config/services'
+import {Post_formData2,Post_formData,Param_Get_Resful} from '@/config/services'
 import {mapState,mapActions} from 'vuex'
 import {Popup,TransferDom} from 'vux'
 export default {
@@ -112,6 +112,7 @@ export default {
               title_2:'首页',
               link:'/home'
           },
+          timer:'',
           show:false,
           replyText:'',
           hotCommentList:[],
@@ -122,13 +123,9 @@ export default {
         }
     },
     computed: {
-      ...mapState(['readBookId','userName','avatar','vipGrade','isLogin'])  
+      ...mapState(['readBookId','userInfo','isLogin'])  
     },
      filters:{
-      formatDate(time){
-        let data = new Date(time);
-        return formatDate(data,'yyyy-MM-dd');
-      },
       content(str){
               return str.length>36?str.slice(0,37)+'...':str 
       }
@@ -167,10 +164,11 @@ export default {
                              options.isthumbs=0
                              options.thumbsCount=0
                              options.replyCount=0
-                             options.userHeadPortraitURL=this.avatar
-                             options.pseudonym=this.userName
-                             options.userGrade=this.vipGrade
-                             options.commentDateTime=new Date()
+                             options.userSex=this.userInfo.userSex
+                             options.userHeadPortraitURL=this.userInfo.userHeadPortraitURL
+                             options.pseudonym=this.userInfo.pseudonym
+                             options.userGrade=this.userInfo.userGrade
+                             options.commentDateTime=this.timer
                              this.newCommentList.unshift(options)
                          }
                      })
@@ -190,12 +188,17 @@ export default {
                   }
               }) 
           },
+          getTime(){
+               Param_Get_Resful(this,'/api/sys-getNetWorkDateTime',res=>{
+                     this.timer=res.data.beijing
+               })
+          },
           handlereplyDetail(id){
               console.log(id)
           },
           handleCommentDetail(item){
               this.setReadCommentInfo(item)
-            //   this.$router.push({path:'/bookCommentDetail'})   
+              this.$router.push({path:'/bookCommentDetail'})   
            },
            handelLike(item){
                Post_formData2(this,{commentId:item.id},'/api/comm-GiveThumbs',res=>{
@@ -221,7 +224,7 @@ export default {
     mounted() {
         this.getHotComment()
         this.getNewComment()
-        
+        this.getTime()
         // Post_formData2(this,"",'/api/person-checkLoginState',res=>{
         //     console.log(res)
         // })
@@ -315,6 +318,7 @@ export default {
             font-size:.16rem;
             color:#F77583;
             text-align: center;
+            border-bottom:1px solid #EFEFEF;
         }
     }
 </style>

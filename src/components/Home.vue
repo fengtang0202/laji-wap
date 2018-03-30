@@ -4,7 +4,7 @@
             <img src="../assets/images/ico@2x.png" @click='handleTo({path:"/home"})' class="logo_two">
             <div class="btn_top" @click="handleTo({path:'/download'})">下载APP</div>
             <span class='userId' @click='handleTo({path:"/bookRank"})' >排行榜</span>
-            <img   v-if='isLogin' :src="avatar" @click="handleTo({path:'/person'})" class="logo_three">
+            <img   v-if='isLogin' :src="userInfo.userHeadPortraitURL" @click="handleTo({path:'/person'})" class="logo_three">
             <img v-if='!isLogin' @click="handleTo({path:'/person'})" class="logo_three" src='../assets/images/user@3x.png'>
          </div>
          <div class="bottom">
@@ -30,12 +30,12 @@
                cate:[
                    {name:'首页',res:{path:"/home"}},
                    {name:'分类',res:{path:"/home/categoryList"}},
-                   {name:'限免',res:{path:"/home/free"}}
+                   {name:'限免',res:{path:"/home/bookFree"}}
                ]
             }
         },
         computed: {
-            ...mapState(["userName","avatar",'homeIndex','isLogin'])
+            ...mapState(['homeIndex','isLogin','userInfo'])
         },
         methods:{
             ...mapActions(['changeIndex']),
@@ -46,6 +46,9 @@
             handleTo(res){
                  this.$router.push(res);
             }
+        },
+        mounted () {
+            console.log(this.userInfo)
         }
     }
 </script>

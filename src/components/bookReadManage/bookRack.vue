@@ -40,7 +40,7 @@ import {mapActions,mapState} from 'vuex'
             }
         },
         computed:{
-            ...mapState(['bookRack','userId'])
+            ...mapState(['bookRack','userInfo'])
         },
         filters:{
             bookName:name=>name.length>6?(name.slice(0,5)+'....'):name
@@ -53,7 +53,7 @@ import {mapActions,mapState} from 'vuex'
                 })
             },
             getReadNow(){
-                Post_formData(this,{userid:this.userId,startpage:1},'./api/bookshelf-getuserbookshelf',res=>{
+                Post_formData(this,{userid:this.userInfo.userId,startpage:1},'./api/bookshelf-getuserbookshelf',res=>{
                    res.returnCode==200&&this.getBookRack(res.data.list)
                 })
             },

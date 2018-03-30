@@ -12,7 +12,7 @@
                   <span>作者: </span>
                   <span v-html="item.writerName"></span>
                   <p></p>
-                  <span  v-html="item.classificationName">dfggag</span>
+                  <span  v-html="item.classificationName"></span>
                   <p></p>
                   <span class="oSpan" v-if="item.bookStatus===0">连载中</span>
                   <span class="oSpan" v-if="item.bookStatus===1">已完结</span>
@@ -73,7 +73,7 @@
                  let self = this;
                  function load(){
                         noParam_Get(self,'/api/sys-freetimelimit',res=>{
-                            // if(res.returnCode==200){
+                            if(res.returnCode==200){
                                 let lists = res.data.data;
                                 self.freeList = self.freeList.concat(lists);
                                 if(res.data.data.length>0){                                   
@@ -83,7 +83,10 @@
                                     // self.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
                                     $state.complete()
                                 }
-                            // }
+                            }else{
+                                    $state.complete()                                
+                            }
+
                         })
                  }
                 setTimeout(() => {

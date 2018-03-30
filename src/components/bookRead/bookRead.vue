@@ -410,7 +410,7 @@ import {mapState,mapActions} from 'vuex'
         }
         .bottom_nav{
             width:100%;
-            height:1.98rem;
+            height:1.38rem;
             background-color: #3D3D3D;
             position: fixed;
             bottom:0;

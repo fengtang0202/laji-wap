@@ -14,15 +14,11 @@
 </template>
 
 <script>
-    import AppLoad from '@/components/Load.vue'
     export default {
         name: 'contactUs',
         data () {
             return {}
-        },
-        components: {
-            AppLoad
-        },
+        }
     }
 </script>
 

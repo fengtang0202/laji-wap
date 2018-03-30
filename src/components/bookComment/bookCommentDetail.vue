@@ -58,7 +58,7 @@
             <popup v-model="show">
                 <div style='height:1.5rem;font-size:.16rem;background-color:#fff;'>
                     <div  style='border-bottom:1px solid #E9E9E9;overflow:hidden;padding:.08rem .2rem'>
-                        <p style='float:left' @click='canlce()'>取消</p>
+                        <p style='float:left' @click='show=false'>取消</p>
                         <p style='color:#F77583;float:right' @click='handleReply()'>发表</p>
                     </div>
                     <div class='text_box'>
@@ -70,7 +70,7 @@
    </div>
 </template>
 <script>
-import {Post_formData2,formatDate} from '@/config/services'
+import {Post_formData2} from '@/config/services'
 import {mapState} from 'vuex'
 import {Popup,TransferDom} from 'vux'
     export default {
@@ -93,13 +93,9 @@ import {Popup,TransferDom} from 'vux'
             Popup
         },
         computed : {
-           ...mapState(['readCommentInfo','isLogin','readBookId','userName','vipGrade','sex','avatar'])
+           ...mapState(['readCommentInfo','isLogin','readBookId','userInfo'])
         },
         filters:{
-      formatDate(time){
-        let data = new Date(time);
-        return formatDate(data,'yyyy-MM-dd');
-      },
       content (str) {
               return str.length>36?str.slice(0,37)+'...':str 
        }
@@ -115,7 +111,7 @@ import {Popup,TransferDom} from 'vux'
                  let options = {
                     bookid:this.readBookId,
                     replyCommentsContent:this.replyText,
-                    userName:this.userName,
+                    userName:this.userInfo.userName,
                     bookName:this.readCommentInfo.bookName,
                     commentId:this.readCommentInfo.id,
                     puserId:this.readCommentInfo.userId
@@ -124,9 +120,9 @@ import {Popup,TransferDom} from 'vux'
                      if (res.returnCode===200) {
                          this.show=false
                          this.readCommentInfo.replyCount++
-                         options.pseudonym=this.userName
-                         options.userHeadPortraitURL=this.avatar
-                         options.userGrade=this.vipGrade
+                         options.pseudonym=this.userInfo.pseudonym
+                         options.userHeadPortraitURL=this.userInfo.avatar
+                         options.userGrade=this.userInfo.userGrade
                          this.replyList.unshift(options)
                      }
                  })
@@ -145,7 +141,7 @@ import {Popup,TransferDom} from 'vux'
               })
            },
            handleShow(){
-               if(isLogin){
+               if(this.isLogin){
                    this.show=!this.show
                }else{
                    

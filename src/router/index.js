@@ -1,20 +1,20 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import Login from '@/components/Login'
-import Register from '@/components/Register'
-import Password from '@/components/password'
-import resetPassword from '@/components/resetPassword'
+import Login from '@/components/person/Login'
+import Register from '@/components/person/Register'
+import Password from '@/components/person/password'
+import resetPassword from '@/components/person/resetPassword'
 import noAuthor from '@/components/author/noAuthor'
 import appAuthor from '@/components/author/appAuthor'
 import contactUs from '@/components/contactUs/contactUs'
 import feed from '@/components/feed/feed'
 import cookie from '@/config/cookie'
-import index from '@/components/index'
+import index from '@/components/index/index'
 // import bookStacks from '@/components/bookStacks'
 import categoryList from '@/components/bookCategory/categoryList'
 import categoryDetail from '@/components/bookCategory/categoryDetail'
-import free from '@/components/free'
+import bookFree from '@/components/bookReadManage/bookFree'
 import editorRecommend from '@/components/editorRecommend/editorRecommend'
 import bookDetails from '@/components/bookDetail/bookDetails'
 import directory from '@/components/directory/directory'
@@ -33,6 +33,13 @@ import bookComment from '@/components/bookComment/bookComment'
 import bookCommentDetail from '@/components/bookComment/bookCommentDetail'
 import buyChapter from '@/components/pay/buyChapter'
 import payMoney from '@/components/pay/payMoney'
+import gradeSystem from '@/components/person/gradeSystem'
+import myWallet from '@/components/person/myWallet'
+// 消息管理中心
+import MessageManage from '@/components/Message/MessageManage'
+import sysMessage from '@/components/Message/sysMessage'
+import personalLetter from '@/components/Message/personalLetter'
+import commentReply from '@/components/Message/commentReply'
 Vue.use(Router)
 let routers=[
     {path: '/', name: 'Login', component: Login},
@@ -54,7 +61,7 @@ let routers=[
         children:[//子路由
             {path:'/',component:index},
             {path: 'categoryList', component:categoryList},
-            {path:'free',component:free}
+            {path:'bookFree',component:bookFree}
         ]
     },
     {path: '/directory', name: 'directory', component: directory},
@@ -105,6 +112,28 @@ let routers=[
       path:'/payMoney',component:payMoney,meta:{
         requireAuth:true
      }
+    },
+     {
+      path:'/gradeSystem',component:gradeSystem,meta:{
+        requireAuth:true
+      }
+    },
+    {
+         path:'/myWallet',component:myWallet,meta:{
+            requireAuth:true           
+         }
+    },
+    {
+        path:'/MessageManage',component:MessageManage,
+          children:[//子路由
+            {path:'/',component:personalLetter},
+            {path: 'sysMessage', component:sysMessage},
+            {path:'commentReply',component:commentReply}
+        ],
+        meta:{
+            requireAuth:true           
+         }
+      
     }
 ]
 const router = new Router({

@@ -11,7 +11,6 @@
    </div>
 </template>
 <script>
-    import AppLoad from '@/components/Load.vue'
     import { Post_formData2, noParam_Get } from '@/config/services'
     export default {
         name: 'password',
@@ -23,9 +22,6 @@
                 word:'获取验证码',
                 iscode:false
             }
-        },
-        components: {
-            AppLoad,
         },
         methods:{
             getCode:function(){
