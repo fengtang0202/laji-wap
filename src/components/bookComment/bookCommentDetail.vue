@@ -42,8 +42,8 @@
                     <div class='i_one'>
                         <div style='float: left;'>
                             <span style='font-size:.16rem;'>{{item.pseudonym}}</span>
-                            <img src="../../assets/images/sex-03@3x.png" v-if='item.userSex==0?true:false' alt="">
-                            <img src="../../assets/images/sex-02_03@3x.png" v-if='item.userSex==1?true:false' alt="">                     
+                            <img src="../../assets/images/sex-03@3x.png" v-if='item.userSex==1' alt="">
+                            <img src="../../assets/images/sex-02_03@3x.png" v-if='item.userSex==0' alt="">                     
                             <span class='grade'>&nbsp;LV{{item.userGrade}}&nbsp;</span>
                         </div>
                     </div>
@@ -121,8 +121,9 @@ import {Popup,TransferDom} from 'vux'
                          this.show=false
                          this.readCommentInfo.replyCount++
                          options.pseudonym=this.userInfo.pseudonym
-                         options.userHeadPortraitURL=this.userInfo.avatar
+                         options.userHeadPortraitURL=this.userInfo.userHeadPortraitURL
                          options.userGrade=this.userInfo.userGrade
+                         options.userSex=this.userInfo.userSex
                          this.replyList.unshift(options)
                      }
                  })
