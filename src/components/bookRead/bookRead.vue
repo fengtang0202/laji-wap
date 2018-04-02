@@ -1,5 +1,6 @@
 <template>
     <v-touch @press='up' @touchmove.native='handlea()' @touchstart='getTouchStartXY(e)'>
+        <div>
   <div class='bookRead'>
      <div class='feed' :class='{show:navShow}'>
             <div style='float:left'>
@@ -10,7 +11,7 @@
             </div>
      </div>
      <ul class='nav_list' :class='{show:show}'>
-         <li v-for='item in navList' @click='handleTap(item.key)'>{{item.text}}</li>
+         <li v-for='(item,index) in navList' :key='index' @click='handleTap(item.key)'>{{item.text}}</li>
      </ul>
     <ul class='share_list' :class='{show:shareShow}'>
         <li v-for='(item,index) in shareList'  @click='handleShare(index)' :key='index'>
@@ -34,7 +35,7 @@
          </div>
          <div class='tow_nav'>
               <ul>
-                  <li v-for='item in colorList' @click='changebgColor(item)' :style='{"backgroundColor":item}'></li>
+                  <li v-for='(item,index) in colorList' :key='index' @click='changebgColor(item)' :style='{"backgroundColor":item}'></li>
               </ul>
          </div>
          <!-- <div class='last_nav'>
@@ -60,7 +61,14 @@
     <!-- <div style='text-align:center;padding-top:.1rem;' v-if='preShow'>
          <button  class='next_btn' @click='getPreChapterText()'>加载上一章</button>
     </div> -->
-      <div class='book_content' ref='content' :style='{"fontSize":fontSize+"px","backgroundColor":backgroundColor,"color":fontColor}' v-html='bookText' :class='{changeColor:show}'>
+      <div class='book_content'  ref='content' :style='{"fontSize":fontSize+"px","backgroundColor":backgroundColor,"color":fontColor}' :class='{changeColor:show}'>
+      <p class='book_title'>       
+         <span>{{bookName}}</span>
+         <span>{{chapterName}}</span>
+     </p> 
+     <p style='font-size:.2rem;text-align:center;'>{{chapterName}}</p>
+     <p v-html='bookText'>
+     </p>  
       </div>
          <!-- <button  class='next_btn' @click='getNextChapterText()'>加载下一章</button> -->
           <div class='last_nav' v-if='preNextShow'>
@@ -74,17 +82,64 @@
               </ul>
          </div>
     </div>
+        <div v-transfer-dom>
+                <x-dialog   v-model="dialogshow" :dialog-style='{width:"100%"}' class="dialog-demo">
+                    <div style="padding:.7rem 0rem;">
+                        <!-- 未登录 -->
+                        <div v-if='!isLogin'>
+                            <img style='width:1rem;height:1.63rem' src="../../assets/images/ns@2x.png" alt="">
+                            <p style='color:#333;margin:.1rem'>
+                                <span>价格:{{price}}</span>
+                                <span>余额{{userInfo.userMoney}}</span>
+                            </p>
+                            <p  style='#999;' v-if='isvip==1'>本章是VIP章节，需购买后阅读</p>
+                            <p>
+                            <button @click='buyChapter()' style='width:2rem;height:.4rem;color:#fff;margin:.3rem 0;outline:none;border:0;border-radius:.5rem;background-color:#F77583'>购买本章</button>
+                            </p>
+                            <p @click='handleClickAuto()'>
+                                 <img v-if="!btnShow" style='vertical-align: middle;width:.16rem;height:.16rem;' src="../../assets/images/Combined Shape Copy@3x.png" alt="">
+                                 <img v-if="btnShow" style='vertical-align: middle;width:.16rem;height:.16rem;' src="../../assets/images/Oval 8 Copy@3x.png" alt="">
+                                  <img src="" alt="">
+                                <span>自动购买下一章，不再提醒</span>
+                            </p>
+                        </div>
+                        <!-- 登录 -->
+                        <div v-if='isLogin'>
+                            <img style='width:1rem;height:1.63rem' src="../../assets/images/ns@2x.png" alt="">
+                            <p style='color:#333;font-size:.16rem;'>
+                                <span>价格:{{price}}</span>
+                            </p>
+                            <p style='font-size:.14rem'>
+                                <span>余额{{userInfo.userMoney}}辣椒</span>
+                                <span style='margin-left:.1rem;'>{{userInfo.userReadTicket}}阅读币</span>
+                                </p>
+                            <p>
+                            <button @click='buyChapter()'  style='font-size:.14rem;width:2rem;height:.4rem;color:#fff;margin:.3rem 0;outline:none;border:0;border-radius:.5rem;background-color:#F77583'>购买本章</button>
+                            </p>
+                            <p style='font-size:.14rem;' @click='handleClickAuto()'>
+                                 <img v-if="!btnShow" style='vertical-align: middle;width:.16rem;height:.16rem;' src="../../assets/images/Combined Shape Copy@3x.png" alt="">
+                                 <img v-if="btnShow" style='vertical-align: middle;width:.16rem;height:.16rem;' src="../../assets/images/Oval 8 Copy@3x.png" alt="">
+                                  <img src="" alt="">
+                                <span>自动购买下一章，不再提醒</span>
+                            </p>
+                        </div>
+                    </div>
+                </x-dialog>
+         </div>
+        </div>
     </v-touch>
 </template>
 <script>
 import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
 import { setTimeout } from 'timers';
-import {TransferDomDirective as TransferDom,Confirm} from 'vux'
+import {TransferDomDirective as TransferDom,Confirm, XDialog} from 'vux'
 import {mapState,mapActions} from 'vuex'
+import { userInfo } from 'os';
      export default{
          data(){
             return{
                bookText:'',
+               isScroll:false,
                fontSize:18,
                fontColor:'#000',
                backgroundColor:'#fff',
@@ -95,13 +150,18 @@ import {mapState,mapActions} from 'vuex'
                bookName:'',
                messageTitle:'',
                touchstartX:0,
+               chapterName:'',
                touchstartY:0,
                chapterList:[],
                bottomShow:false,
                shareShow:false,
                navShow:false,
                confirmKey:0,
+               dialogshow:true,
                preNextShow:false,
+               isvip:this.$route.query.isvip,
+               price:this.$route.query.price,    
+               btnShow:false,           
                feedList:[
                    {img:require('../../assets/images/Group 3@3x.png')},
                    {img:require('../../assets/images/Group 2@3x.png')},
@@ -133,10 +193,10 @@ import {mapState,mapActions} from 'vuex'
             }
          },
          components:{
-             Confirm
-         },
+             Confirm,XDialog
+        },
          computed: {
-             ...mapState(['readBookId','chapterId','userName']),              
+             ...mapState(['readBookId','chapterId','userInfo','isLogin']),              
          },
          directives: {
              TransferDom
@@ -185,7 +245,8 @@ import {mapState,mapActions} from 'vuex'
              },
              getBookText(){
                  Post_formData2(this,{chapterId:this.chapterId,readType:1},'/api/book-read',res=>{
-                     if(res.returnCode==200){
+                     if(res.returnCode===200||res.returnCode===500){
+                         console.log(res.data)
                          this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
                          this.preNextShow=true
                          this.bookName=res.data.bookInfo.bookName
@@ -245,7 +306,7 @@ import {mapState,mapActions} from 'vuex'
                                  this.$vux.toast.text(res.msg)
                                  return;    
                              } else {
-                       Post_formData2(this,{userName:this.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
+                       Post_formData2(this,{userName:this.userInfo.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
                             // this.ConfirmShow=true
                             this.messageTitle='收藏书籍'
                             this.message='这本书还没有加入书架，现在帮您加入书架吗？'
@@ -298,9 +359,9 @@ import {mapState,mapActions} from 'vuex'
               change (status) {
                 // this.$Message.info('开关状态：' + status);
             },
-            addReadHistory(){
+            addReadHistory () {
                 let options={
-                    userName:this.userName,
+                    userName:this.userInfo.userName,
                     bookId:this.readBookId,
                     bookName:this.bookName,
                     chapterId:this.chapterId,
@@ -309,13 +370,30 @@ import {mapState,mapActions} from 'vuex'
                Post_formData2(this,options,'/api/person-addBookReadRecord',res=>{
                     // console.log(res)
                }) 
+            },
+            buyChapter(){
+                let options={
+                    userName:this.userInfo.userName,
+                    bookId:this.readBookId,
+                    bookName:this.bookName,
+                    bookChapterId:this.chapterId,
+                    bookChapterName:this.chapterName	
+                }
+                Post_formData2(this,options,'/api/book-subscription',res=>{
+                    if(res.returnCode===200){
+                         this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+                    }
+                })
+            },
+            handleClickAuto(){
+                this.btnShow=!this.btnShow
             }
          },
          mounted(){
             this.getBookText()
             this.getNowChapterId()
             this.addReadHistory()
-            // console.log(this.chapterIdNum)
+            // this.isvip==1?this.dialogshow=true:this.dialogshow=false
          }
      }
 </script>
@@ -360,6 +438,11 @@ import {mapState,mapActions} from 'vuex'
             letter-spacing:.04rem; 
             text-indent: 2em; 
             padding:.05rem .1rem;
+            .book_title{
+                font-size: .1rem;
+                margin-left:-.3rem;
+                color:#999;
+            }
          }
         .nav_list{
             width:.88rem;

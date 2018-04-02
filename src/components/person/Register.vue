@@ -51,14 +51,14 @@
                 this.women = !this.women;
                 if(!this.women){
                    this.man = true;
-                   this.sex = 1;
+                   this.sex = 0;
                 }
             },
             handleMan:function(){
                 this.man =!this.man;
                 if(!this.man){
                    this.women = true;
-                   this.sex = 0;
+                   this.sex = 1;
                 }
             },
             handleRegister:function(){

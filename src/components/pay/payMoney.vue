@@ -26,7 +26,7 @@ import {mapState} from 'vuex'
         components:{
           headerComponent
         },
-        computed: {
+        computed: { 
           ...mapState(['userInfo'])  
         },
         data () {
@@ -48,7 +48,7 @@ import {mapState} from 'vuex'
                }
              Post_formData2(this,options,'/api/api/muser/alipaySuccess.action',res=>{
                  console.log(res)
-             })
+            })
            },
            handleWeChatPay(){
              console.log('微信')

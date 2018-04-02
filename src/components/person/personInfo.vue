@@ -11,7 +11,7 @@
               <img v-if='userInfo.userSex==1' src="../../assets/images/sex-03@3x.png" style='width:.3rem;height:.3rem' alt="">
           </cell>
           <cell title="个性签名" link='{path:"/home"}'>{{userInfo.userAutograph}}</cell>
-          <cell title="账号" link='{path:"/home"}'>{{userInfo.userPhone}}</cell>
+          <cell title="账号">{{userInfo.userPhone}}</cell>
           <cell title="邮箱" link='{path:"/home"}'>{{userInfo.userEmail}}</cell>
        </group>
     </div>

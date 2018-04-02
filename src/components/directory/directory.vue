@@ -1,4 +1,5 @@
 <template>
+ <div>
     <div id="directory">
         <loading :show="isShow"></loading>
         <headerComponent :list='topList'></headerComponent>
@@ -11,7 +12,7 @@
                 @click.native="handleTapvolume(index,item.id)">
                 </cell>
             <template v-if="showContent===index?true:false">
-                <cell-box class='chapterTitle'  :class='{Vip:item.chapterIsvip==1}'  @click.native='handle(item.chapterIsvip,item.id)' :key='index' v-for='(item,index) in chapterList'>
+                <cell-box class='chapterTitle'  :class='{Vip:item.chapterIsvip==1}'  @click.native='handle(item.chapterIsvip,item.id,item.price)' :key='index' v-for='(item,index) in chapterList'>
                     <span>{{item.chapterTitle}}</span>
                     <img src="../../assets/images/vip@3x.png" v-if='item.chapterIsvip==1?true:false' class='vip_icon' alt="">
                  <span class='words'>{{item.chapterLength}}</span>                                    
@@ -27,9 +28,10 @@
             <span class="page_num">1/20</span>
         </div> -->
     </div>
+     </div>
 </template>
 <script>   
-    import { Loading,Group,Cell,CellBox } from 'vux'
+    import { Loading,Group,Cell,CellBox,XButton,TransferDom } from 'vux'
     import { Post_formData2, noParam_Get } from '@/config/services'
     import {mapState,mapActions} from 'vuex'
     export default {
@@ -41,6 +43,7 @@
                 volumeList:[],//所有卷
                 isShow:false,
                 showContent:-1,
+                dialogshow:false,
                 topList:{
                     title_1:'目录',
                     title_2:'首页',
@@ -51,6 +54,9 @@
         components: {
             Loading,Group,Cell,CellBox
         },
+        directives: {
+           TransferDom
+         },
         computed: {
             ...mapState(['readBookId','chapterId'])   
         },
@@ -62,15 +68,9 @@
             handleBack(){
                  window.history.go(-1);
             },
-            handle(isvip,chapterId){
-            //    console.log(isvip)
-            //    console.log(chapterId)
-            //首页判读是否阅读的是会员 访问章节 进行页面的选择
-             this.$router.push({path:'/bookRead'});  
-             this.setChapterId(chapterId)          
-            //    Post_formData2(this,{chapterId:chapterId,readType:1},'/api/book-read',res=>{
-            //        console.log(res.data.chapterInfo.chapterContent)
-            //    })
+            handle(isvip,chapterId,price){
+                  this.$router.push({path:'/bookRead',query:{isvip:isvip,price:price}});  
+                  this.setChapterId(chapterId)
             },
              handleTapvolume(index,volumeId){
                  this.showContent!==index?this.showContent=index:this.showContent=-1
@@ -79,6 +79,7 @@
                 //   }
                    Post_formData2(this,{volumeid:volumeId},'/api/books-getVolumeById',res=>{
                        this.chapterList=res.data
+                       console.log(this.chapterList)
                       if (res.data==null) {
                          this.chapterList=[]
                        }

@@ -84,7 +84,7 @@
             }
         },
         methods:{
-            ...mapActions(['loginAction','setFans','setFllows']),
+            ...mapActions(['loginAction','setFans','setFllows','getUserInfo']),
         handleAuthorCenter(){
             this.show=true;
          },
@@ -92,14 +92,14 @@
                let self=this
                console.log(self)
                Post_formData2(this,'','/api/person-ClearUserInfo',res=>{
-                   if(res.returnCode==200){
+                   if(res.returnCode==200||res.returnCode==400){
                        weui.toast('退出成功', {//loading
                                         className: 'custom-classname',
                                         duration: 2000,
                                         callback: function(){
                                             self.$router.push({path:'/home'})
-                                            self.loginAction(false)                       
-                                            self.updateName('未登录')
+                                            self.loginAction(false)
+                                            self.getUserInfo(null)                       
                                         }
                           });
                    }

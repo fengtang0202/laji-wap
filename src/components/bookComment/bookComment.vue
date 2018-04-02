@@ -4,15 +4,15 @@
         <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>热门评论({{hotCommentcount}})</p>
             <div class='book_comment_item'  :key='index' v-for='(item,index) in hotCommentList'>
-              <div class='avatar' @click='handleCommentDetail(item)'>
+              <div class='avatar' >
                   <img  :src="item.userHeadPortraitURL" alt="">
               </div>
               <div class='book_comment_item_detail' >
                 <div class='i_one'>
                     <div style='float: left;'>
                         <span style='font-size:.16rem;'>{{item.pseudonym}}</span>
-                        <img src="../../assets/images/sex-03@3x.png" v-if='item.userSex==0?true:false' alt="">
-                        <img src="../../assets/images/sex-02_03@3x.png" v-if='item.userSex==1?true:false' alt="">                     
+                        <img src="../../assets/images/sex-03@3x.png" v-if='item.userSex==1' alt="">
+                        <img src="../../assets/images/sex-02_03@3x.png" v-if='item.userSex==0' alt="">                     
                         <span class='grade'>&nbsp;LV{{item.userGrade}}&nbsp;</span>
                      </div>
                      <div style='float:right'>
@@ -28,7 +28,7 @@
                      <span>{{item.thumbsCount}}</span>
                      </p>
                      <p>
-                     <img @click='handlereplyDetail(item.id)' src="../../assets/images/message@3x.png" alt="">
+                     <img @click='handleCommentDetail(item)' src="../../assets/images/message@3x.png" alt="">
                      <span>{{item.replyCount}}</span>
                      </p>
                  </div>             
@@ -42,15 +42,15 @@
         <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>最新评论({{newCommentcount}})</p>
             <div class='book_comment_item'  :key='index' v-for='(item,index) in newCommentList'>
-              <div class='avatar' @click='handleCommentDetail(item)'>
+              <div class='avatar'>
                   <img  :src="item.userHeadPortraitURL" alt="">
               </div>
               <div class='book_comment_item_detail' >
                 <div class='i_one'>
                     <div style='float: left;'>
                         <span style='font-size:.16rem;'>{{item.pseudonym}}</span>
-                        <img src="../../assets/images/sex-03@3x.png" v-if='item.userSex==0?true:false' alt="">
-                        <img src="../../assets/images/sex-02_03@3x.png" v-if='item.userSex==1?true:false' alt="">                     
+                        <img src="../../assets/images/sex-03@3x.png" v-if='item.userSex==1' alt="">
+                        <img src="../../assets/images/sex-02_03@3x.png" v-if='item.userSex==0' alt="">                     
                         <span class='grade'>&nbsp;LV{{item.userGrade}}&nbsp;</span>
                      </div>
                      <div style='float:right'>
@@ -66,7 +66,7 @@
                      <span>{{item.thumbsCount}}</span>
                      </p>
                      <p>
-                     <img src="../../assets/images/message@3x.png" alt="">
+                     <img @click='handleCommentDetail(item)' src="../../assets/images/message@3x.png" alt="">
                      <span>{{item.replyCount}}</span>
                      </p>
                  </div>             
@@ -74,7 +74,7 @@
             </div>  
         </div>
         <div class='bottom_x'>
-
+   
         </div>
         <div class='replyInput'>
             <span @click='handleShow()'>发表评价</span>
@@ -198,6 +198,7 @@ export default {
           },
           handleCommentDetail(item){
               this.setReadCommentInfo(item)
+              console.log(item.userSex)
               this.$router.push({path:'/bookCommentDetail'})   
            },
            handelLike(item){

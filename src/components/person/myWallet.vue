@@ -1,17 +1,17 @@
 <template>
    <div class='wallet'>
      <div class='header'>
-         <p>
+         <p style='text-align:center;'>
              <span style='margin-left:1.48rem;font-size:.18rem;'>我的钱包</span>
-             <span style='margin-left:.76rem;'>交易记录</span>
+             <span style='margin-left:.7rem;'>交易记录</span>
          </p>
-         <p>
-             <span style='margin-left:1.7rem;font-size:.3rem;'>{{userInfo.userMoney}}</span>
-             <span style='margin-left:.16rem;font-size:.12rem'>辣椒</span>
+         <p style='text-align:center;'>
+             <span style='font-size:.3rem;'>{{userInfo.userMoney}}</span>
+             <span style='font-size:.12rem'>辣椒</span>
              <img src="../../assets/images/d-28@3x.png"  alt="">
          </p>
          <p class='pay'>
-             <button >充值</button>
+             <button @click='handleGo()'>充值</button>
          </p>
      </div>
      <div class='peper' v-for='(item,index) in moneyList' :key='index'>
@@ -41,8 +41,13 @@ import {mapState} from 'vuex'
         }, 
         mounted () {
         //   this.moneyList[0].price=
+        },
+         methods: {
+             handleGo() {
+                 this.$router.push('/payMoney')
+             }
+         }
         }
-      }
 </script>
 <style lang='less' scoped>
   .wallet{
@@ -50,7 +55,7 @@ import {mapState} from 'vuex'
          height:1.96rem;
          background:-webkit-gradient(linear, 0 0, 0 bottom, from(#F55968), to(#ED9C8C));  
          color:#fff;
-         padding-top:.28rem;
+         padding-top:.2rem;
          img{
              width:.12rem;
              height:.18rem;
@@ -66,6 +71,7 @@ import {mapState} from 'vuex'
              background-color: #fff;
              border:1px solid #F73D51;
              color:#F73D51;
+             outline: none;
              border-radius: .19rem;
              }
          }

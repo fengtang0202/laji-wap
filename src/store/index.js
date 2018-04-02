@@ -84,9 +84,10 @@ Vue.use(Vuex);
         setReadCommentInfo({commit},readCommentInfo){
             commit('setReadCommentInfo',readCommentInfo)
         },
-        getUserInfo({commit},userInfo){
+        getUserInfo({commit,state},userInfo){
             commit('getUserInfo',userInfo)
         }
+        
     }
 export default new Vuex.Store({
     state,
