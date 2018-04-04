@@ -19,10 +19,10 @@
                 </div>
                  <p class='bookName'>《{{readCommentInfo.bookName}}》</p>  
                  <p class='content'>{{readCommentInfo.commentContext}}</p> 
-                 <div class='zhan'>
+                 <div class='zhan' @click='handelLike()'>
                      <p>
-                     <img  v-if='readCommentInfo.isthumbs==0?true:false' @click='handelLike()' src="../../assets/images/zan@3x.png"  alt="">
-                     <img  v-if='readCommentInfo.isthumbs==1?true:false' @click='handelLike()' src="../../assets/images/goodzan@3x.png" alt="">
+                     <img  v-if='readCommentInfo.isthumbs==0?true:false'  src="../../assets/images/zan@3x.png"  alt="">
+                     <img  v-if='readCommentInfo.isthumbs==1?true:false'  src="../../assets/images/goodzan@3x.png" alt="">
                      <span>{{readCommentInfo.thumbsCount}}</span>
                      </p>
                      <p>
@@ -108,6 +108,7 @@ import {Popup,TransferDom} from 'vux'
               })
            },
            handleReply(){
+               if(this.replyText.length>0&&this.replyText.length<100){
                  let options = {
                     bookid:this.readBookId,
                     replyCommentsContent:this.replyText,
@@ -125,8 +126,14 @@ import {Popup,TransferDom} from 'vux'
                          options.userGrade=this.userInfo.userGrade
                          options.userSex=this.userInfo.userSex
                          this.replyList.unshift(options)
+                         this.replyText=''
                      }
                  })
+               }else if(this.replyText.length==0){
+                   this.$vux.toast.show('不能为空!')
+               }else if(this.replyText.length>=100){
+                   this.$vux.toast.show('评价太多了!')
+               }
            },
            handelLike(){
                Post_formData2(this,{commentId:this.readCommentInfo.id},'/api/comm-GiveThumbs',res=>{
@@ -217,8 +224,8 @@ import {Popup,TransferDom} from 'vux'
                           margin-left:.7rem;
                       }
                       img{
-                          width:.15rem;
-                          height:.15rem;
+                          width:.2rem;
+                          height:.2rem;
                       }
                       span{
                           margin-left:.1rem;

@@ -10,7 +10,7 @@
                 :border-intent="true"
                 :arrow-direction="showContent!==index? 'up' : 'down'"
                 @click.native="handleTapvolume(index,item.id)">
-                </cell>
+             </cell>
             <template v-if="showContent===index?true:false">
                 <cell-box class='chapterTitle'  :class='{Vip:item.chapterIsvip==1}'  @click.native='handle(item.chapterIsvip,item.id,item.price)' :key='index' v-for='(item,index) in chapterList'>
                     <span>{{item.chapterTitle}}</span>
@@ -68,7 +68,7 @@
             handleBack(){
                  window.history.go(-1);
             },
-            handle(isvip,chapterId,price){
+            handle (isvip,chapterId,price) {
                   this.$router.push({path:'/bookRead',query:{isvip:isvip,price:price}});  
                   this.setChapterId(chapterId)
             },
@@ -85,7 +85,7 @@
                        }
                    })
             },
-            handleInit(){
+            handleInit () {
                 this.isShow = true;
                 Post_formData2(this,{bookId:this.readBookId},'/api/books-getvolume',res=>{
                         this.isShow = false;

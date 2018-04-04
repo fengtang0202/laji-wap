@@ -24,7 +24,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['userId'])
+        ...mapState(['userInfo'])
     },
     filters: {
       bookName(res){
@@ -39,7 +39,7 @@ export default {
             },
         handleReadBookList(){
                 //this.userId  : 1082 测试
-                Post_formData(this,{userid:this.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
+                Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
                     if(res.returnCode==200){
                         this.ReadHistoryList=res.data.list
                         this.showNoData=false;                       

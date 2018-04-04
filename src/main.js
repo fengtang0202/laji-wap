@@ -7,7 +7,7 @@ import 'iview/dist/styles/iview.css';
 import axios from 'axios'
 import FastClick from 'fastclick'
 import VueTouch from 'vue-touch'
-import  { ToastPlugin ,Cell,Group } from 'vux'
+import  { ToastPlugin ,Cell,Group,Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
 Vue.config.productionTip = false
 Vue.use(iView)
 import headerComponent from '@/components/common/header'
@@ -15,6 +15,9 @@ import Load from '@/components/common/Load'
 // 注册全局组件
 Vue.component('headerComponent',headerComponent)
 Vue.component('appLoad',Load)
+Vue.component('Swipeout',Swipeout)
+Vue.component('SwipeoutItem',SwipeoutItem)
+Vue.component('SwipeoutButton',SwipeoutButton)
 Vue.use(VueTouch, {name: 'v-touch'})
 Vue.use(ToastPlugin,Cell,Group)
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'

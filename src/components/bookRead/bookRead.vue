@@ -83,25 +83,25 @@
          </div>
     </div>
         <div v-transfer-dom>
-                <x-dialog   v-model="dialogshow" :dialog-style='{width:"100%"}' class="dialog-demo">
+                <x-dialog   v-model="dialogshow"  class="dialog-demo">
                     <div style="padding:.7rem 0rem;">
                         <!-- 未登录 -->
                         <div v-if='!isLogin'>
                             <img style='width:1rem;height:1.63rem' src="../../assets/images/ns@2x.png" alt="">
                             <p style='color:#333;margin:.1rem'>
                                 <span>价格:{{price}}</span>
-                                <span>余额{{userInfo.userMoney}}</span>
+                                <!-- <span>余额{{userInfo.userMoney}}</span> -->
                             </p>
                             <p  style='#999;' v-if='isvip==1'>本章是VIP章节，需购买后阅读</p>
                             <p>
-                            <button @click='buyChapter()' style='width:2rem;height:.4rem;color:#fff;margin:.3rem 0;outline:none;border:0;border-radius:.5rem;background-color:#F77583'>购买本章</button>
+                            <button @click='buyChapter()' style='width:2rem;height:.4rem;color:#fff;margin:.3rem 0;outline:none;border:0;border-radius:.5rem;background-color:#F77583'>登录阅读</button>
                             </p>
-                            <p @click='handleClickAuto()'>
+                            <!-- <p @click='handleClickAuto()'>
                                  <img v-if="!btnShow" style='vertical-align: middle;width:.16rem;height:.16rem;' src="../../assets/images/Combined Shape Copy@3x.png" alt="">
                                  <img v-if="btnShow" style='vertical-align: middle;width:.16rem;height:.16rem;' src="../../assets/images/Oval 8 Copy@3x.png" alt="">
                                   <img src="" alt="">
                                 <span>自动购买下一章，不再提醒</span>
-                            </p>
+                            </p> -->
                         </div>
                         <!-- 登录 -->
                         <div v-if='isLogin'>
@@ -114,12 +114,12 @@
                                 <span style='margin-left:.1rem;'>{{userInfo.userReadTicket}}阅读币</span>
                                 </p>
                             <p>
-                            <button @click='buyChapter()'  style='font-size:.14rem;width:2rem;height:.4rem;color:#fff;margin:.3rem 0;outline:none;border:0;border-radius:.5rem;background-color:#F77583'>购买本章</button>
+                            <button v-if='btn' @click='buyChapter()'  style='font-size:.14rem;width:2rem;height:.4rem;color:#fff;margin:.3rem 0;outline:none;border:0;border-radius:.5rem;background-color:#F77583'>购买本章</button>
+                            <button v-if='!btn' @click='handleGo()'  style='font-size:.14rem;width:2rem;height:.4rem;color:#fff;margin:.3rem 0;outline:none;border:0;border-radius:.5rem;background-color:#F77583'>去充值</button>                            
                             </p>
                             <p style='font-size:.14rem;' @click='handleClickAuto()'>
                                  <img v-if="!btnShow" style='vertical-align: middle;width:.16rem;height:.16rem;' src="../../assets/images/Combined Shape Copy@3x.png" alt="">
                                  <img v-if="btnShow" style='vertical-align: middle;width:.16rem;height:.16rem;' src="../../assets/images/Oval 8 Copy@3x.png" alt="">
-                                  <img src="" alt="">
                                 <span>自动购买下一章，不再提醒</span>
                             </p>
                         </div>
@@ -145,6 +145,7 @@ import { userInfo } from 'os';
                backgroundColor:'#fff',
                show:false,
                message:'',
+               btn:true,
                ConfirmShow:false,
                chapterIdNum:0,
                bookName:'',
@@ -157,11 +158,12 @@ import { userInfo } from 'os';
                shareShow:false,
                navShow:false,
                confirmKey:0,
-               dialogshow:true,
+               dialogshow:false,
                preNextShow:false,
                isvip:this.$route.query.isvip,
                price:this.$route.query.price,    
-               btnShow:false,           
+               btnShow:false, 
+               isSelect:0,
                feedList:[
                    {img:require('../../assets/images/Group 3@3x.png')},
                    {img:require('../../assets/images/Group 2@3x.png')},
@@ -206,7 +208,7 @@ import { userInfo } from 'os';
              handleShare(index){
                     //  index==2&&this.handleShareWX()
              },
-            handleShareWX(){
+           handleShareWX(){
             wx.onMenuShareAppMessage({  
             title: '1', // 分享标题  
             desc: '2', // 分享描述  
@@ -245,14 +247,23 @@ import { userInfo } from 'os';
              },
              getBookText(){
                  Post_formData2(this,{chapterId:this.chapterId,readType:1},'/api/book-read',res=>{
-                     if(res.returnCode===200||res.returnCode===500){
-                         console.log(res.data)
-                         this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
-                         this.preNextShow=true
-                         this.bookName=res.data.bookInfo.bookName
-                         this.chapterName=res.data.chapterInfo.chapterTitle
-                        //  console.log(res.data.chapterInfo.chapterTitle)
+                     if(res.returnCode==400){
+                         this.dialogshow=true
+                     }
+                     if(res.returnCode==200){
+                         this.dialogshow=false
                    }
+                    if(res.returnCode==500){
+                       this.dialogshow=true
+                    }
+                    if(res.returnCode==1000){
+                        this.$vux.message()
+                        return ;
+                    }
+                   this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;').replace(/[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}/g,' ')
+                   this.preNextShow=true
+                   this.bookName=res.data.bookInfo.bookName
+                   this.chapterName=res.data.chapterInfo.chapterTitle
               })    
              },
              onConfirm(res){
@@ -275,12 +286,16 @@ import { userInfo } from 'os';
              },  
              getNextChapterText () {
                    this.confirmKey=0
-                  let n=this.chapterList.length-1
-                   this.chapterIdNum++                  
+                   let n=this.chapterList.length-1
+                   this.chapterIdNum++ 
+                   this.handleIsAuto()
                   if(this.chapterIdNum<n){
                     this.getNowChapterId()                 
                     this.setChapterId(this.chapterList[this.chapterIdNum].id)
-                    this.getBookText()
+                    if (this.isLogin) {
+                        this.btnShow&&this.buyChapter()                              
+                    }
+                        !this.btnShow&&this.getBookText()
                     this.$refs.content.scrollIntoView();
                   }else{
                     this.messageTitle='目前最后一章'
@@ -289,25 +304,24 @@ import { userInfo } from 'os';
              },
             getPreChapterText () {
                    this.confirmKey=0                
-                 if(this.chapterIdNum>0){
+                 if (this.chapterIdNum>0) {
                     this.chapterIdNum--  
                     this.setChapterId(this.chapterList[this.chapterIdNum].id) 
                     this.getBookText()
                     this.$refs.content.scrollIntoView();
-                 }else{
+                 } else {
                      this.messageTitle='第一章了'
                      this.ConfirmShow=true  
                  }
             },
             addBookRack(){
-                    //  this.confirmKey=1
-                       Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
+                    if(this.isLogin){
+                    Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
                              if(res.returnCode==500){
                                  this.$vux.toast.text(res.msg)
                                  return;    
                              } else {
                        Post_formData2(this,{userName:this.userInfo.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
-                            // this.ConfirmShow=true
                             this.messageTitle='收藏书籍'
                             this.message='这本书还没有加入书架，现在帮您加入书架吗？'
                             if (res.returnCode==200) {   
@@ -319,6 +333,9 @@ import { userInfo } from 'os';
                          })
                         }
                   })
+               }else{
+                   this.$router.push('/')
+               }
             },
              handleTap(res){
                  if (res===6) {
@@ -357,7 +374,12 @@ import { userInfo } from 'os';
                  }
              },
               change (status) {
-                // this.$Message.info('开关状态：' + status);
+                  setTimeout(()=>{
+                      this.$Message.info(status?'订阅成功':'订阅取消');
+                  },100)
+            },
+            handleGo(){
+                  this.$router.push('/payMoney')
             },
             addReadHistory () {
                 let options={
@@ -371,7 +393,8 @@ import { userInfo } from 'os';
                     // console.log(res)
                }) 
             },
-            buyChapter(){
+            buyChapter () {
+                if(this.isLogin){
                 let options={
                     userName:this.userInfo.userName,
                     bookId:this.readBookId,
@@ -380,20 +403,48 @@ import { userInfo } from 'os';
                     bookChapterName:this.chapterName	
                 }
                 Post_formData2(this,options,'/api/book-subscription',res=>{
-                    if(res.returnCode===200){
-                         this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+                    if (res.returnCode===200) {
+                         this.btn=true
+                         this.bookText=res.data.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+                         this.isLogin&&(this.dialogshow=false)
+                    }else if(res.returnCode===300){
+                        this.$vux.toast.show({text:res.msg})
+                        this.btn=false
                     }
-                })
+                  })
+                }else{
+                    this.$router.push({path:'/',query:{redirect:'/bookRead'}})
+                    
+                }
             },
-            handleClickAuto(){
+            handleIsAuto(type='update'){
+                 let options = {
+                    bookid:this.readBookId,
+                    type:type,
+                    isSelect:this.isSelect
+                }
+                Post_formData2(this,options,'/api/userRmemberChose',res=>{
+                    if(res.returnCode==200){ 
+                        res.data.isClose==1?this.btnShow=true:this.btnShow=false
+                        this.isSelect=res.data.isClose
+                    }
+                 })
+            },
+            handleClickAuto () {
                 this.btnShow=!this.btnShow
-            }
+                this.btnShow?this.isSelect=1:this.isSelect=0
+                this.handleIsAuto()
+             }
          },
-         mounted(){
+         mounted () {
             this.getBookText()
             this.getNowChapterId()
-            this.addReadHistory()
-            // this.isvip==1?this.dialogshow=true:this.dialogshow=false
+            console.log(this.btnShow)
+            if(this.isLogin){
+                this.addReadHistory()                
+                this.btnShow&&this.buyChapter()
+                this.handleIsAuto('search')
+            }
          }
      }
 </script>

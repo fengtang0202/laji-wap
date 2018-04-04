@@ -26,13 +26,14 @@
 </template>
 <script>
 import {mapState} from 'vuex'
+import { userInfo } from 'os';
      export default {
          data () {
              return{
                moneyList:[
-                   {img:require('../../assets/images/d_18@3x.png'),type:'金椒',price:9999,gift:'每充值20元送一张金椒'},
-                   {img:require('../../assets/images/d-48@3x.png'),type:'小米椒',price:9999,gift:'每日登陆小米椒+1，隔天清零，快去送给你喜欢的作者吧！'},
-                   {img:require('../../assets/images/juan@3x.png'),type:'代金券',price:9999,gift:'只用于作品订阅，阅读券优先于辣椒使用'}
+                   {img:require('../../assets/images/d_18@3x.png'),price:0,type:'金椒',gift:'每充值20元送一张金椒'},
+                   {img:require('../../assets/images/d-48@3x.png'),price:0,type:'小米椒',gift:'每日登陆小米椒+1，隔天清零，快去送给你喜欢的作者吧！'},
+                   {img:require('../../assets/images/juan@3x.png'),price:0,type:'代金券',gift:'只用于作品订阅，阅读券优先于辣椒使用'}
               ],
              }  
          },
@@ -41,6 +42,10 @@ import {mapState} from 'vuex'
         }, 
         mounted () {
         //   this.moneyList[0].price=
+        this.moneyList[0].price=this.userInfo.userGoldenTicket
+        this.moneyList[1].price=this.userInfo.userMoney
+        this.moneyList[2].price=this.userInfo.userReadTicket
+        console.log(this.moneyList)
         },
          methods: {
              handleGo() {

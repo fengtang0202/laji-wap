@@ -18,7 +18,7 @@
                     <span v-if="infoList.bookStatus==1">已完结</span>
                  </div>
                  <div class="p_two">
-                    <span class="title"  v-for="item in labelList" v-html="item.bookLableName" :style="{color:item.bookColor}"></span>
+                    <span class="title"  :key='index' v-for="(item,index) in labelList" v-html="item.bookLableName" :style="{color:item.bookColor}"></span>
                  </div> 
               </div>
           </div>
@@ -92,7 +92,7 @@
              </div>
              <div class="similar-swiper">
                     <div class="swiper-wrapper">
-                        <div v-for="item in swiperList" @click='handleToBookDetail(item.bookId)' :key="item.bookId">
+                        <div class='swiper-slide' v-for="item in swiperList" @click='handleToBookDetail(item.bookId)' :key="item.bookId">
                            <img  :src="item.bookImage">
                            <span>{{item.bookName|bookName}}</span>
                          </div>
@@ -162,7 +162,7 @@
                 this.$refs.child.handleClose();
             },
             handleClosefeedpepper(){
-               this.$refs.childfeedpepper.handleClosepepper();
+                this.$refs.childfeedpepper.handleClosepepper();
             },
             handleGo(res){
                  this.$router.push(res);
@@ -228,7 +228,7 @@
                  this.handleComments()
             }
         },
-        mounted(){
+        mounted () {
             let self = this;
             self.handleInit();
             self.handleComments();
@@ -468,7 +468,7 @@
                     height:.12rem;
                 }
                 .text_con{
-                    height:.5rem;
+                    height:.55rem;
                     color:#333;
                     font-size:.12rem;
                     overflow : hidden;
@@ -479,6 +479,7 @@
                 }
                 .r_p{
                     float:right;
+                    margin-bottom:.01rem ;
                 }
             }
             .more{
@@ -522,6 +523,10 @@
             }
             span{
                 font-size: .14rem;
+            }
+            .swiper-slide{
+                width:.96rem;
+                margin-left: .1rem;
             }
         }
     }

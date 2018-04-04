@@ -40,6 +40,7 @@ import MessageManage from '@/components/Message/MessageManage'
 import sysMessage from '@/components/Message/sysMessage'
 import personalLetter from '@/components/Message/personalLetter'
 import commentReply from '@/components/Message/commentReply'
+import test from '@/components/test'
 Vue.use(Router)
 let routers=[
     {path: '/', name: 'Login', component: Login},
@@ -134,7 +135,8 @@ let routers=[
             requireAuth:true           
          }
       
-    }
+    },
+    {path:'/test',component:test}
 ]
 const router = new Router({
     routes: routers

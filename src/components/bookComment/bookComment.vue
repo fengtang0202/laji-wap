@@ -288,10 +288,11 @@ export default {
                       p{
                           float: left;
                           margin-left:.7rem;
+                        //   padding: .1rem 0;
                       }
                       img{
-                          width:.15rem;
-                          height:.15rem;
+                          width:.2rem;
+                          height:.2rem;
                       }
                       span{
                           margin-left:.1rem;

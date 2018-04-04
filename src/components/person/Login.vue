@@ -68,7 +68,7 @@
                      cookie.delete('userPassword')
                 }
             },
-            loginIn:function(){
+            loginIn(){
                 var self = this;
                 let checkPhone=/^1(3|4|5|7|8)\d{9}$/;
                 let checkPassword = /^.{6,20}$/;
@@ -89,7 +89,7 @@
                                         className: 'custom-classname',
                                         duration: 1000,
                                         callback: function(){
-                                            self.$router.push({path:'/home'})
+                                            self.$router.push(self.$route.query.redirect||'/home')
                                         }
                                     });
                                 }else if(res.returnCode==500){

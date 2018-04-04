@@ -1,19 +1,25 @@
 <template>
    <div>
-       <ul class='message_item'>
-                  <li v-for='(item,index) in messageList' :key='index'>
-                      <img class='avatar' :src="item.userHeadPortraitURL" alt="">
+           <swipeout>
+                <swipeout-item class='message_item' v-for='(item,index) in messageList' :key='index' @on-close="handleEvents('on-close')" @on-open="handleEvents('on-open')" transition-mode="follow">               
+                  <div  slot="right-menu">
+                    <swipeout-button @click.native="onButtonClick('fav')" type="primary">回复</swipeout-button>
+                    <swipeout-button @click.native="onButtonClick('delete')" type="warn">删除</swipeout-button>                      
+                  </div>
+                    <div   slot="content" class="message_content vux-1px-t"> 
+                    <img class='avatar' :src="item.userHeadPortraitURL" alt="">                                         
                       <div class='message_item_detail'>
-                         <p >
-                         <span>{{item.userName}}</span>
-                         <img v-if='item.userSex==0' class='sex' src="../../assets/images/sex-02_03@3x.png" alt="">
-                         <img v-if='item.userSex==1' class='sex' src="../../assets/images/sex-03@3x.png" alt="">                         
-                         <span class='timer'>{{item.dateTimes|formatDate}}</span>
+                         <p>
+                            <span>{{item.userName}}</span>
+                            <img v-if='item.userSex==0' class='sex' src="../../assets/images/sex-02_03@3x.png" alt="">
+                            <img v-if='item.userSex==1' class='sex' src="../../assets/images/sex-03@3x.png" alt="">                         
+                            <span class='timer'>{{item.dateTimes|formatDate}}</span>
                          </p>
-                         <p style='color:#666' >{{item.messageContent}}</p>
+                        <p style='color:#666' >{{item.messageContent}}</p>
                       </div>
-                  </li>
-        </ul>
+                    </div>                      
+              </swipeout-item>
+           </swipeout>
    </div>
 </template>
 <script>
@@ -31,7 +37,13 @@ import {Param_Get_Resful} from '@/config/services'
                      this.messageList=res.data.list
                  }
              })
-          }             
+          },
+          onButtonClick (type) {
+          alert('on button click ' + type)
+         },
+          handleEvents (type) {
+           console.log('event: ', type)
+         }             
       },
       mounted () {
            this.getMessage()  
@@ -41,7 +53,7 @@ import {Param_Get_Resful} from '@/config/services'
 <style lang='less' scoped>
   .message_item{
               width:100%;   
-              li{
+              .message_content{
                  min-height:.75rem;
                  overflow: hidden;
                  border:1px solid #EFEFEF;
