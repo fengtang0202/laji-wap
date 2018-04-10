@@ -3,7 +3,7 @@
      <div class='header'>
          <p style='text-align:center;'>
              <span style='margin-left:1.48rem;font-size:.18rem;'>我的钱包</span>
-             <span style='margin-left:.7rem;'>交易记录</span>
+             <span style='margin-left:.7rem;' @click='handleGo("/dealManage")'>交易记录</span>
          </p>
          <p style='text-align:center;'>
              <span style='font-size:.3rem;'>{{userInfo.userMoney}}</span>
@@ -11,7 +11,7 @@
              <img src="../../assets/images/d-28@3x.png"  alt="">
          </p>
          <p class='pay'>
-             <button @click='handleGo()'>充值</button>
+             <button @click="handleGo('/payMoney')">充值</button>
          </p>
      </div>
      <div class='peper' v-for='(item,index) in moneyList' :key='index'>
@@ -25,8 +25,8 @@
    </div>
 </template>
 <script>
-import {mapState} from 'vuex'
-import { userInfo } from 'os';
+import {mapState, mapActions} from 'vuex'
+import {Post_formData2} from '@/config/services'
      export default {
          data () {
              return{
@@ -41,17 +41,31 @@ import { userInfo } from 'os';
               ...mapState(['userInfo'])
         }, 
         mounted () {
-        //   this.moneyList[0].price=
+        this.getUserMoney()        
         this.moneyList[0].price=this.userInfo.userGoldenTicket
-        this.moneyList[1].price=this.userInfo.userMoney
+        this.moneyList[1].price=this.userInfo.userRecommendTicket
         this.moneyList[2].price=this.userInfo.userReadTicket
-        console.log(this.moneyList)
         },
          methods: {
-             handleGo() {
-                 this.$router.push('/payMoney')
-             }
-         }
+             ...mapActions(['getUserInfo']),
+             handleGo(res) {
+                 this.$router.push(res)
+             },
+             getUserMoney(){
+                      Post_formData2(this,'','/api/person-info',res=>{
+                            if(res.returnCode==200){
+                                this.getUserInfo(res.data) 
+                            }else{
+                                 this.$vux.toast.show({text:'身份过期,重新登录',type:'warn'})
+                                 this.getUserInfo(null)
+                             setTimeout(()=>{
+                                 this.$router.push({path:'/',query:{redirect: '/myWallet'}})
+                             },2000) 
+                            }
+                      })
+                           
+                    }
+            }
         }
 </script>
 <style lang='less' scoped>

@@ -12,6 +12,7 @@
 </template>
 <script>
     import { Post_formData2, noParam_Get } from '@/config/services'
+    import{mapActions} from 'vuex'
     export default {
         name: 'password',
         data () {
@@ -24,14 +25,16 @@
             }
         },
         methods:{
+            ...mapActions(['setPhone','setUserCode']),
             getCode:function(){
-                let checkPhone=/^1(3|4|5|7|8)\d{9}$/;
+                let checkPhone=/^1(3|4|5|6|7|8|9)\d{9}$/;
                 if (checkPhone.test(this.phone)) {
                     noParam_Get(this,'/api/person-checkNickPhone/'+this.phone,res=>{
                         if(res.returnCode ==200){
                             this.$vux.toast.text('您的手机号未注册');
                         }else{
-                            this.$store.commit('setUserPhone',this.phone)
+                            //将手机号码存到vuex
+                            this.setPhone(this.phone)
                             this.sendMessage();
                             if(!this.isOvertime){
                                 let options={
@@ -54,12 +57,12 @@
                     this.$vux.toast.text('请输入正确手机号')
                 }
             },
-            sendMessage:function(){
+            sendMessage(){
                 if(this.isOvertime){
                     return false;
                 }
                 let that = this,
-                    time = 10;
+                    time = 60;
                 var sendTimer = setInterval(function(){
                      that.isOvertime = true;
                     that.iscode = true;
@@ -73,7 +76,7 @@
                     }
                 },1000)
             },
-            handleSubmit:function(){
+            handleSubmit(){
                 let checkPhone=/^1(3|4|5|7|8)\d{9}$/;
                     if (checkPhone.test(this.phone) && this.verificationCode!='') {
                         let options={
@@ -81,9 +84,8 @@
                             checkCode:this.verificationCode
                         }
                         Post_formData2(this,options,'/api/verification/person-checkedCode',res=>{
-                         
                                 if(res.returnCode==200){
-                                    this.$store.commit('setUserCode',this.verificationCode)
+                                    this.setUserCode(this.verificationCode)
                                     this.$router.push({path:'/resetPassword'});
                                 }else{
                                     this.$vux.toast.text(res.msg);
@@ -130,6 +132,7 @@
                height:.42rem;
                float:left;
                border:none;
+               outline: none;
             }
             p{  
                 width:.85rem;

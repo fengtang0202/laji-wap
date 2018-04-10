@@ -14,8 +14,10 @@
               <img :src="item.bookImage" style='width:.81rem;height:1.08rem' alt="">
               <div class='book_detail'>
                   <p style='font-size:.16rem'>{{item.bookName|bookName}}</p>
-                  <p style='color:#999'>作者：{{item.writerName}}<span>304金票</span> </p>
-                  <p style='color:#666'>我是简介我是简介我是简介 我是简介我是简介我是简介</p>
+                  <p style='color:#999'>作者：{{item.writerName}}
+                      <span>{{item.tempTicketSum}}金票</span> 
+                  </p>
+                  <p style='color:#666;height:.45rem;overflow:hidden;'>{{item.bookIntroduction}}</p>
               </div>
           </div>
        </div>
@@ -78,6 +80,7 @@ import {mapActions} from 'vuex'
             },
             hanleRankBook () {
                  Post_formData2(this,{type:this.RankType},'/api/ranking-book',res=>{
+                     console.log(res)
                      if(res.data[this.dayType]!==undefined){
                         this.rankBookList=res.data[this.dayType].list
                      }else{

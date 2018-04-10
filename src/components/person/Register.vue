@@ -62,7 +62,7 @@
                 }
             },
             handleRegister:function(){
-                let checkPhone = /^1(3|4|5|7|8)\d{9}$/;
+                let checkPhone = /^1(3|4|5|6|7|8|9)\d{9}$/;
                 let checkPassword = /^.{6,20}$/;
                 let checkName = /^.{1,20}$/;
                     if(checkPhone.test(this.phone)&&checkPassword.test(this.pwd)&&checkName.test(this.name)&&this.sex!==''){
@@ -92,7 +92,7 @@
                         }
                     })
             },
-            handleCheckRegister:function(){
+            handleCheckRegister(){
                 let options ={
                     code:this.verificationCode,
                     pseudonym:this.name,
@@ -103,13 +103,13 @@
                 Post_formData2(this,options,'/api/person-regInfo',res=>{
                         this.$vux.toast.text(res.msg);
                             if(res.returnCode==200){
-                                this.$router.push({path:'/home'});
+                                this.$router.push({path:'/Login'});
                             }else{
                                 this.$vux.toast.text(res.msg);
                             }
                 })
             },
-            sendMessage:function(){
+            sendMessage(){
                 if(this.isOvertime){
                     return false;
                 }
@@ -128,7 +128,7 @@
                     }
                 },1000)
             },
-            getCode:function(){
+            getCode(){
                 let checkPhone = /^1(3|4|5|7|8)\d{9}$/;
                 if(checkPhone.test(this.phone)){
                      noParam_Get(this,'/api/person-checkNickPhone/'+this.phone,res=>{
@@ -143,7 +143,7 @@
                     this.$vux.toast.text('请输入正确手机号');
                 }
             },
-            setCode:function(){
+            setCode(){
                 if(!this.isOvertime){
                     let options={
                         userMob:this.phone,

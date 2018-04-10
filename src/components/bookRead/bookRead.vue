@@ -1,10 +1,13 @@
 <template>
-    <v-touch @press='up' @touchmove.native='handlea()' @touchstart='getTouchStartXY(e)'>
         <div>
-  <div class='bookRead'>
+            <app-feed  :param='rewordParam' ref="child"  @click="handleClosefeed()"></app-feed>
+            <app-feedpepper :param='rewordParam'  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper>
+            <AppMinpepper :param='rewordParam' ref='minFeedpepper' @click='hanldeCloseMinFeedPepper()'></AppMinpepper>
+    <v-touch @press='up'>  
+   <div class='bookRead'>
      <div class='feed' :class='{show:navShow}'>
             <div style='float:left'>
-               <img :src="item.img"   class='pepper' :key='index' v-for='(item,index) in feedList' alt="">
+               <img :src="item.img"  @click='handleFeedTap(index)'  class='pepper' :key='index' v-for='(item,index) in feedList' alt="">
             </div>
             <div class='nav' @touchend='show=!show'>
               <img src="../../assets/images/dropdown@3x.png"   alt="">
@@ -25,8 +28,8 @@
          <div class='one_nav'>
              <ul>
                  <li>字号</li>
-                 <li class='m' @click='fontSize--' style='font-size:.18rem;'>A-</li>
-                 <li class='m' @click='fontSize++' style='font-size:.2rem;'>A+</li>
+                 <li class='m' @click='handleFontSize(0)' style='font-size:.18rem;'>A-</li>
+                 <li class='m' @click='handleFontSize(1)' style='font-size:.2rem;'>A+</li>
                  <li>自动订阅</li>
                  <li>
                      <i-switch  @on-change="change"></i-switch>                     
@@ -76,9 +79,9 @@
                   <li v-for='item in bottomNavList' @click='handleTap(item.key)'>
                       <div  class='nav_d'>
                          <img :src="item.img" alt="">
-                         <span style='font-size:.12rem;'>{{item.text}}</span>
                       </div>
-                  </li>
+                         <p style='font-size:.12rem'>{{item.text}}</p>                      
+                   </li>
               </ul>
          </div>
     </div>
@@ -126,15 +129,17 @@
                     </div>
                 </x-dialog>
          </div>
-        </div>
-    </v-touch>
+           </v-touch>         
+      </div>
 </template>
 <script>
 import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
 import { setTimeout } from 'timers';
 import {TransferDomDirective as TransferDom,Confirm, XDialog} from 'vux'
 import {mapState,mapActions} from 'vuex'
-import { userInfo } from 'os';
+import AppFeed from '@/components/feed/feed.vue'
+import AppFeedpepper from '@/components/feed/feedPepper.vue' 
+import AppMinpepper from '@/components/feed/minPepper'
      export default{
          data(){
             return{
@@ -162,8 +167,11 @@ import { userInfo } from 'os';
                preNextShow:false,
                isvip:this.$route.query.isvip,
                price:this.$route.query.price,    
-               btnShow:false, 
+               btnShow:false,
+               readBookId:this.$route.query.bookId, 
                isSelect:0,
+               chapterId:this.$route.query.chapterId,
+               rewordParam:{},
                feedList:[
                    {img:require('../../assets/images/Group 3@3x.png')},
                    {img:require('../../assets/images/Group 2@3x.png')},
@@ -195,20 +203,51 @@ import { userInfo } from 'os';
             }
          },
          components:{
-             Confirm,XDialog
+             Confirm,XDialog,AppFeed,AppFeedpepper,AppMinpepper
         },
          computed: {
-             ...mapState(['readBookId','chapterId','userInfo','isLogin']),              
+             ...mapState(['userInfo','isLogin']),              
          },
          directives: {
              TransferDom
          },
          methods:{
-             ...mapActions(['setChapterId']),
+             handleFontSize(res){
+                  res===1&&this.handleFontSizeAdd()
+                  res===0&&this.handleFontSizeSubtract()
+             },
+             handleFontSizeAdd(){
+                    if(this.fontSize<28){
+                        this.fontSize+=1
+                    }else{
+                        this.$vux.toast.text('字体最大了,保护好眼睛!')
+                    }
+             },
+             handleFontSizeSubtract (){
+                 if(this.fontSize>20){
+                     this.fontSize--
+                 }else{
+                     this.$vux.toast.text('字体最小了,保护好眼睛!')
+                 }
+             },
+              handleClosefeed(){
+                this.$refs.child.handleClose();
+            },
+            handleClosefeedpepper(){
+                this.$refs.childfeedpepper.handleClosepepper();
+            },
+            hanldeCloseMinFeedPepper(){
+                this.$refs.minFeedpepper.handleClose()
+            },
+             handleFeedTap(index){
+                index===0&&this.handleClosefeedpepper()
+                index===1&&this.hanldeCloseMinFeedPepper()
+                index===2&&this.handleClosefeed()
+              },
              handleShare(index){
                     //  index==2&&this.handleShareWX()
              },
-           handleShareWX(){
+          handleShareWX(){
             wx.onMenuShareAppMessage({  
             title: '1', // 分享标题  
             desc: '2', // 分享描述  
@@ -225,17 +264,7 @@ import { userInfo } from 'os';
                 // 用户取消分享后执行的回调函数  
                 //alert('已取消');  
             }  
-        });  
-             },
-             getTouchStartXY(){
-                 this.touchstartX=event.touches[0].pageX
-                 this.touchstartY=event.touches[0].pageY
-                 },
-             handlea(){
-                let touchendX=event.touches[0].pageX
-                let touchendY=event.touches[0].pageY
-                // distanceX = endX-startX;
-                // distanceY = endY-startY;            
+               });  
              },
              changebgColor(color){
                 this.backgroundColor=color
@@ -247,23 +276,29 @@ import { userInfo } from 'os';
              },
              getBookText(){
                  Post_formData2(this,{chapterId:this.chapterId,readType:1},'/api/book-read',res=>{
-                     if(res.returnCode==400){
+                     if (res.returnCode==400){
                          this.dialogshow=true
                      }
-                     if(res.returnCode==200){
+                     if (res.returnCode==200){
                          this.dialogshow=false
                    }
-                    if(res.returnCode==500){
+                    if (res.returnCode==500){
                        this.dialogshow=true
                     }
-                    if(res.returnCode==1000){
-                        this.$vux.message()
+                    if (res.returnCode===800){
+                        this.$vux.toast.show('作者偷懒中....')
+                        return;
+                    }
+                    if (res.returnCode==1000) {
+                        this.$vux.toast.show({text:'服务器异常',type:'warn'})
                         return ;
                     }
                    this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;').replace(/[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}/g,' ')
                    this.preNextShow=true
                    this.bookName=res.data.bookInfo.bookName
                    this.chapterName=res.data.chapterInfo.chapterTitle
+                   this.rewordParam.authorId=res.data.chapterInfo.bookWriterId
+                   this.rewordParam.bookName=res.data.bookInfo.bookName
               })    
              },
              onConfirm(res){
@@ -281,17 +316,19 @@ import { userInfo } from 'os';
                         if(this.chapterList[n].id==this.chapterId){
                             this.chapterIdNum=n
                         }
-                      }
-                  }) 
+                    }
+                }) 
              },  
              getNextChapterText () {
                    this.confirmKey=0
                    let n=this.chapterList.length-1
                    this.chapterIdNum++ 
+                   console.log(this.chapterIdNum)
                    this.handleIsAuto()
                   if(this.chapterIdNum<n){
                     this.getNowChapterId()                 
-                    this.setChapterId(this.chapterList[this.chapterIdNum].id)
+                    // this.setChapterId(this.chapterList[this.chapterIdNum].id)
+                    this.chapterId=this.chapterList[this.chapterIdNum].id
                     if (this.isLogin) {
                         this.btnShow&&this.buyChapter()                              
                     }
@@ -306,7 +343,8 @@ import { userInfo } from 'os';
                    this.confirmKey=0                
                  if (this.chapterIdNum>0) {
                     this.chapterIdNum--  
-                    this.setChapterId(this.chapterList[this.chapterIdNum].id) 
+                    // this.setChapterId(this.chapterList[this.chapterIdNum].id) 
+                    this.chapterId=this.chapterList[this.chapterIdNum].id                    
                     this.getBookText()
                     this.$refs.content.scrollIntoView();
                  } else {
@@ -331,7 +369,7 @@ import { userInfo } from 'os';
                                 this.$router.push('/')
                             }
                          })
-                        }
+                    }
                   })
                }else{
                    this.$router.push('/')
@@ -410,11 +448,13 @@ import { userInfo } from 'os';
                     }else if(res.returnCode===300){
                         this.$vux.toast.show({text:res.msg})
                         this.btn=false
-                    }
+                    }else if(res.returnCode===400){
+                        this.$vux.toast.show({text:res.msg})  
+                        this.$router.push({path:'/Login',query:{redirect:'/bookRead'}})
+                      }
                   })
                 }else{
-                    this.$router.push({path:'/',query:{redirect:'/bookRead'}})
-                    
+                    this.$router.push({path:'/Login',query:{redirect:'/bookRead'}})
                 }
             },
             handleIsAuto(type='update'){
@@ -434,12 +474,12 @@ import { userInfo } from 'os';
                 this.btnShow=!this.btnShow
                 this.btnShow?this.isSelect=1:this.isSelect=0
                 this.handleIsAuto()
-             }
-         },
-         mounted () {
+            }
+        },
+        mounted () {
             this.getBookText()
             this.getNowChapterId()
-            console.log(this.btnShow)
+            console.log(this.chapterId)
             if(this.isLogin){
                 this.addReadHistory()                
                 this.btnShow&&this.buyChapter()
@@ -449,206 +489,5 @@ import { userInfo } from 'os';
      }
 </script>
 <style lang='less' scoped>
-     .bookRead{
-         position: relative;
-         width:100%;
-         height:100%;
-         overflow-x:hidden;
-         -webkit-overflow-scrolling:touch;
-         li{
-             list-style: none;
-         }
-        .feed{
-            height:.64rem;
-            background-color: #3D3D3D;
-            opacity: 0;
-            width:100%;
-            position:fixed;
-            top:0;
-            transition: all .5s;
-            transform: translate(0, -.64rem);                                        
-            .pepper{
-                width:.78rem;
-                height:.3rem;
-                margin-top:.17rem;
-                margin-left:.2rem;
-            }
-            .nav{
-                width:.63rem;
-                height:.55rem;
-                float: right;
-                text-align: center;
-                img{
-                    width:.07rem;
-                    height:.23rem;
-                    margin-top:.2rem;
-                }
-            }
-        }
-        .book_content{
-            letter-spacing:.04rem; 
-            text-indent: 2em; 
-            padding:.05rem .1rem;
-            .book_title{
-                font-size: .1rem;
-                margin-left:-.3rem;
-                color:#999;
-            }
-         }
-        .nav_list{
-            width:.88rem;
-            height:2.16rem;
-            position: fixed;
-            right:0;
-            top:.64rem;
-            background-color: #fff;
-            transition: all .5s ;
-            opacity: 0;
-            transform: translate(0.88rem, 0);                            
-            li{
-                height:0.36rem;
-                text-align: center;
-                line-height:.36rem;
-                border-bottom:1px solid #EFEFEF;
-            }
-        }
-        .share_list{
-            height:1.8rem;
-            position: fixed;
-            width:100%;
-            bottom:0;
-            background-color: #fff;
-            transition: all .5s ;
-            transform: translate(0,1.8rem);   
-            opacity: 0;
-            li{
-                width:25%;
-                height:.9rem;
-                float:left;
-                text-align: center;
-                font-size:.12rem;
-                border-right:1px solid #EFEFEF;
-                border-bottom:1px solid #EFEFEF;
-                img{
-                    width:.35rem;
-                    height: .35rem;
-                    margin-top:.2rem;
-                }
-            }
-            li:nth-child(4){
-                border-right:0;
-            }
-            li:last-child{
-                border-right:0;
-            }
-        }
-        .bottom_nav{
-            width:100%;
-            height:1.38rem;
-            background-color: #3D3D3D;
-            position: fixed;
-            bottom:0;
-            color:#FFF;
-            opacity: 1;
-            transform: translate(0,1.98rem); 
-            transition: all .5s;                                       
-            .one_nav{
-            height:.62rem;
-            border-bottom:1px solid #333;
-             ul{
-                 li{
-                     float: left;
-                     margin-top:.16rem;
-                     margin-left:.17rem;
-                 }
-                 .m{
-                     width:.6rem;
-                     height:.3rem;
-                     border:1px solid #FFF;
-                     border-radius: .08rem;
-                     text-align:center; 
-                }
-                .auto_btn{
-                    width:.46rem;
-                    height:.22rem;
-                    background-color: #fff;
-                    border-radius:.1rem;
-                    border:0;
-                }
-             }
-            }
-            .tow_nav{
-             height:.74rem;
-             border-bottom:1px solid #333;
-             li{
-                 width:.38rem;
-                 height:.38rem;
-                 border-radius: 50%;
-                 float:left;
-                 margin-top:.18rem;
-                 margin-left:.2rem;
-             }
-           }
-        //    .last_nav{
-        //        img{
-        //            width:.36rem;
-        //            height:.36rem;
-        //            vertical-align: middle;
-        //        }
-        //        li{
-        //         float: left; 
-        //         width:25%;
-        //         .nav_d{
-        //             width:.36rem;
-        //             text-align: center;
-        //             margin-left:.25rem
-        //          }
-        //       }
-        //    }
-        }
-        .next_btn{
-            background-color:#F77583;
-            width:2rem;
-            height:.35rem;
-            color:#fff;
-            font-size:.18rem;
-            border-radius: .2rem;
-            border:0;
-            outline: none;
-            
-        }
-        .show{
-             transform: translate(0, 0);
-             opacity: 1;                
-            }
-          .changeColor{
-             background-color: #D8D9DC;
-          }
-          .isFixed{
-            position: fixed;
-            top:.4rem;
-         }
-         .last_nav{
-             background-color: #3D3D3D;
-             overflow: hidden;
-             color:#FFF;
-             width:100%;
-            //  position: fixed;
-            //  bottom:0;
-               img{
-                   width:.36rem;
-                   height:.36rem;
-                   vertical-align: middle;
-               }
-               li{
-                float: left; 
-                width:25%;
-                .nav_d{
-                    width:.36rem;
-                    text-align: center;
-                    margin-left:.25rem
-                 }
-              }
-           }
-       }
+     @import '../../css/bookRead';
 </style>

@@ -46,7 +46,7 @@ import {Tab,TabItem,Swiper,SwiperItem} from 'vux'
                  topList:{
                      title_1:'等级制度',
                      title_2:'首页',
-                     link:'/home'
+                     link:'/'
                  },
                     height:'14.26rem',
                     navlist:['等级制度','积分规则'],

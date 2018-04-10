@@ -1,7 +1,7 @@
 <template>
     <div id="home">
          <div class="top">
-            <img src="../assets/images/ico@2x.png" @click='handleTo({path:"/home"})' class="logo_two">
+            <img src="../assets/images/ico@2x.png" @click='handleTo({path:"/"})' class="logo_two">
             <div class="btn_top" @click="handleTo({path:'/download'})">下载APP</div>
             <span class='userId' @click='handleTo({path:"/bookRank"})' >排行榜</span>
             <img   v-if='isLogin' :src="userInfo.userHeadPortraitURL" @click="handleTo({path:'/person'})" class="logo_three">
@@ -28,9 +28,9 @@
             return {
                isAddTo:0,
                cate:[
-                   {name:'首页',res:{path:"/home"}},
-                   {name:'分类',res:{path:"/home/categoryList"}},
-                   {name:'限免',res:{path:"/home/bookFree"}}
+                   {name:'首页',res:{path:"/"}},
+                   {name:'分类',res:{path:"/categoryList"}},
+                   {name:'限免',res:{path:"/bookFree"}}
                ]
             }
         },
@@ -48,7 +48,7 @@
             }
         },
         mounted () {
-            console.log(this.userInfo)
+            // console.log(this.userInfo)
         }
     }
 </script>
@@ -99,6 +99,7 @@
                 width:.34rem;
                 height:.33rem;
                 float:right;
+                border-radius: 50%;
                 margin-top:.08rem;
             }
         }
@@ -140,7 +141,7 @@
         }
         .tap{
             box-sizing:border-box;
-            padding:0 .14rem;
+            padding:.14rem .14rem;
             display: flex;
             justify-content:space-between;
             .btn{

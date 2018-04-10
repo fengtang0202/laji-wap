@@ -19,6 +19,13 @@
                 </cell-box>
             </template>
         </div>
+       <!-- <div>
+        <cell-box class='chapterTitle'  :class='{Vip:item.chapterIsvip==1}'  @click.native='handle(item.chapterIsvip,item.id,item.price)' :key='index' v-for='(item,index) in chapterList'>
+                    <span>{{item.chapterTitle}}</span>
+                    <img src="../../assets/images/vip@3x.png" v-if='item.chapterIsvip==1?true:false' class='vip_icon' alt="">
+                 <span class='words'>{{item.chapterLength}}</span>                                    
+        </cell-box>
+       </div> -->
         <!-- <div style='width:100%;height:.2rem;'></div>
         <div class="page">
             <span class="page_l">上一页</span>
@@ -44,10 +51,11 @@
                 isShow:false,
                 showContent:-1,
                 dialogshow:false,
+                readBookId:this.$route.query.bookId,
                 topList:{
                     title_1:'目录',
                     title_2:'首页',
-                    link:'/home'
+                    link:'/'
                 }
             }
         },
@@ -57,9 +65,6 @@
         directives: {
            TransferDom
          },
-        computed: {
-            ...mapState(['readBookId','chapterId'])   
-        },
         methods:{
             ...mapActions(['setChapterId']),
             handleGo(){
@@ -69,8 +74,7 @@
                  window.history.go(-1);
             },
             handle (isvip,chapterId,price) {
-                  this.$router.push({path:'/bookRead',query:{isvip:isvip,price:price}});  
-                  this.setChapterId(chapterId)
+                  this.$router.push({path:'/bookRead',query:{isvip:isvip,price:price,bookId:this.readBookId,chapterId:chapterId}});  
             },
              handleTapvolume(index,volumeId){
                  this.showContent!==index?this.showContent=index:this.showContent=-1
@@ -79,7 +83,6 @@
                 //   }
                    Post_formData2(this,{volumeid:volumeId},'/api/books-getVolumeById',res=>{
                        this.chapterList=res.data
-                       console.log(this.chapterList)
                       if (res.data==null) {
                          this.chapterList=[]
                        }

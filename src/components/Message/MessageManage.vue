@@ -22,7 +22,7 @@ import {Param_Get_Resful,Post_formData2,formatDate} from '@/config/services'
                  topList:{
                      title_1:'我的消息',
                      title_2:'首页',
-                     link:'/home'
+                     link:'/'
                  },
                  transitionName: 'slide-left',
                     tabList:[

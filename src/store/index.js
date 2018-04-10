@@ -15,12 +15,20 @@ Vue.use(Vuex);
         bookRack:[],
         readCommentInfo:{},
         fans:0,
-        fllows:0
+        fllows:0,
+        rephone:0,
+        code:0,
     }
     const mutations = {
         changeMenuName (state, name) {
             state.subName=name.subName
             state.itemName=name.itemName
+        },
+         setUserCode(state,code){
+            state.code=code;
+        },
+        setPhone(state,rephone){
+            state.rephone=rephone
         },
         getUserInfo(state,userInfo){
              state.userInfo=userInfo
@@ -34,9 +42,6 @@ Vue.use(Vuex);
         checkToken(state,token){
             state.token=token;
         },
-        setUserCode(state,code){
-            state.code=code;
-        } ,
         changeLogin(state, status) {
             state.isLogin = status;
         },
@@ -49,9 +54,6 @@ Vue.use(Vuex);
         setBookRack(state,bookRack){
             state.bookRack=bookRack
         },
-        setReadBookId(state,readBookId){
-            state.readBookId=readBookId
-        },
         setChapterId(state,chapterId){
             state.chapterId=chapterId
         },
@@ -60,6 +62,12 @@ Vue.use(Vuex);
         }
     }
     const actions = {
+        setPhone({commit},rephone){
+           commit('setPhone',rephone)
+        },
+        setUserCode({commit},code){
+           commit('setUserCode',code)
+        },
         loginAction({commit},status){
             commit('changeLogin',status)
         },
@@ -75,16 +83,13 @@ Vue.use(Vuex);
         getBookRack({commit,state},bookReck){
             commit('setBookRack',bookReck)
         },
-        setReadBookId({commit},readBookId){
-           commit('setReadBookId',readBookId)
-        },
         setChapterId({commit},chapterId){
             commit('setChapterId',chapterId)
         },
         setReadCommentInfo({commit},readCommentInfo){
             commit('setReadCommentInfo',readCommentInfo)
         },
-        getUserInfo({commit,state},userInfo){
+        getUserInfo({commit},userInfo){
             commit('getUserInfo',userInfo)
         }
         

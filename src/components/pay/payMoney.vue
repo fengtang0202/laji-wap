@@ -20,7 +20,7 @@
 </template>
 <script>
 import headerComponent from '@/components/common/header'
-import { Post_formData2} from '@/config/services'
+import { Post_formData2,noParam_Get} from '@/config/services'
 import {mapState} from 'vuex'
     export default {
         components:{
@@ -34,23 +34,27 @@ import {mapState} from 'vuex'
               topList:{
                   title_1:'充值',
                   title_2:'首页',
-                  link:'/home'
-              }
+                  link:'/'
+              },
+              alipayData:''
           }
-       },
+       },   
        methods: {
            handleAlipay(){
                let options={
-                   userId:this.userInfo.userId,
-                   userName:this.userInfo.userName,
-                   total_fee:1,
-                   apymentType:3	
+                //    userId:this.userInfo.userId,
+                //    userName:this.userInfo.userName,
+                //    total_fee:1,
+                //    apymentType:3	
+                username:this.userInfo.userName,
+                apymentType:3,
+                WIDtotal_amount:1
                }
-             Post_formData2(this,options,'/api/api/muser/alipaySuccess.action',res=>{
-                 console.log(res)
+             Post_formData2(this,options,'/api/payment-alipaywap',res=>{
+                console.log(res.data)
             })
            },
-           handleWeChatPay(){
+           handleWeChatPay () {
              console.log('微信')
            },
            handleTap(res) {

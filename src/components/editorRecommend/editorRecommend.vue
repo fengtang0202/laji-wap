@@ -41,7 +41,7 @@
                topList:{
                    title_1:"小编推荐",
                    title_2:'首页',
-                   link:'/home'
+                   link:'/'
                }
             }
         },
@@ -62,8 +62,8 @@
                 })
             },
             handleGo(id){
-                 this.setReadBookId(id)
-                 this.$router.push({path:'/bookDetails'});
+                //  this.setReadBookId(id)
+                 this.$router.push({path:'/bookDetails',query:{bookId:id}});
             },
             handleBack(){
                  window.history.go(-1);
@@ -105,6 +105,7 @@
             padding:0 .15rem;
             height:1.05rem;
             margin-top:.27rem;
+            overflow: hidden;
             img{
                 width:.78rem;
                 height:1.05rem;
@@ -161,6 +162,7 @@
                 margin-top:.03rem;
                 width:2.54rem;
                 font-size:.14rem;
+                height:.4rem;
                 color:#666;
                 overflow : hidden;
                 text-overflow: ellipsis;

@@ -9,20 +9,20 @@
                 <div class='i_one'>
                     <div style='float: left;'>
                         <span style='font-size:.16rem;'>{{readCommentInfo.pseudonym}}</span>
-                        <img src="../../assets/images/sex-03@3x.png" v-if='readCommentInfo.userSex==0?true:false' alt="">
-                        <img src="../../assets/images/sex-02_03@3x.png" v-if='readCommentInfo.userSex==1?true:false' alt="">                     
+                        <img src="../../assets/images/sex-03@3x.png" v-if='readCommentInfo.userSex==1' alt="">
+                        <img src="../../assets/images/sex-02_03@3x.png" v-if='readCommentInfo.userSex==0' alt="">                     
                         <span class='grade'>&nbsp;LV{{readCommentInfo.userGrade}}&nbsp;</span>
                      </div>
                      <div style='float:right'>
                         <span style='font-size:.12rem;'>{{readCommentInfo.commentDateTime|formatDate}}</span>
                       </div>
                 </div>
-                 <p class='bookName'>《{{readCommentInfo.bookName}}》</p>  
+                 <!-- <p class='bookName'>《{{readCommentInfo.bookName}}》</p>   -->
                  <p class='content'>{{readCommentInfo.commentContext}}</p> 
-                 <div class='zhan' @click='handelLike()'>
+                 <div class='zhan'>
                      <p>
-                     <img  v-if='readCommentInfo.isthumbs==0?true:false'  src="../../assets/images/zan@3x.png"  alt="">
-                     <img  v-if='readCommentInfo.isthumbs==1?true:false'  src="../../assets/images/goodzan@3x.png" alt="">
+                     <img  v-if='readCommentInfo.isthumbs==0?true:false' @click='handelLike()'  src="../../assets/images/zan@3x.png"  alt="">
+                     <img  v-if='readCommentInfo.isthumbs==1?true:false' @click='handelLike()' src="../../assets/images/goodzan@3x.png" alt="">
                      <span>{{readCommentInfo.thumbsCount}}</span>
                      </p>
                      <p>
@@ -33,7 +33,7 @@
               </div>
             </div> 
             <!-- 相关回复 -->
-                <p  class='x_reply'>相关回复</p>
+              <p  class='x_reply'>相关回复</p>
                <div class='book_comment_item'  :key='index' v-for='(item,index) in replyList'>
                     <div class='avatar'>
                         <img  style='width:.38rem;height:.38rem;' :src="item.userHeadPortraitURL" alt="">
@@ -73,15 +73,17 @@
 import {Post_formData2} from '@/config/services'
 import {mapState} from 'vuex'
 import {Popup,TransferDom} from 'vux'
+import { setTimeout } from 'timers';
     export default {
         data(){
             return {
                 replyList:[],
                 replyText:'',
+                readBookId:this.$route.query.bookId,
                 topList:{
                     title_1:'评论详情',
                     title_2:'首页',
-                    link:'/home'
+                    link:'/'
                 },
                 show:false
             }
@@ -93,7 +95,7 @@ import {Popup,TransferDom} from 'vux'
             Popup
         },
         computed : {
-           ...mapState(['readCommentInfo','isLogin','readBookId','userInfo'])
+           ...mapState(['readCommentInfo','isLogin','userInfo'])
         },
         filters:{
       content (str) {
@@ -136,7 +138,8 @@ import {Popup,TransferDom} from 'vux'
                }
            },
            handelLike(){
-               Post_formData2(this,{commentId:this.readCommentInfo.id},'/api/comm-GiveThumbs',res=>{
+               if(this.isLogin){
+                   Post_formData2(this,{commentId:this.readCommentInfo.id},'/api/comm-GiveThumbs',res=>{
                    if(res.returnCode==200) {
                        if(this.readCommentInfo.isthumbs==0) {
                             this.readCommentInfo.isthumbs=1
@@ -147,102 +150,26 @@ import {Popup,TransferDom} from 'vux'
                         }
                    }
               })
+            }else{
+                this.$vux.toast.text('登录后点赞哦')
+             }
            },
            handleShow(){
                if(this.isLogin){
                    this.show=!this.show
                }else{
-                   
+                   this.$vux.toast.text('请先登录!')
+                   setTimeout(()=>{
+                       this.$router.push('/Login')
+                   },2000)
                }
            }
         },
         mounted () {
             this.getCommentReply()
-            console.log(this.readCommentInfo)
         }
     }
 </script>
 <style lang='less' scoped>
-     .book_comment_detail {
-          overflow-x:hidden;
-          img{
-              vertical-align: middle;
-          }
-          .x_reply{
-            margin-top:.1rem;
-            font-size:.14rem;
-            color:#333;
-            margin-left:.2rem; 
-          }
-         .book_comment_item {
-               margin-left:.2rem;
-               margin-top:.1rem;
-               border-bottom:1px solid #EFEFEF;
-               overflow: hidden;
-               padding-bottom: .1rem;
-               width:100%;
-              .avatar { 
-                  width:.52rem;
-                  height:.52rem;
-                  border-radius: 50%;
-                  float: left;
-                  img {
-                     width:.52rem;
-                     height:.52rem;
-                     border-radius: 50%; 
-                  }
-              }
-              .book_comment_item_detail {
-                  float: left;
-                  margin-left:.2rem;
-                  width:2.7rem;
-                  .i_one{
-                          color:#666;
-                          overflow: hidden;                   
-                      img {
-                          width:.12rem;
-                          height:.12rem;
-                      }
-                      .grade{
-                          background-color:#74F3FE;
-                          font-size:.08rem;
-                          color:#fff;
-                          border-radius: .03rem;
-                      }
-                  }
-                  .bookName{
-                      font-size: .14rem;
-                  }
-                  .content{
-                      font-size: .14rem;
-                  }
-                  .zhan{
-                      overflow: hidden;
-                      font-size:.12rem;
-                      p{
-                          float: left;
-                          margin-left:.7rem;
-                      }
-                      img{
-                          width:.2rem;
-                          height:.2rem;
-                      }
-                      span{
-                          margin-left:.1rem;
-                      }
-                  }
-              }
-           }
-            .replyInput{
-               width:100%;
-               border-top:1px solid #EFEFEF;
-               height:.4rem;
-               background-color: #fff;
-               position:fixed;
-               bottom:0;
-               line-height: .4rem;
-               color:#F77583;
-               text-align: center;
-           }
-        }
+     @import '../../css/bookCommentDetail';
 </style>

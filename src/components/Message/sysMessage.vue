@@ -20,7 +20,7 @@ import {Post_formData2} from '@/config/services'
          },
          methods:{
           getSysMessage(){
-               Post_formData2(this,{startpage:1},'api/sys-getsystemmsg',res=>{
+               Post_formData2(this,{startpage:1},'/api/sys-getsystemmsg',res=>{
                  this.sysMessageList=res.data.list
              })
           }

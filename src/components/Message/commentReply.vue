@@ -32,7 +32,7 @@
       },
       methods :{
           getComment(){
-            Post_formData2(this,{userid:this.userInfo.userId,startPage:1},'api/comm-coverReplyInfo',res=>{
+            Post_formData2(this,{userid:this.userInfo.userId,startPage:1},'/api/comm-coverReplyInfo',res=>{
                  if(res.returnCode==200){
                      this.messageList=res.data.list
                      console.log(res.data)

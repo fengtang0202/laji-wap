@@ -7,7 +7,7 @@
         <div class="re_radio">
             <img src="../../assets/images/login.png" class="left_d" v-if="show" @click="handleCheck()">
             <img src="../../assets/images/select_login.png" class="left_d" v-if="!show" @click="handleCheck()">
-            <p>自动登录</p>
+            <p @click="handleCheck()">自动登录</p>
             <div class="right_d" @click="handleRouter({path:'/password'})">忘记密码</div>
         </div>
         <div class="login" @click="loginIn()">登录</div>
@@ -21,6 +21,7 @@
     import cookie from '@/config/cookie'
     import { mapActions,mapState } from 'vuex' 
     import md5  from 'js-md5'      
+    import { setTimeout } from 'timers';
     export default {
         name: 'login',
         components: {
@@ -59,7 +60,7 @@
                     });
                     cookie.set({
                         name: 'userPassword',
-                        value: this.password,
+                        value: md5(this.password),
                         path: '/',
                         day: 7
                     });
@@ -70,28 +71,24 @@
             },
             loginIn(){
                 var self = this;
-                let checkPhone=/^1(3|4|5|7|8)\d{9}$/;
-                let checkPassword = /^.{6,20}$/;
-                    if (checkPhone.test(this.phone)&&checkPassword.test(this.password)) {
+                let checkPhone=/^1(3|4|5|6|7|8|9)\d{9}$/;
+                // let checkPassword = /^.{6,20}$/;
+                    if (checkPhone.test(this.phone)) {
                         let options={
                             userName:this.phone,
-                            userPassword:md5(this.password),
+                            userPassword:this.password.length>20?this.password:md5(this.password),
                             terminal:3
                         }
                         Post_formData2(this,options,'/api/person-login',res=>{
                                 if(res.returnCode==200){
                                       let userInfo=res.data
-                                      console.log(userInfo)
                                     // 登录状态改变0 是未登录 1 是登录
                                     this.loginAction(true)
                                     this.getUserInfo(userInfo)
-                                     weui.toast('登录成功', {//loading
-                                        className: 'custom-classname',
-                                        duration: 1000,
-                                        callback: function(){
-                                            self.$router.push(self.$route.query.redirect||'/home')
-                                        }
-                                    });
+                                    this.$vux.toast.text('登录成功!')
+                                    setTimeout(()=>{
+                                        this.$router.push(this.$route.query.redirect||'/')
+                                    },1000)
                                 }else if(res.returnCode==500){
                                     this.$vux.toast.text(res.msg);
                               }

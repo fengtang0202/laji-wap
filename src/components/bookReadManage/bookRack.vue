@@ -53,13 +53,12 @@ import {mapActions,mapState} from 'vuex'
                 })
             },
             getReadNow(){
-                Post_formData(this,{userid:this.userInfo.userId,startpage:1},'./api/bookshelf-getuserbookshelf',res=>{
+                Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/bookshelf-getuserbookshelf',res=>{
                    res.returnCode==200&&this.getBookRack(res.data.list)
                 })
             },
             handleBookDetail(bookId){
-                 this.setReadBookId(bookId)
-                 this.$router.push({path:'/bookDetails'});
+                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
             },
             handleGo(){
                 this.$router.push({path:'/editorRecommend'})

@@ -9,6 +9,7 @@
 </template>
 <script>
     import { Post_formData2, noParam_Get } from '@/config/services'
+    import {mapState} from 'vuex'
     import md5  from 'js-md5'      
     export default {
         name: 'resetPassword',
@@ -18,20 +19,23 @@
                 repwd:'',
             }
         },
+        computed:{
+           ...mapState(['code','rephone'])
+        },
         methods:{
-           handleSubmit:function(){
+           handleSubmit(){
                let checkpwd = /^.{6,20}$/;
                if(checkpwd.test(this.pwd)){
                    if(this.pwd == this.repwd){
                         let options ={
                             newPwd:md5(this.repwd),
-                            code:this.$store.state.code,
-                            phoneId:this.$store.state.phone,
+                            code:this.code,
+                            phoneId:this.rephone,
                         }
                         Post_formData2(this,options,'/api/person-pwdRetrieval',res=>{
                                 if(res.returnCode==200){
                                     this.$vux.toast.text('密码重置成功');
-                                    this.$router.push({path:'/'});
+                                    this.$router.push({path:'/Login'});
                                 }else{
                                     this.$vux.toast.text(res.msg);
                                 }                      

@@ -2,18 +2,19 @@
     <div id="feed">
         <div class="page_mcbg" @click="handleClose()" v-show="backShow"></div>
         <div class="glod_div"  v-show="dilogShow">
-            <div class='goldpepper'>投喂金椒</div>
-            <p class='computerd'>您的金椒余额:{{money}}</p>
+            <div class='goldpepper'>投喂小米椒</div>
+            <p class='computerd'>您的小米椒余额:{{money}}</p>
             <div class="oDiv">
             <p class="op"  @click="subtract()" :class="{off:number==1}">—</p>
             <p class='pan'>{{number}}</p>
             <p class="op"  @click='handleAdd()'>＋</p>
-            <p class="op" @click='number=money' style="margin-left:.15rem;">ALL</p>                 
+            <p class="op" @click='number=userInfo.userRecommendTicket' style="margin-left:.15rem;">ALL</p>                 
             <button class="btn" @click='handleReword()'>投喂</button> 
             </div>
         </div>
     </div>
 </template>
+
 <script>
     import { Group, XNumber,XButton, Box} from 'vux'
     import {mapState} from 'vuex'
@@ -41,7 +42,7 @@
         },
         methods: {
             change (val) {
-                // console.log('change', val)
+                console.log('change', val)
             },
             subtract(){
                 let self=this;
@@ -63,31 +64,33 @@
             },
             handleReword(){
                let options = {
-                   goldenTicketCount:this.number,
+                   recommendTicketCount	:this.number,
                    bookid:this.readBookId,
                    bookName:this.param.bookName,
                    authorId:this.param.authorId
-               }
-                      Post_formData2(this,options,'/api/user-RewardGonderTicket',res=>{
+                  }
+                      Post_formData2(this,options,'/api/user-RecommendationTicket',res=>{
                       if(res.returnCode===200){
                        this.$vux.toast.show({text:res.msg}) 
-                       this.userInfo.userGoldenTicket-=this.number
-                       this.money-=this.number
-                        this.backShow = false;
-                        this.dilogShow = false;
+                       this.userInfo.userRecommendTicket-=this.number
+                       this.backShow = false;
+                       this.dilogShow = false;
                         }else if(res.returnCode==500){
                           this.$vux.toast.show({text:res.msg,type:'cancel'}) 
+                          this.backShow = false;
+                          this.dilogShow = false;
+                        }else if(res.returnCode==400){
+                            this.$vux.toast.show({text:res.msg,type:'warn'})
                         }
-                     })
+                 })
+             },
+             mounted(){
+                 if(this.Login){
+                     this.money=this.userInfo.userRecommendTicket   
+                 }
              }
-        },
-        mounted(){
-            if(this.isLogin)
-            this.money=this.userInfo.userGoldenTicket
         }
     }
 </script>
-
 <style lang="less">
-    @import '../../css/paper';
 </style>

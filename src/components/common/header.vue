@@ -19,7 +19,7 @@ import {mapActions} from 'vuex'
            methods:{
                ...mapActions(['changeIndex']),
               hanldeIndex(){
-                  
+                  this.changeIndex(0)
               } 
            },
            mounted () {

@@ -98,6 +98,8 @@
 import {Post_formData2,Post_formData,Param_Get_Resful} from '@/config/services'
 import {mapState,mapActions} from 'vuex'
 import {Popup,TransferDom} from 'vux'
+import { setTimeout } from 'timers';
+
 export default {
     components:{
       Popup
@@ -110,8 +112,8 @@ export default {
           topList:{
               title_1:'评论',
               title_2:'首页',
-              link:'/home'
-          },
+              link:'/'
+          }, 
           timer:'',
           show:false,
           replyText:'',
@@ -119,11 +121,12 @@ export default {
           hotCommentcount:0,
           newCommentList:[],
           newCommentcount:0,
-          bookName:''
+          bookName:'',
+          readBookId:this.$route.query.bookId
         }
     },
     computed: {
-      ...mapState(['readBookId','userInfo','isLogin'])  
+      ...mapState(['userInfo','isLogin'])  
     },
      filters:{
       content(str){
@@ -179,12 +182,13 @@ export default {
           getNewComment(){
                Post_formData2(this,{id:this.readBookId,type:1,startPage:1},'/api/comm-getcomminfo',res=>{
                   if(res.returnCode==200){
+                      if(res.data.list.length!=0){
                       this.newCommentList=res.data.list
                       this.newCommentcount=res.data.list.length
                       this.bookName=res.data.list[0].bookName
-                    //   console.log(this.bookName)
+                      }
                   }else{
-                       
+                          
                   }
               }) 
           },
@@ -198,11 +202,11 @@ export default {
           },
           handleCommentDetail(item){
               this.setReadCommentInfo(item)
-              console.log(item.userSex)
-              this.$router.push({path:'/bookCommentDetail'})   
+              this.$router.push({path:'/bookCommentDetail',query:{bookId:this.readBookId}})   
            },
            handelLike(item){
-               Post_formData2(this,{commentId:item.id},'/api/comm-GiveThumbs',res=>{
+               if(this.isLogin){
+                 Post_formData2(this,{commentId:item.id},'/api/comm-GiveThumbs',res=>{
                    if(res.returnCode==200) {
                        if (item.isthumbs==0) {
                             item.isthumbs=1
@@ -212,13 +216,19 @@ export default {
                             item.isthumbs=0                 
                         }
                    }
-              })
+                })
+               }else{
+                  this.$vux.toast.text('登录后点赞哦!')
+               } 
            },
            handleShow(){
                if(this.isLogin){
                    this.show=!this.show
                }else{
-                  this.$router.push('/')
+                   this.$vux.toast.text('请先登录!')
+                     setTimeout(()=>{
+                        this.$router.push('/Login')
+                   },2000)
                }
            }
     },
@@ -233,94 +243,5 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-    .book_comment_wrap{
-        width:100%;
-        img {
-             vertical-align: middle;
-            }
-        .book_hot_comment {
-           padding:.1rem .1rem 0 .1rem;
-           .book_comment_item {
-               margin-top:.1rem;
-               border-bottom:1px solid #EFEFEF;
-               overflow: hidden;
-               padding-bottom: .1rem;
-               width:100%;
-              .avatar { 
-                  width:.52rem;
-                  height:.52rem;
-                  border-radius: 50%;
-                  float: left;
-                  img {
-                     width:.52rem;
-                     height:.52rem;
-                     border-radius: 50%; 
-                  }
-              }
-              .book_comment_item_detail {
-                  float: left;
-                  margin-left:.2rem;
-                  width:2.7rem;
-                  .i_one {
-                          color:#666;
-                          overflow: hidden;                   
-                      img {
-                          width:.12rem;
-                          height:.12rem;
-                      }
-                      .grade{
-                          background-color:#74F3FE;
-                          font-size:.08rem;
-                          color:#fff;
-                          border-radius: .03rem;
-                      }
-                  }
-                  .bookName{
-                      font-size: .14rem;
-                  }
-                  .content{
-                      font-size: .14rem;
-                      margin:.02rem 0;
-                  }
-                  .zhan{
-                      overflow: hidden;
-                      font-size:.12rem;
-                      p{
-                          float: left;
-                          margin-left:.7rem;
-                        //   padding: .1rem 0;
-                      }
-                      img{
-                          width:.2rem;
-                          height:.2rem;
-                      }
-                      span{
-                          margin-left:.1rem;
-                      }
-                  }
-              }
-           }
-        }
-        .bottom_x{
-             width:100%;
-             height:.4rem;
-        }
-        .replyInput{
-               width:100%;
-               border-top:1px solid #EFEFEF;
-               height:.4rem;
-               background-color: #fff;
-               position:fixed;
-               bottom:0;
-               line-height: .4rem;
-               color:#F77583;
-               text-align: center;
-           }
-        .more{
-            font-size:.16rem;
-            color:#F77583;
-            text-align: center;
-            border-bottom:1px solid #EFEFEF;
-        }
-    }
+    @import '../../css/bookComment';
 </style>

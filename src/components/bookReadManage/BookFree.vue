@@ -66,13 +66,13 @@
                 })
             },
             handleGo(id){
-                this.$router.push({path:'/bookdetails'})
-                this.setReadBookId(id)
+                this.$router.push({path:'/bookdetails',query:{bookId:id}})
             },
             onInfinite($state){
                  let self = this;
                  function load(){
                         noParam_Get(self,'/api/sys-freetimelimit',res=>{
+                            console.log(res)
                             if(res.returnCode==200){
                                 let lists = res.data.data;
                                 self.freeList = self.freeList.concat(lists);

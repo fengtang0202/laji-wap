@@ -54,7 +54,6 @@
             box-sizing:border-box;
             padding:.17rem  .17rem;
             position:relative;
-            overflow:hidden;
             .oImg{
                 position:absolute;
                 top:3rem;

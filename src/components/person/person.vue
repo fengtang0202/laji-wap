@@ -19,7 +19,7 @@
      </div>
       <div class="person_info" @click='handleGo()'>
            <div class='avatar_wrap'>
-               <img :src="userInfo.userHeadPortraitURL" alt="" style='width:.52rem;height:.52rem'>
+               <img :src="userInfo.userHeadPortraitURL" alt="" style='width:.52rem;height:.52rem;border-radius:50%;'>
            </div>
            <div class='person_info_detail'>
               <div>
@@ -85,7 +85,7 @@
         },
         methods:{
             ...mapActions(['loginAction','setFans','setFllows','getUserInfo']),
-        handleAuthorCenter(){
+        handleAuthorCenter () {
             this.show=true;
          },
          loginOut(){
@@ -93,15 +93,12 @@
                console.log(self)
                Post_formData2(this,'','/api/person-ClearUserInfo',res=>{
                    if(res.returnCode==200||res.returnCode==400){
-                       weui.toast('退出成功', {//loading
-                                        className: 'custom-classname',
-                                        duration: 2000,
-                                        callback: function(){
-                                            self.$router.push({path:'/home'})
-                                            self.loginAction(false)
-                                            self.getUserInfo(null)                       
-                                        }
-                          });
+                            this.$vux.toast.text('退出成功!')
+                                setTimeout(()=>{
+                                 this.loginAction(false)
+                                 this.getUserInfo(null)       
+                                 this.$router.push(this.$route.query.redirect||'/')
+                          },1000)
                    }
                })
          },
@@ -124,7 +121,8 @@
                 })
             },
            handleGo () {
-               this.$router.push("/personInfo")
+            // 用户信息还没有确定
+            //    this.$router.push("/personInfo")
             }
         },
         mounted(){

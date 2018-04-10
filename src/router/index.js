@@ -40,10 +40,18 @@ import MessageManage from '@/components/Message/MessageManage'
 import sysMessage from '@/components/Message/sysMessage'
 import personalLetter from '@/components/Message/personalLetter'
 import commentReply from '@/components/Message/commentReply'
+import dealManage from '@/components/dealRecord/dealManage'
+// 子组件
+import payRecord from '@/components/dealRecord/payRecord'
+import subscriptionRecord from '@/components/dealRecord/subscriptionRecord'
+import minPepper from '@/components/dealRecord/minPepper'
+import pepperRecord from '@/components/dealRecord/pepperRecord'
+import rewordRecord from '@/components/dealRecord/rewordRecord'
+
 import test from '@/components/test'
 Vue.use(Router)
 let routers=[
-    {path: '/', name: 'Login', component: Login},
+    {path: '/Login', name: 'Login', component: Login},
     {path: '/register', name: 'Home', component: Register},
     {path: '/password', name: 'Password', component: Password},
     {path: '/resetPassword', name: 'resetPassword', component: resetPassword},
@@ -58,7 +66,7 @@ let routers=[
     {path: '/editorRecommend',component: editorRecommend},
     {path: '/bookDetails', name: 'bookDetails', component: bookDetails},
     {path:'/categoryDetail',component:categoryDetail},
-    {path: '/home',component: Home,
+    {path: '/',component: Home,
         children:[//子路由
             {path:'/',component:index},
             {path: 'categoryList', component:categoryList},
@@ -135,6 +143,19 @@ let routers=[
             requireAuth:true           
          }
       
+    },
+    {
+      path:'/dealManage',component:dealManage,
+      children:[
+          {path:'/',component:payRecord},
+          {path:'subscriptionRecord',component:subscriptionRecord},
+          {path:'pepperRecord',component:pepperRecord},
+          {path:'rewordRecord',component:rewordRecord},   
+          {path:'minPepper',component:minPepper}                                                                                        
+      ],
+       meta:{
+            requireAuth:true           
+         }
     },
     {path:'/test',component:test}
 ]

@@ -1,14 +1,11 @@
 <template>
     <div id="index">
         <loading :show="isShow"></loading>
-        <div class="swiper-container swiper" >
-            <div class="swiper-wrapper" >
-                <div class="swiper-slide" v-for="(item,index) in pictureList">
-                    <img  :src="item.bookImage" @click='handleGo(item.bookId)' style="width:100%;height:.98rem;" >
-                </div>
-            </div>
-            <div class="swiper-pagination"></div>
-        </div>
+        <swiper auto height="100px" dots-position="center">
+           <swiper-item v-for='(item,index) in pictureList' :key='index' >
+                <img  :src="item.bookImage" @click='handleGo(item.bookId)' style="width:100%;height:.98rem;" >
+           </swiper-item>
+       </swiper>
         <div class="edit">
             <img src='../../assets/images/recommend@3x.png' class="left_img">
             <p class='le_p'>小编推荐</p>
@@ -51,11 +48,9 @@
         </div>
         <div class="bottom_d">
             <ul>
-                <li>首页</li>
-                <li>书架</li>
-                <li>充值</li>
-                <li>客户端</li>
-                <li>联系我们</li>
+                <li @click='handleTap(index)' v-for='(item,index) in bottomList' :key='index'>
+                   {{item.title}}
+                </li>
             </ul>
             <p style="margin-top:.5rem;margin-bottom:.1rem;">Copyright (C) 辣鸡小说网 2004-2017</p>
             <p>浙ICP备12010638号-1</p>
@@ -64,7 +59,7 @@
 </template>
 
 <script>
-    import { Loading } from 'vux'
+    import { Loading,Swiper ,SwiperItem } from 'vux'
     import { Post_formData2, noParam_Get } from '@/config/services'
     import {mapState,mapActions} from 'vuex'
     export default {
@@ -76,11 +71,18 @@
                  total:10,
                  newList:[],
                  pictureList:[],
-                 isShow:false
+                 isShow:false,
+                 bottomList:[
+                     {title:'首页',link:'/'},
+                     {title:'书架',link:'/bookRack'},
+                     {title:'充值',link:'/payMoney'},
+                     {title:'客户端',link:'/download'},
+                     {title:'联系我们',link:'/contactUs'}
+                 ]
             }
         },
         components: {
-            Loading,
+            Loading,Swiper,SwiperItem
         },
         filters: {
           className(res){
@@ -91,10 +93,9 @@
           }  
         },
         computed: {
-          ...mapState(['readBookId'])  
+          ...mapState(['isLogin'])  
         },
         methods:{
-            ...mapActions(['setReadBookId']),
             handleGetbook(){
                 this.isShow = true;
                 noParam_Get(this,'/api/hot/homePageRecommended',res=>{
@@ -107,14 +108,28 @@
                         }
                 })
             },
+            handle(link,msg){
+                if(this.isLogin){
+                    this.$router.push(link)
+                  }else{
+                    this.$vux.toast.text(msg)
+                }
+             },
+            handleTap(index){
+                  index==0&&this.$router.push('/')
+                  index==1&&this.handle('/bookRack','登录后才能看书架')
+                  index==2&&this.handle('/payMoney','登录后才能充值')
+                  index==3&&this.$router.push('/download')
+                  index==4&&this.$router.push('/contactUs')
+            },
             handleNewbook(){
                 this.isShow = true;
                  noParam_Get(this,'/api/hot/getbooklistList/'+this.page+'/'+this.total,res=>{
                         this.isShow= false;
                         if(res.returnCode==200){
                             this.newList = res.data.list;
-                            console.log(res)
-                        }else{
+
+                      }else{
                             this.$vux.toast.text(res.msg);
                         }
                 })
@@ -123,22 +138,12 @@
                 this.$router.push({path:"/editorRecommend"});
             },
             handleGo(id){
-                 this.setReadBookId(id)
-                 this.$router.push({path:'/bookDetails'});
+                 this.$router.push({path:'/bookDetails',query:{bookId:id}});
             }
         },
         mounted(){
-            let self = this;
-            self.handleGetbook();
-            self.handleNewbook();
-            let mySwiper = new Swiper('.swiper-container', {
-                autoplay:3000,
-                autoplayDisableOnInteraction : false,
-                pagination : '.swiper-pagination',
-                // paginationClickable:true,
-                observer:true,
-                observeParents:true,
-            });
+            this.handleGetbook();
+            this.handleNewbook();
         }
     }
 </script>

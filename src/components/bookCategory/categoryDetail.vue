@@ -86,7 +86,7 @@ import {mapActions} from 'vuex'
                 topList:{
                     title_1:this.$route.query.classificationName,
                     title_2:'首页',
-                    link:'/home'
+                    link:'/'
                 },
                 filterList:[],
                 keyword:'',
@@ -136,8 +136,29 @@ import {mapActions} from 'vuex'
                 ]
             }
         },
+        watch:{
+            keyword(){
+                this.handleSearch()
+            }
+        },
         methods:{
-            ...mapActions(['setReadBookId']),
+            handleSearch(){
+                let options = {
+                    keyWord:this.keyword,
+                    startPage:1,
+                    isHotWorld:1
+                }
+                  Post_formData2(this,options,'/api/stacks-search',res=>{
+                    if(res.returnCode==200){
+                          if(res.data.list.length>0){
+                              this.message = true;
+                              this.filterList = res.data.list;
+                          }else{
+                              this.message = false;
+                          }                  
+                    }
+                })
+            },            
             handleOrder(){
                 (this.direction=!this.direction)&&(this.direction1=false)        
             },
@@ -157,7 +178,6 @@ import {mapActions} from 'vuex'
             getTime(res,index){
                 this.worksTime =res;
                 this.timeRed = index;
-                console.log(this.worksTime);
                 this.handleFilter();
             },
             up(){
@@ -249,8 +269,8 @@ import {mapActions} from 'vuex'
                 })
             },
              handleToBookDetail(bookId){
-                 this.setReadBookId(bookId)
-                 this.$router.push({path:'/bookDetails'});
+                //  this.setReadBookId(bookId)
+                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
             }
         },
         mounted(){
@@ -260,125 +280,5 @@ import {mapActions} from 'vuex'
     }
 </script>
 <style lang='less' scoped>
-   .categoryDetail_wrap{
-       width:100%;
-       font-size:.16rem;
-       .search_top{
-            height:.36rem;
-            box-sizing:border-box;
-            padding: 0 .14rem;
-            margin-top:.1rem;
-            img{
-                width:.2rem;
-                height:.2rem;
-                position:absolute;
-                top:.62rem;
-                left:.25rem;
-            }
-            input{
-                width:3.48rem;
-                height:.36rem;
-                border-radius:8px;
-                border:1px solid #979797;
-                outline:none;
-                box-sizing:border-box;
-                padding-left:.4rem;
-                color:#999;
-                font-size:.16rem;
-            }
-            span{
-                font-size:.18rem;
-                color:#F77583;             
-                margin-left:.05rem;
-            }
-        }
-        .filter_nav{
-            height:.5rem;
-            border-bottom:1px solid #E9E9E9;
-            .filter_btn_wrap {
-                width:.7rem;
-                height:.25rem;
-                display:inline-block;
-                margin:.125rem 0 0 .85rem;
-            }
-            img{
-                width:.15rem;
-                height:.15rem;
-                transition:.5s;
-            }      
-         }
-        .filter_wrap{
-            position: relative;
-            .orderList_wrap{
-                height:1.3rem;
-                width:100%;
-                transition:all .5s linear;
-                overflow: hidden;
-                position: absolute;
-                background-color: #fff;
-                top:0;
-                left:0;  
-                .select{
-                    border-bottom:1px solid #e9e9e9;
-                    box-sizing:border-box;
-                    padding:.12rem;
-              li{
-                font-size:.16rem;
-                color:#999;
-                float:left;
-                margin-right:.22rem;
-                height:.2rem;
-                margin-bottom:.1rem;
-                list-style: none;
-               }
-             .red{
-                color:#FB5E6F;
-               }
-              }          
-            }
-        }
-        .book_text{
-            height:1.3rem;
-            box-sizing:border-box;
-            margin-top:.14rem;
-            margin-left:.14rem;
-            img{
-                width:.8rem;
-                height:1.02rem;
-                margin-right:.16rem;
-                float:left;
-            }
-            .con-text{
-                float:left;
-            }
-            .p_one{
-                font-size:.16rem;
-                color:#333;
-                margin-bottom:.1rem;
-            }
-            .p_two{
-                font-size:.12rem;
-                color:#999;
-                margin-bottom:.12rem;
-                span:not(:first-child):not(:last-child):after{
-                   content:'';
-                   display: inline-block;
-                   width:.02rem;
-                   height:.1rem;
-                   margin-left:.1rem;
-                   background-color: #FFAAAA;
-                }
-            }
-            .p_three{
-                width:2.47rem;
-                font-size:.14rem;
-                color:#666;
-                overflow : hidden;
-                text-overflow: ellipsis;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-            }
-        }
-   }
+   @import '../../css/categoryDetail';
 </style>

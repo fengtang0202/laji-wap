@@ -60,7 +60,7 @@ export default {
             if(this.delId.length!==0){
              Post_formData2(this,{id:[...new Set(this.delId)].toString()},'/api/bookshelf-deluserbookshelf',res=>{
               if (res.returnCode) {
-                Post_formData(this,{userid:this.userInfo.userId,startpage:1},'./api/bookshelf-getuserbookshelf',res=>{
+                Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/bookshelf-getuserbookshelf',res=>{
                    res.returnCode==200&&this.getBookRack(res.data.list)
                    this.bookRack.forEach(value=>{
                      value.checked=false 

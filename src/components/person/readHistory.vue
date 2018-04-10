@@ -32,10 +32,8 @@ export default {
       }  
     },
     methods:{
-        ...mapActions(['setReadBookId']),
         handleBookDetail(bookId){
-                 this.setReadBookId(bookId)
-                 this.$router.push({path:'/bookDetails'});
+                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
             },
         handleReadBookList(){
                 //this.userId  : 1082 测试
