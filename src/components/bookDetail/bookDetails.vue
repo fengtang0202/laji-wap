@@ -148,8 +148,16 @@ import { setTimeout } from 'timers';
             AppFeedpepper,
             AppMinpepper
         },
+        watch:{
+          '$route'(){
+              this.readBookId=this.$route.query.bookId
+              this.handleInit()
+              this.handleComments()
+              window.scrollTo(0,0);
+          }
+        },
         computed:{
-          ...mapState(['userInfo','isLogin'])
+          ...mapState(['userInfo','isLogin']),
         },
         filters:{
             bookName:name=>name.length>6?(name.slice(0,5)+'....'):name
@@ -241,10 +249,11 @@ import { setTimeout } from 'timers';
                         this.labelList = res.data.bookLable;
                         this.swiperList=res.data.similarRecommendation
                         this.rewordParam.authorId=res.data.AuthorInfo.userId
+                        this.rewordParam.bookId=this.readBookId
                         this.rewordParam.bookName=res.data.bookListInfo.bookName
-                        setTimeout(()=>{
-                            this.$refs.content.scrollIntoView();
-                         },100) 
+                        // setTimeout(()=>{
+                        //     this.$refs.content.scrollIntoView();
+                        //  },1000) 
                     }else{
                         this.$vux.toast.text(res.msg);
                     }
@@ -293,13 +302,22 @@ import { setTimeout } from 'timers';
                     }
                 })
             },
+             refeshUserInfo(){
+                 if(this.isLogin){
+                    Post_formData2(this,'','/api/person-info',res=>{
+                            if(res.returnCode===200){
+                                this.getUserInfo(res.data) 
+                             }
+                      })
+                  }
+            },
             handleToBookDetail(bookId){
-                //  this.$router.replace({path:'/bookDetails',query:{bookId:bookId}});
-                 this.readBookId=bookId                               
-                 this.handleInit()
-                 this.handleComments()
+                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
+                //  this.readBookId=bookId                               
+                //  this.handleInit()
+                //  this.handleComments()
             }
-        },
+          },
         mounted () {
             this.handleInit();
             this.handleComments();
@@ -309,8 +327,8 @@ import { setTimeout } from 'timers';
                  this.cate[1].name='已在书架'
               }
           })
+         }
         }
-     }
 </script>
 
 <style lang="less" scoped>

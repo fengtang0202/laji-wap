@@ -7,11 +7,11 @@
          </div>
          <p class='buyMay'>选择充值方式</p>
          <div class='buy'>
-             <div class='zfb' @click='handleTap(1)'>
+             <div class='zfb' @click='handleTap("/alipay")'>
                 <img src="../../assets/images/zfb@2x.png" alt="">
                 <span>支付宝</span>
              </div>
-             <div class='wx' @click='handleTap()'>
+             <div class='wx' @click='handleTap("/wechatPay")'>
                  <img src="../../assets/images/wx@2x.png" alt="">
                  <span>微信</span>
              </div>
@@ -34,7 +34,8 @@ import {mapState} from 'vuex'
               topList:{
                   title_1:'充值',
                   title_2:'首页',
-                  link:'/'
+                  link:'/',
+                  html:''
               },
               alipayData:''
           }
@@ -51,14 +52,16 @@ import {mapState} from 'vuex'
                 WIDtotal_amount:1
                }
              Post_formData2(this,options,'/api/payment-alipaywap',res=>{
+                 this.html=res.data
                 console.log(res.data)
             })
-           },
+         },
            handleWeChatPay () {
              console.log('微信')
            },
            handleTap(res) {
-            res?this.handleAlipay():this.handleWeChatPay()
+            // res?this.handleAlipay():this.handleWeChatPay()
+            this.$router.push(res)
            }
        }
     }

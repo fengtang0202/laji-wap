@@ -33,6 +33,7 @@
               </div>
             </div> 
             <!-- 相关回复 -->
+            <div v-if='showContent'>
               <p  class='x_reply'>相关回复</p>
                <div class='book_comment_item'  :key='index' v-for='(item,index) in replyList'>
                     <div class='avatar'>
@@ -51,6 +52,8 @@
                  <p class='content'>{{item.replyCommentsContent}}</p>           
               </div>
             </div> 
+            </div>
+            <no-content v-if='!showContent' :source='source'></no-content>
            <div class='replyInput'>
              <span @click='handleShow()'>回复</span>
           </div>
@@ -78,6 +81,7 @@ import { setTimeout } from 'timers';
         data(){
             return {
                 replyList:[],
+                showContent:true,
                 replyText:'',
                 readBookId:this.$route.query.bookId,
                 topList:{
@@ -85,7 +89,11 @@ import { setTimeout } from 'timers';
                     title_2:'首页',
                     link:'/'
                 },
-                show:false
+                show:false,
+                source:{
+                img:require('../../assets/images/1.png'),
+                text:'没有相关回复'
+              }
             }
         },
         directives: {
@@ -105,11 +113,18 @@ import { setTimeout } from 'timers';
         methods:{
            getCommentReply(){
                Post_formData2(this,{commentid:this.readCommentInfo.id,startPage:1},'/api/comm-replyInfo',res=>{
-                  this.replyList=res.data.list
-                  console.log(this.replyList)
+                 if(res.returnCode===200){
+                     if(res.data.list.length==0){
+                         this.showContent=false
+                         return;
+                     }
+                     this.replyList=res.data.list
+                 }
               })
            },
            handleReply(){
+            let reg=/[\ud83c-\ud83e][\udc00-\udfff]|[\u2600-\u27ff]/
+             if(!reg.test(this.replyText)){ 
                if(this.replyText.length>0&&this.replyText.length<100){
                  let options = {
                     bookid:this.readBookId,
@@ -122,6 +137,7 @@ import { setTimeout } from 'timers';
                  Post_formData2(this,options,'/api/add-replyInfo',res=>{
                      if (res.returnCode===200) {
                          this.show=false
+                         this.showContent=true
                          this.readCommentInfo.replyCount++
                          options.pseudonym=this.userInfo.pseudonym
                          options.userHeadPortraitURL=this.userInfo.userHeadPortraitURL
@@ -135,7 +151,10 @@ import { setTimeout } from 'timers';
                    this.$vux.toast.show('不能为空!')
                }else if(this.replyText.length>=100){
                    this.$vux.toast.show('评价太多了!')
-               }
+                }
+               }else{
+                 this.$vux.toast.show({text:'目前不支持表情',type:'cancle'})       
+             }
            },
            handelLike(){
                if(this.isLogin){

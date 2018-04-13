@@ -2,27 +2,50 @@
   <div class='wechat'>
       <headerComponent :list='topList'></headerComponent>
       <div class='pay_category_wrap'>
-            <div class='pay_category' :key='index'  v-for="(item,index) in payCategoryList" :class="{isAdd:isAddTo===index}" @click='handelTap(index)'>
+            <div class='pay_category'  :key='index'  v-for="(item,index) in payCategoryList" :class="{isAdd:isAddTo===index}" @click='handelTap(index,item.price)'>
                  <p class='price'>{{item.price+'元'}}</p>
                  <p class='price'>{{item.price*100+'小辣椒'}}</p>
                  <p class='gift'>{{item.gift}}</p> 
                  <span class='icon' v-if='item.gift?true:false'>赠送</span>         
             </div>
-      </div>    
+      </div>  
+      <div v-html='formHtml'>
+      </div> 
+       <!--支付宝弹框-->
+    <div v-transfer-dom >
+      <popup v-model="show" style='height:2rem;'>
+        <div class="popup">
+           <p style='color:#FB5E6F;font-size:.28rem;text-align:center;margin:.13rem 0;'>¥{{price}}</p>
+           <div style='overflow:hidden;border-bottom:1px solid #EFEFEF;'>
+              <p style='color:#666666;font-size:.16rem;float:left;margin-left:.14rem'>可用余额:{{userInfo.userMoney}}</p>
+              <p style='color:#4A90E2;font-size:.12rem;float:right;margin-right:.14rem;'>没充值20元送1个金椒</p>
+           </div>
+            <p style='text-align:center;margin-top:.1rem;'>
+              <button @click='pay()' style='border:0;outline:none;background-color:#F77582;width:80%;height:.4rem;border-radius:.4rem;color:#fff;'>立即支付</button>
+           </p>
+        </div>
+      </popup>
+    </div>
   </div>
 </template>
 <script>
+    import {mapState} from 'vuex'
+    import {Post_formData2} from '../../config/services'
+    import {TransferDom,Popup} from 'vux'
 export default{
      data(){
       return{
        topList:{
-           title_1:"微信支付",
+           title_1:'支付宝支付',
            title_2:"首页",
            link:'/'
        },
+       price:0,
+       formHtml:'',
        isAddTo:0,
+       show:false,
        payCategoryList:[
-           {price:6,gift:''},
+           {price:1,gift:''},
            {price:12,gift:''},
            {price:30,gift:'送150辣椒券'},
            {price:50,gift:'送300辣椒券'},
@@ -31,10 +54,34 @@ export default{
        ]
     }  
   },
+  components:{
+       Popup
+  },
+   directives: {
+    TransferDom
+  },
+  computed: {
+      ...mapState(['userInfo'])
+  },
   methods: {
-      handelTap(index){
+      handelTap(index,price){
            this.isAddTo=index
+           this.price=price
+           let options={
+                username:this.userInfo.userName,
+                apymentType:3,
+                WIDtotal_amount:price
+           }
+           Post_formData2(this,options,'/api/payment-alipaywap',res=>{
+               if(res.returnCode==200){
+                  this.formHtml=res.data
+                  this.show=true
+               }
+           })
       },
+      pay () {
+          document.forms[0].submit()
+      }
   }
 }
 </script>

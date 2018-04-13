@@ -10,23 +10,30 @@
           </ul>
        </div>
        <div class='book_list_wrap'>
-          <div class='book_item_wrap' v-for='item in rankBookList' :key='item.bookId' @click='handleToDetail(item.bookId)'>
+          <div class='book_item_wrap' v-for='item in rankBookList'  @click='handleToDetail(item.bookId)'>
               <img :src="item.bookImage" style='width:.81rem;height:1.08rem' alt="">
               <div class='book_detail'>
-                  <p style='font-size:.16rem'>{{item.bookName|bookName}}</p>
+                  <p style='font-size:.16rem'>{{item.bookName}}</p>
                   <p style='color:#999'>作者：{{item.writerName}}
                       <span>{{item.tempTicketSum}}金票</span> 
                   </p>
-                  <p style='color:#666;height:.45rem;overflow:hidden;'>{{item.bookIntroduction}}</p>
+                  <p style='color:#666;height:.42rem;overflow:hidden;'>{{item.bookIntroduction}}</p>
               </div>
           </div>
+          <infinite-loading @infinite="onInfinite" ref="infiniteLoading">
+          <span slot="no-more">
+            目前暂无更多书籍
+          </span>
+          <span slot="no-results">
+            目前暂无更多书籍
+          </span>
+         </infinite-loading>
        </div>
    </div>
 </template>
 <script>
 import headerComponent from '@/components/common/header'
 import {Post_formData2,handleScroll} from '@/config/services'
-import {mapActions} from 'vuex'
     export default{
         components:{
             headerComponent
@@ -40,15 +47,15 @@ import {mapActions} from 'vuex'
                link:''
              },
              dayList:[
-                 {day:'周',key:'week'},
                  {day:'月',key:'month'},
                  {day:'总',key:'total'}
              ],
              changeDayColor:0,
              changeItemColor:0,
              rankBookList:[],
-             RankType:2,
-             dayType:'week',
+             RankType:1,
+             dayType:'month',
+             page:0,
              rankList:[
                     {name:"金椒榜",key:1},
                     {name:"推荐榜",key:2},
@@ -67,38 +74,101 @@ import {mapActions} from 'vuex'
             }
         },
         methods:{
-            ...mapActions(['setReadBookId']),
             handleTapDay(index,key){
                 this.changeDayColor=index
                 this.dayType=key
                 this.hanleRankBook()
+                window.scrollTo(0,0)                             
             },
             handleTapItem (index,key) {
               this.changeItemColor=index
+              if(key==1){
+                  this.dayType='month'
+                  this.dayList=[
+                           {day:'月',key:'month'},
+                           {day:'总',key:'total'}
+                 ]
+              }else if(key!==4){
+                  this.dayType='week'
+                  console.log(this.dayType)
+                  if(this.dayList[0].day!='周'){
+                      this.dayList=[
+                           {day:'周',key:'week'},
+                           {day:'月',key:'month'},
+                           {day:'总',key:'total'}
+                      ]
+                  }
+              }
+              if(key==4){
+                  this.dayList=[
+                           {day:'总',key:'total'}
+                      ]
+                  this.handleNewBook()
+              } 
               this.RankType=key
-              this.hanleRankBook()              
+              console.log(this.RankType)
+              this.hanleRankBook()
+              window.scrollTo(0,0)             
+            },
+            handleNewBook(){
+                 Post_formData2(this,{type:4,page:1},'/api/ranking-book',res=>{
+                       this.rankBookList=res.data.newBookRankingList.list
+                 })
             },
             hanleRankBook () {
-                 Post_formData2(this,{type:this.RankType},'/api/ranking-book',res=>{
+                 Post_formData2(this,{type:this.RankType,page:1},'/api/ranking-book',res=>{
                      console.log(res)
                      if(res.data[this.dayType]!==undefined){
                         this.rankBookList=res.data[this.dayType].list
                      }else{
-                        return this.rankBookList
+                        console.log(this.dayType)
                    }
                 })
              },
-              
+          onInfinite($state){
+                  let self = this;
+                  this.page+=1
+                 function load() {
+                        Post_formData2(self,{type:self.RankType,page:self.page},'/api/ranking-book',res=>{
+                             let lists=null
+                           if(res.returnCode==200){
+                                if(self.RankType!=4){
+                                     lists = res.data[self.dayType].list
+                                }else{
+                                     lists=res.data.newBookRankingList.list
+                                 }
+                                    self.rankBookList = self.rankBookList.concat(lists);
+                                if(self.RankType!=4){
+                                    if(res.data[self.dayType].lastPage>=self.page){                                   
+                                        $state.loaded()
+                                   }else {
+                                        $state.complete()
+                                  }
+                                }else{
+                                    if(res.data.newBookRankingList.lastPage>=self.page){
+                                        $state.loaded()
+                                    }else{
+                                        $state.complete()
+                                    }
+                              }
+                            }else{
+                              $state.complete()                                
+                         }
+                    })
+                 }
+                setTimeout(() => {
+                    load();
+                },500);  
+            },
              handleToDetail(bookId){
-                 this.setReadBookId(bookId)
-                 this.$router.push({path:'/bookDetails'});
+                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
              },
              handleScroll(){
                  handleScroll(this,'#nav')
              }
         },
         mounted () {
-            this.hanleRankBook()
+            // this.hanleRankBook()
             let self=this
             this.$nextTick(()=>{
                 window.addEventListener('scroll',this.handleScroll)

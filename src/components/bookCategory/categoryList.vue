@@ -52,8 +52,7 @@
             }
             .categoryPic{
                 width:.74rem;
-                height:.74rem;
-                border:1px dashed;             
+                height:.74rem;             
             }
     }
 </style>

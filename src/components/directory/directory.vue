@@ -3,29 +3,20 @@
     <div id="directory">
         <loading :show="isShow"></loading>
         <headerComponent :list='topList'></headerComponent>
-        <div class='readVolumeList' style='border-bottom:1px solid #EFEFEF;' :key='index' v-for='(item,index) in volumeList'>
-             <cell
-                :title="item.volumeName"
-                is-link
-                :border-intent="true"
-                :arrow-direction="showContent!==index? 'up' : 'down'"
-                @click.native="handleTapvolume(index,item.id)">
-             </cell>
-            <template v-if="showContent===index?true:false">
-                <cell-box class='chapterTitle'  :class='{Vip:item.chapterIsvip==1}'  @click.native='handle(item.chapterIsvip,item.id,item.price)' :key='index' v-for='(item,index) in chapterList'>
-                    <span>{{item.chapterTitle}}</span>
-                    <img src="../../assets/images/vip@3x.png" v-if='item.chapterIsvip==1?true:false' class='vip_icon' alt="">
-                 <span class='words'>{{item.chapterLength}}</span>                                    
-                </cell-box>
-            </template>
+       <div class='readVolumeList' style='border-bottom:1px solid #EFEFEF;' :key='index' v-for='(item,index) in volumeAndChapterlist'>
+                <p class='volume_wrap'>
+                    {{item.volumeName}}
+                </p>
+        <div class='chapter_wrap'  @click='handleToBookRead(i)' v-for="(i,index) in item.resultList" :key='index'>
+                <p class='volume_wrap chapter'>
+                   <span :class='{add:i.chapterIsvip==1}'>{{i.chapterTitle}}</span>
+                   <img class='vip' src="../../assets/images/vip@3x.png" v-if='i.chapterIsvip==1' alt="">
+                </p>
+                  <span class='fontLength'>
+                    {{i.chapterLength}}
+                  </span>
+       </div>  
         </div>
-       <!-- <div>
-        <cell-box class='chapterTitle'  :class='{Vip:item.chapterIsvip==1}'  @click.native='handle(item.chapterIsvip,item.id,item.price)' :key='index' v-for='(item,index) in chapterList'>
-                    <span>{{item.chapterTitle}}</span>
-                    <img src="../../assets/images/vip@3x.png" v-if='item.chapterIsvip==1?true:false' class='vip_icon' alt="">
-                 <span class='words'>{{item.chapterLength}}</span>                                    
-        </cell-box>
-       </div> -->
         <!-- <div style='width:100%;height:.2rem;'></div>
         <div class="page">
             <span class="page_l">上一页</span>
@@ -34,12 +25,12 @@
             <p class="page_p">跳转</p>
             <span class="page_num">1/20</span>
         </div> -->
-    </div>
+      </div>
      </div>
 </template>
 <script>   
-    import { Loading,Group,Cell,CellBox,XButton,TransferDom } from 'vux'
-    import { Post_formData2, noParam_Get } from '@/config/services'
+    import { Loading,Cell,TransferDom } from 'vux'
+    import { Post_formData2, noParam_Get,Param_Get_Resful} from '@/config/services'
     import {mapState,mapActions} from 'vuex'
     export default {
         name: 'directory',
@@ -56,50 +47,35 @@
                     title_1:'目录',
                     title_2:'首页',
                     link:'/'
-                }
+                },
+                volumeAndChapterlist:null
             }
         },
         components: {
-            Loading,Group,Cell,CellBox
+            Loading,Cell
         },
         directives: {
            TransferDom
          },
         methods:{
-            ...mapActions(['setChapterId']),
-            handleGo(){
-                 this.$router.push({path:'/Home'});
-            },
             handleBack(){
                  window.history.go(-1);
             },
-            handle (isvip,chapterId,price) {
-                  this.$router.push({path:'/bookRead',query:{isvip:isvip,price:price,bookId:this.readBookId,chapterId:chapterId}});  
+            handleToBookRead (i) {
+                  this.$router.push({path:'/bookRead',query:{isvip:i.chapterIsvip,price:i.price,bookId:this.readBookId,chapterId:i.id}});  
             },
-             handleTapvolume(index,volumeId){
-                 this.showContent!==index?this.showContent=index:this.showContent=-1
-                //  if(!this.showContent){
-                     this.chapterList=[]
-                //   }
-                   Post_formData2(this,{volumeid:volumeId},'/api/books-getVolumeById',res=>{
-                       this.chapterList=res.data
-                      if (res.data==null) {
-                         this.chapterList=[]
-                       }
-                   })
-            },
-            handleInit () {
-                this.isShow = true;
-                Post_formData2(this,{bookId:this.readBookId},'/api/books-getvolume',res=>{
-                        this.isShow = false;
-                        if(res.returnCode==200){
-                            this.volumeList=res.data
-                    }
-                })
+            handleGetVolumeChapter(){
+                 Param_Get_Resful(this,'/api/books-volumeChapterList/'+this.readBookId,res=>{
+                     if(res.returnCode===200){
+                         this.volumeAndChapterlist=res.data.chapterInfo
+                         console.log(this.volumeAndChapterlist)
+                     }
+                 })
             }
         },
         mounted () {
-            this.handleInit();
+            // this.handleInit();
+            this.handleGetVolumeChapter()
         }
     }
 </script>
@@ -111,17 +87,40 @@
         box-sizing:border-box;
         font-family:'PingFangSC-Regular';
         .readVolumeList{
-           .chapterTitle{
-               font-size:.14rem;
-               .vip_icon{
-                   width:.15rem;
-                   height:.15rem;
-                   margin-left:.2rem;
-               }
-           }
-           .Vip{
-              color:#999;  
-          }
+            .chapter_wrap{
+                position: relative;
+            }
+            .volume_wrap{
+                height:.52rem;
+                font-size: .16rem;
+                color:#333;
+                padding:0 .14rem;
+                border-bottom:1px solid #EFEFEF;
+                line-height: .52rem;
+            }
+            .chapter{
+                font-size:.14rem;
+                padding:0 .24rem;
+                .vip{
+                    width:.15rem;
+                    height:.15rem;
+                    margin-left:.2rem;
+                }
+                .add{
+                    color:#999;
+                }
+               
+            }
+             .fontLength{
+                   border:1px solid #F77583;
+                   position: absolute;
+                   height:.24rem;
+                   padding:0 .05rem;
+                   color:#F77583;
+                   top:15px;
+                   right:15px;
+                   border-radius:.15rem;
+                }
         }
         .page{
             width:100%;

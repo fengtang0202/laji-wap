@@ -28,11 +28,13 @@ import bookRack from '@/components/bookReadManage/bookRack'
 import bookEdit from '@/components/bookReadManage/bookEdit'
 import bookRank from '@/components/bookRank/bookRank'
 import readHistory from '@/components/person/readHistory'
+import bookHistoryEdit from '@/components/bookReadManage/bookHistoryEdit'
 import bookRead from '@/components/bookRead/bookRead'
 import bookComment from '@/components/bookComment/bookComment'
 import bookCommentDetail from '@/components/bookComment/bookCommentDetail'
 import buyChapter from '@/components/pay/buyChapter'
 import payMoney from '@/components/pay/payMoney'
+import alipay from '@/components/pay/alipay'
 import gradeSystem from '@/components/person/gradeSystem'
 import myWallet from '@/components/person/myWallet'
 // 消息管理中心
@@ -105,6 +107,11 @@ let routers=[
         requireAuth: true
       }
     },
+   {
+    path: '/bookHistoryEdit', component: bookHistoryEdit, meta: {
+      requireAuth: true
+    }
+   },
     {path:'/bookRank',component:bookRank},
     {path:'/readHistory',component:readHistory, meta: {
         requireAuth: true
@@ -122,8 +129,15 @@ let routers=[
         requireAuth:true
      }
     },
+    {
+      path:'/alipay',component:alipay,
+       meta:{
+        requireAuth:true
+       }
+    },
      {
-      path:'/gradeSystem',component:gradeSystem,meta:{
+      path:'/gradeSystem',component:gradeSystem,
+       meta:{
         requireAuth:true
       }
     },
@@ -135,8 +149,8 @@ let routers=[
     {
         path:'/MessageManage',component:MessageManage,
           children:[//子路由
-            {path:'/',component:personalLetter},
-            {path: 'sysMessage', component:sysMessage},
+            { path: '/', component:  sysMessage},
+            { path: 'personalLetter', component:personalLetter},
             {path:'commentReply',component:commentReply}
         ],
         meta:{

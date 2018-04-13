@@ -7,13 +7,13 @@
             <div class="con_d">
                <div class="text_one">
                   <span class="one_sp" v-html="item.bookName"></span>
-                  <span class="two_sp" >{{item.clickTotal}}万点击</span>
+                  <span class="two_sp" >{{item.clickTotal|clickTotal}}万点击</span>
                </div>
                <div class="text_two">
                   <span>作者: </span>
                   <span v-html="item.writerName"></span>
                   <p></p>
-                  <span  v-html="item.classificationName">dfggag</span>
+                  <span  v-html="item.classificationName"></span>
                   <p></p>
                   <span class="oSpan" v-if="item.bookStatus===0">连载中</span>
                   <span class="oSpan" v-if="item.bookStatus===1">已完结</span>
@@ -49,11 +49,11 @@
             Loading
         },
         methods:{
-            ...mapActions(['setReadBookId']),
             handleMore(){
                 this.isShow = true;
                 Post_formData2(this,{},'/api/book-xiaobiantuijian',res=>{
                     this.isShow = false;
+                    console.log(res.data)
                     if(res.returnCode==200){
                            this.moreList = res.data;
                     }else{
@@ -62,7 +62,6 @@
                 })
             },
             handleGo(id){
-                //  this.setReadBookId(id)
                  this.$router.push({path:'/bookDetails',query:{bookId:id}});
             },
             handleBack(){

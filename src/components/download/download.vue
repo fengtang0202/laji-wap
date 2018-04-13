@@ -26,7 +26,7 @@
             }
             if(isiOS){
             //    alert('i am ios')
-            }
+             }
             }
         },
         mounted () {

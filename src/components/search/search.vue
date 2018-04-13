@@ -17,9 +17,10 @@
                 </div>
                 <div class="hostroy" >
                     <div class="hostroy_p">历史搜索</div>
-                    <div class="hostroy_text" @click='handleHotLabel(item)' v-for="(item,index) in hotwordList"  :key='index'>
-                       <img src="../../assets/images/copy@2x.png">
-                       <span >{{item}}</span>
+                    <div class="hostroy_text"  v-for="(item,index) in hotwordList"  :key='index'>
+                       <img   @click='handleHotLabel(item)' src="../../assets/images/copy@2x.png">
+                       <span  @click='handleHotLabel(item)'>{{item}}</span>
+                       <span class='close' @click='hanldeDel(item)'></span>
                     </div>
                 </div>
         </div>
@@ -31,7 +32,7 @@
                         <div class="con_d">
                             <div class="text_one">
                                 <span class="one_sp" v-html="item.bookName"></span>
-                                <span class="two_sp" >{{item.clickTotal}}万点击</span>
+                                <span class="two_sp" >{{item.clickTotal|clickTotal}}万点击</span>
                             </div>
                             <div class="text_two">
                                 <span>作者: </span>
@@ -50,8 +51,16 @@
                             </div>
                         </div>
                     </div>
+                    <infinite-loading  @infinite="infiniteHandler"  ref="infiniteLoading">
+                        <span slot="no-more">
+                            目前暂无更多书籍
+                        </span>
+                         <span slot="no-results">
+                            目前暂无更多书籍
+                        </span>
+                    </infinite-loading>
              </div>
-             <div v-if="!message" style='text-align:center;margin-top:.1rem;'>暂无相关数据</div>
+             <no-content  v-if="!message" :source='source'></no-content>
         </div>
        
    </div>
@@ -67,10 +76,15 @@ import { mapActions, mapState } from 'vuex';
                  labelList:[],
                  isShow:false,
                  keyword:'',
+                 page:0,
                  searchList:[],
                  message:true,
                  hotLabel:true,
-                 hotwordList:[]
+                 hotwordList:[],
+                  source:{
+                    img:require('../../assets/images/2.png'),
+                    text:'暂无相关数据'
+                }
             }
         },
          components: {
@@ -90,6 +104,24 @@ import { mapActions, mapState } from 'vuex';
                 }else{
                    this.$router.push({path:"/"});
                 }
+            },
+             infiniteHandler($state){
+                this.page+=1
+                   let options = {
+                    keyWord:this.keyword,
+                    startPage:this.page,
+                    isHotWorld:1
+                 }
+                Post_formData2(this,options,'/api/stacks-search',res=>{
+                    if(res.returnCode==200){
+                        this.searchList = this.searchList.concat(res.data.list);
+                        if(res.data.lastPage>this.page){
+                            $state.loaded()
+                        }else{
+                            $state.complete()
+                        }         
+                    }
+                })
             },
             handleGo(id){
                  this.$router.push({path:'/bookDetails',query:{bookId:id}});
@@ -111,6 +143,7 @@ import { mapActions, mapState } from 'vuex';
                         }                         
                 })            
             },
+            
             handleHotLabel(res){
               this.keyword=res
             },
@@ -126,6 +159,15 @@ import { mapActions, mapState } from 'vuex';
             //           }                         
             //     })
             // },
+            hanldeDel(item){
+               for(let index in this.hotwordList){
+                   if(item==this.hotwordList[index]){
+                       console.log(index)
+                       this.hotwordList.splice(index,1)
+                       localStorage.setItem(this.userInfo.userId,JSON.stringify(Array.from(new Set(this.hotwordList))))
+                   }
+               }
+            },
             handleSearch(){
                 if(this.keyword !==''){
                      this.hotLabel = false;

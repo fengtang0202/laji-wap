@@ -16,12 +16,6 @@ import {mapActions} from 'vuex'
                }
            },
            props:["list"],
-           methods:{
-               ...mapActions(['changeIndex']),
-              hanldeIndex(){
-                  this.changeIndex(0)
-              } 
-           },
            mounted () {
               
            }

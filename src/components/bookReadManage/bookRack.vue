@@ -1,6 +1,8 @@
 <template>
+<div>
  <div class='book_rcak_wrap'>
-    <headerComponent :list='topList'></headerComponent>
+    <headerComponent  :list='topList'>
+    </headerComponent>
     <div class='readNow'>
          <p>正在阅读{{`(${bookRack.length})`}}</p>
          <div class='book_detail_wrap' v-for='item in bookRack' @click="handleBookDetail(item.bookId)">
@@ -8,7 +10,9 @@
             <span style='font-size:.16rem;'>{{item.bookName|bookName}}</span>
             <span class='icon_update' v-if='item.bookStatus==0?true:false'>更新</span>
          </div>
-         <div class='add_book' @click="handleGo()"></div>         
+         <div class='add_book' @click="handleGo()">
+             <img  src="../../assets/images/addBook@3x.png" alt="">
+         </div>         
     </div>
     <div class='commendRead'>
          <p>推荐阅读{{`(${commendReadList.length})`}}</p>
@@ -19,16 +23,13 @@
          </div>    
     </div>
  </div>
+ </div>
 </template>
 <script>
-import headerComponent from '@/components/common/header'
 import { Post_formData2,Post_formData} from '@/config/services'
 import { join } from 'path';
 import {mapActions,mapState} from 'vuex'
     export default {
-        components:{
-           headerComponent
-        },
         data(){
             return{
                 topList:{
@@ -36,6 +37,10 @@ import {mapActions,mapState} from 'vuex'
                     title_2:'编辑',
                     link:'/bookEdit'
                 },
+                source:{
+                img:require('../../assets/images/1.png'),
+                text:'没有阅读记录'
+               },
                 commendReadList:[]
             }
         },
@@ -46,7 +51,7 @@ import {mapActions,mapState} from 'vuex'
             bookName:name=>name.length>6?(name.slice(0,5)+'....'):name
         },
         methods: {
-            ...mapActions(['getBookRack','setReadBookId']),
+            ...mapActions(['getBookRack']),
             getCommendBook(){
                 Post_formData2(this,'','/api/bookshelf-recommendPosition',res=>{
                     this.commendReadList=res.data
@@ -103,10 +108,16 @@ import {mapActions,mapState} from 'vuex'
           .add_book{
                width:1.04rem;
                height:1.36rem;
+               text-align:center;
                border:1px dashed #FF8E8E;
                float: left;
                margin-top:.1rem;
                border-radius: .05rem;
+               img{
+                width:.6rem;
+                height:.6rem;
+                margin-top:.38rem;
+               }
             }
        }
        .commendRead{

@@ -9,7 +9,7 @@
             <span class='title_2' @click='handleDelBook()' >删除</span>
           </div>
            <div style='margin-left:.22rem'>
-                <div class='book_wrap'   :key='index' v-for='(item,index) in bookRack'>
+                <div class='book_wrap'   :key='index' v-for='(item,index) in ReadHistoryList'>
                         <img :src="item.bookImage" style='width:.96rem;height:1.27rem' alt="">
                         <p>{{item.bookName|bookName}}</p>
                         <P style='color:#999999'>{{item.writerName}}</P>
@@ -29,16 +29,17 @@ export default {
         headerComponent
     },
     computed: {
-       ...mapState(['bookRack','userInfo'])  
+       ...mapState(['userInfo'])  
     },
     data(){
         return{
             list:{
-                title_1:'我的书架',
-                title_2:'删除',
+                title_1:'编辑阅读记录',
+                title_2:'删除', 
                 link:''
             },
             delId:[],
+            ReadHistoryList:[]
         }
     },
     filters:{
@@ -50,33 +51,40 @@ export default {
         //    console.log(item)
         //    item.checked=!item.checked
         // },
+        getBookRead(){
+              Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
+                  console.log(res.data)
+                  if(res.returnCode==200){
+                      this.ReadHistoryList=res.data.list
+                      this.ReadHistoryList.forEach(value=>{
+                          value.checked=false 
+                     })
+                  }
+            })
+        },
         handleDelBook(){
             // console.log(1)
-            this.bookRack.forEach(value=>{
+            this.ReadHistoryList.forEach(value=>{
             if(value.checked==true){
                 this.delId.push(value.id)
               }
             })
             if(this.delId.length!==0){
-             Post_formData2(this,{id:[...new Set(this.delId)].toString()},'/api/bookshelf-deluserbookshelf',res=>{
-                   if(res.returnCode==200){
-                       this.$vux.toast.text('删除成功!')
-                       this.getBookRead()
-                   }
+             Post_formData2(this,{id:[...new Set(this.delId)].toString()},'/api/person-delBookReadRecord',res=>{
+                  if(res.returnCode==200){
+                      this.getBookRead()
+                      this.$vux.toast.text(res.msg)                      
+                  }else{
+                      this.$vux.toast.text(res.msg)
+                  }
               })
+            }else{
+               this.$vux.toast.text('选择要删除的书籍') 
             }
-        },
-        getBookRead(){
-            Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/bookshelf-getuserbookshelf',res=>{
-                   res.returnCode==200&&this.getBookRack(res.data.list)
-                   this.bookRack.forEach(value=>{
-                     value.checked=false 
-                   })
-                })
         }
     },
     mounted () {
-         
+         this.getBookRead()
     }
 }
 </script>

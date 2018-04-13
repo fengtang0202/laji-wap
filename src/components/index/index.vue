@@ -23,7 +23,7 @@
         </div>
         <div class="line">
         </div>
-        <div class="edit_d">
+        <!-- <div class="edit_d">
             <img src='../../assets/images/newbook@3x.png' class="left_img">
             <span class='le_p'>新书推荐</span>
         </div>
@@ -33,19 +33,47 @@
                 <p class="p_one" >{{item.bookName}}</p>
                 <p class="p_two">{{item.writerName}}</p>
             </div>
-        </div>
+        </div> -->
         <div class="line">
         </div>
         <div class="edit_d">
             <img src='../../assets/images/new@3x.png' class="left_img">
             <span class='le_p'>最新小说</span>
         </div>
-        <div class="newBook_d" v-for="i  in newList"  @click='handleGo(i.bookId)'>
+        <div class="text_d" v-for="item in newList" @click="handleGo(item.bookId)">
+            <img :src="item.bookImage">
+            <div class="con_d">
+               <div class="text_one">
+                  <span class="one_sp" v-html="item.bookName"></span>
+               </div>
+               <div class="text_two">
+                  <span>作者: </span>
+                  <span v-html="item.writerName"></span>
+                  <p></p>
+                  <span  v-html="item.classificationName"></span>
+                  <p></p>
+                  <span class="oSpan" v-if="item.bookStatus===0">连载中</span>
+                  <span class="oSpan" v-if="item.bookStatus===1">已完结</span>
+               </div>
+               <div class="text_three">
+                    <span :style="{color:i.bookColor,border:'1px solid'}" v-for="i in item.booklableList" >{{i.bookLableName}}</span>
+               </div>
+               <div class="text_four" v-html="item.bookIntroduction">
+                    
+               </div>
+            </div>
+        </div>
+        <div class='add_new_book' v-if='addBook'>
+             <button @click='manualLoad()'>更多新书</button>
+        </div>
+        <!-- <infinite-loading  @infinite="infiniteHandler"  ref="infiniteLoading">
+        </infinite-loading> -->
+        <!-- <div class="newBook_d" v-for="i  in newList"  @click='handleGo(i.bookId)'>
             <p class="op"></p>
             <span class="span_one">{{i.classificationName|className}}</span>
             <span class="span_two" v-html="i.bookName"></span>
             <img src="../../assets/images/vip@3x.png">
-        </div>
+        </div> -->
         <div class="bottom_d">
             <ul>
                 <li @click='handleTap(index)' v-for='(item,index) in bottomList' :key='index'>
@@ -67,11 +95,15 @@
         data () {
             return {
                  bookList:[],
-                 page:1,
                  total:10,
                  newList:[],
+                 distance:false,
+                 newRecommendList:[],
                  pictureList:[],
                  isShow:false,
+                 page:1,
+                 lastPage:0,
+                 addBook:false,
                  bottomList:[
                      {title:'首页',link:'/'},
                      {title:'书架',link:'/bookRack'},
@@ -84,19 +116,19 @@
         components: {
             Loading,Swiper,SwiperItem
         },
-        filters: {
-          className(res){
-             if(res==='GLBL'){
-                 return `${res}+1`
-             }
-             return res
-          }  
-        },
         computed: {
           ...mapState(['isLogin'])  
         },
         methods:{
-            handleGetbook(){
+            manualLoad() {
+                if(this.page<this.lastPage){
+                    this.page+=1
+                    this.handleNewbook()
+               }else{
+                   this.addBook=false;
+               }
+            },
+            handleGetbook () {
                 this.isShow = true;
                 noParam_Get(this,'/api/hot/homePageRecommended',res=>{
                        this.isShow= false;
@@ -123,12 +155,17 @@
                   index==4&&this.$router.push('/contactUs')
             },
             handleNewbook(){
-                this.isShow = true;
+                this.isShow = true;                
                  noParam_Get(this,'/api/hot/getbooklistList/'+this.page+'/'+this.total,res=>{
-                        this.isShow= false;
+                     this.isShow=false;
                         if(res.returnCode==200){
-                            this.newList = res.data.list;
-
+                            this.addBook=true;
+                            if(this.newList.length==0){
+                                this.newList=res.data.list
+                            }else{
+                                this.newList= this.newList.concat(res.data.list);
+                            }
+                            this.lastPage=res.data.lastPage
                       }else{
                             this.$vux.toast.text(res.msg);
                         }
@@ -149,7 +186,7 @@
 </script>
 
 <style lang="less" scoped>
-
+  @import '../../css/newBookRecommend';
     #index {
         width:100%;
         box-sizing:border-box;
@@ -162,6 +199,7 @@
         .edit_d{
             height:.25rem;
             margin-top:.1rem;
+            margin-bottom:.1rem;
             box-sizing:border-box;
             padding:0 .14rem;
             .left_img{
@@ -271,6 +309,17 @@
                 margin-right:.65rem;
             }
         }
+        .add_new_book{
+            text-align: center;
+            button{
+                outline: none;
+                border: 0;
+                background-color:#FB5E6F;
+                padding:.1rem;
+                border-radius: .1rem;
+                color:#fff;
+            }
+        }
         .bottom_d{
             width:100%;
             height:1.35rem;
@@ -293,4 +342,5 @@
             }
         }
     }
+    
 </style>

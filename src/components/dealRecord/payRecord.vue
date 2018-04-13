@@ -9,14 +9,12 @@
               </div>
           <div class='pay_list' v-for='item in payRecordList'>
                 <p >{{item.dateTimes|dateFormat}}</p>
-                <p>{{item.rechargeType}}</p>
+                <p>{{item.rechargeType|payType}}</p>
                 <p>{{item.money}}</p>
-                <p>{{item.isOK}}</p>
+                <p>{{item.isOK|status}}</p>
           </div>
   </div>
-  <div style='text-align:center;' v-if='!show'>
-      <img src="../../assets/images/1.png" alt="">
-  </div>
+    <no-content v-if='!show' :source='source'></no-content>
   </div>
 </template>
 <script>
@@ -27,11 +25,25 @@ export default{
     data(){
         return {
             payRecordList:[],
-            show:true
+            show:true,
+             source:{
+                img:require('../../assets/images/1.png'),
+                text:'没有相关数据'
+            }
         }  
      },
      filters: {
-         dateFormat
+         dateFormat,
+         status(res){
+           return res==0?'失败':'成功'
+         },
+         payType(res){
+              let type='';
+              res==110&&(type='支付宝')
+              res==111&&(type='微信支付')
+              res==112&&(type='苹果支付')
+              return res=type
+         }
      },
      computed:{
         ...mapState(['userInfo'])

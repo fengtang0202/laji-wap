@@ -14,9 +14,7 @@
                 <p>成功</p>
           </div>
   </div>
-  <div style='text-align:center;' v-if='!show'>
-      <img src="../../assets/images/1.png" alt="">
-  </div>
+ <no-conetnt v-if='!show' :source='source'></no-conetnt>
 </div>
 </template>
 <script>
@@ -27,7 +25,11 @@ export default{
     data(){
         return {
            List:[],
-           show:true
+           show:true,
+            source:{
+                img:require('../../assets/images/1.png'),
+                text:'没有相关数据'
+            }
         }  
      },
      filters: {

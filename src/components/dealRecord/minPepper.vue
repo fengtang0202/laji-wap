@@ -14,9 +14,7 @@
                 <p>成功</p>
           </div>
   </div>
-  <div style='text-align:center;' v-if='!show'>
-      <img src="../../assets/images/1.png" alt="">
-  </div>
+  <no-content v-if='!show' :source='source'></no-content>
   </div>
 </template>
 <script>
@@ -27,7 +25,11 @@ export default{
     data(){
         return {
            List:null,
-           show:true
+           show:true,
+            source:{
+                img:require('../../assets/images/1.png'),
+                text:'没有相关数据'
+            }
         }  
      },
      filters: {
@@ -48,7 +50,6 @@ export default{
              Post_formData2(this,options,'/api/userRecommendTicketRecord',res=>{
                  if(res.returnCode===200){
                      this.List=res.data.list
-                     this.show=true
                  }else{
                      this.show=false
                  }

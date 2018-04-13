@@ -123,11 +123,25 @@
            handleGo () {
             // 用户信息还没有确定
             //    this.$router.push("/personInfo")
+            },
+            refeshUserInfo(){
+               Post_formData2(this,'','/api/person-info',res=>{
+                            if(res.returnCode===200){
+                                this.getUserInfo(res.data) 
+                             }else{
+                                 this.$vux.toast.show({text:'身份过期,重新登录',type:'warn'})
+                                 this.getUserInfo(null)
+                             setTimeout(()=>{
+                                 this.$router.push({path:'/',query:{redirect: '/myWallet'}})
+                             },2000) 
+                      }
+              })
             }
         },
-        mounted(){
+          mounted(){
             this.getFansAndFollowCount()
             this.getFansAndFollowCount(0)
+            this.refeshUserInfo()
         }
     }
 </script>
@@ -161,7 +175,6 @@
             .avatar_wrap{
                 width:.52rem;
                 height:.52rem;
-                background-color:red;
                 margin:auto .14rem;
                 border-radius: 50%;
             }

@@ -27,6 +27,7 @@
         data () {
             return {
                isAddTo:0,
+               homeIndex:0,
                cate:[
                    {name:'首页',res:{path:"/"}},
                    {name:'分类',res:{path:"/categoryList"}},
@@ -35,20 +36,37 @@
             }
         },
         computed: {
-            ...mapState(['homeIndex','isLogin','userInfo'])
+            ...mapState(['isLogin','userInfo'])
+        },
+        watch:{
+           '$route'(){
+               this.getIndex()
+           }
         },
         methods:{
-            ...mapActions(['changeIndex']),
             handleGo(res,index){
-                this.changeIndex(index)
                 this.$router.push(res);
             },
+            getIndex(){
+              let i =this.$route.path
+               console.log(i)
+               switch(i){
+                   case '/':
+                     this.homeIndex=0;
+                     break;
+                   case '/categoryList':
+                     this.homeIndex=1
+                     break;
+                   case '/bookFree' :
+                     this.homeIndex=2
+            } 
+          },
             handleTo(res){
                  this.$router.push(res);
             }
         },
         mounted () {
-            // console.log(this.userInfo)
+            this.getIndex()
         }
     }
 </script>

@@ -64,7 +64,7 @@
             handleReword(){
                let options = {
                    goldenTicketCount:this.number,
-                   bookid:this.readBookId,
+                   bookid:this.param.readBookId,
                    bookName:this.param.bookName,
                    authorId:this.param.authorId
                }
@@ -82,8 +82,9 @@
              }
         },
         mounted(){
-            if(this.isLogin)
-            this.money=this.userInfo.userGoldenTicket
+            if(this.isLogin){
+                this.money=this.userInfo.userGoldenTicket
+            }
         }
     }
 </script>

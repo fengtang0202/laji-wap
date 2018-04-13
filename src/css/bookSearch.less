@@ -78,6 +78,7 @@
                 line-height:.54rem;
                 box-sizing:border-box;
                 padding: 0 .14rem;
+                position: relative;
                 font-size:.16rem;
                 img{
                     width:.2rem;
@@ -85,6 +86,19 @@
                     margin-top:.17rem;
                     float:left;
                     margin-right:.2rem;
+                }
+                .close {
+                    color: #F77583;
+                    border-radius: .12rem;
+                    height: .3rem;
+                    width: .3rem;
+                    font-size:.25rem;
+                    position: absolute;
+                    top:.08rem;
+                    right: .2rem;
+                }
+                .close::before {
+                    content: "\2716";
                 }
             }
            
@@ -112,7 +126,7 @@
             .con_d{
                 float:right;
                 width:2.54rem;
-                height:1.05rem;
+                overflow: hidden;
             }
             .text_one{
                 margin-top:-.02rem;

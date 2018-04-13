@@ -5,7 +5,6 @@ Vue.use(Vuex);
     const state={
         subName: '首',
         itemName: '页',
-        homeIndex:0,
         showConnect:false,
         token:'',
         userInfo:null,
@@ -32,9 +31,6 @@ Vue.use(Vuex);
         },
         getUserInfo(state,userInfo){
              state.userInfo=userInfo
-        },
-        changeIndex(state,index){
-            state.homeIndex=index
         },
         changeConnect(state){
             state.showConnect=true
@@ -70,9 +66,6 @@ Vue.use(Vuex);
         },
         loginAction({commit},status){
             commit('changeLogin',status)
-        },
-        changeIndex({commit},index){
-            commit('changeIndex',index)    
         },
         setFans({commit},fans){
             commit('setFans',fans)

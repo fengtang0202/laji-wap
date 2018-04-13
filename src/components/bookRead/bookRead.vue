@@ -32,7 +32,7 @@
                  <li class='m' @click='handleFontSize(1)' style='font-size:.2rem;'>A+</li>
                  <li>自动订阅</li>
                  <li>
-                     <i-switch  @on-change="change"></i-switch>                     
+                     <i-switch  v-model="btnShow" @on-change="change"></i-switch>                     
                  </li>
              </ul>
          </div>
@@ -80,7 +80,7 @@
                       <div  class='nav_d'>
                          <img :src="item.img" alt="">
                       </div>
-                         <p style='font-size:.12rem'>{{item.text}}</p>                      
+                         <p class='nav_text'>{{item.text}}</p>                      
                    </li>
               </ul>
          </div>
@@ -167,10 +167,10 @@ import AppMinpepper from '@/components/feed/minPepper'
                preNextShow:false,
                isvip:this.$route.query.isvip,
                price:this.$route.query.price,    
-               btnShow:false,
                readBookId:this.$route.query.bookId, 
-               isSelect:0,
                chapterId:this.$route.query.chapterId,
+               btnShow:false,
+               isSelect:0,
                rewordParam:{},
                feedList:[
                    {img:require('../../assets/images/Group 3@3x.png')},
@@ -181,7 +181,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                    {text:'书籍详情',key:1},
                    {text:'查看书评',key:2},
                    {text:'加入书架',key:3},
-                   {text:'添加书签',key:4},
+                //    {text:'添加书签',key:4},
                    {text:'举报本章',key:5},
                    {text:'分享本书',key:6}
                ],
@@ -211,7 +211,16 @@ import AppMinpepper from '@/components/feed/minPepper'
          directives: {
              TransferDom
          },
+         watch:{
+            '$route'(){
+                this.chapterId=this.$route.query.chapterId
+                this.getBookText()
+                window.scrollTo(0,0)
+                this.addReadHistory()
+            }
+         },
          methods:{
+             ...mapActions(['getUserInfo']),
              handleFontSize(res){
                   res===1&&this.handleFontSizeAdd()
                   res===0&&this.handleFontSizeSubtract()
@@ -232,39 +241,31 @@ import AppMinpepper from '@/components/feed/minPepper'
              },
               handleClosefeed(){
                 this.$refs.child.handleClose();
-            },
-            handleClosefeedpepper(){
-                this.$refs.childfeedpepper.handleClosepepper();
-            },
-            hanldeCloseMinFeedPepper(){
-                this.$refs.minFeedpepper.handleClose()
-            },
-             handleFeedTap(index){
-                index===0&&this.handleClosefeedpepper()
-                index===1&&this.hanldeCloseMinFeedPepper()
-                index===2&&this.handleClosefeed()
-              },
-             handleShare(index){
-                    //  index==2&&this.handleShareWX()
+                console.log(1)
              },
-          handleShareWX(){
-            wx.onMenuShareAppMessage({  
-            title: '1', // 分享标题  
-            desc: '2', // 分享描述  
-            link: window.location.href, // 分享链接  
-            imgUrl: '', // 分享图标  
-            type: 'link', // 分享类型,music、video或link，不填默认为link  
-            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空  
-            success: function () {   
-                // 用户确认分享后执行的回调函数  
-                //alert('已分享');  
-                //window.location.href = "https://www.baidu.com";  
-            },  
-            cancel: function () {   
-                // 用户取消分享后执行的回调函数  
-                //alert('已取消');  
-            }  
-               });  
+              handleClosefeedpepper(){
+                this.$refs.childfeedpepper.handleClosepepper();
+             },
+              hanldeCloseMinFeedPepper(){
+                this.$refs.minFeedpepper.handleClose()
+             },
+              handleFeedTap(index){
+                if(this.isLogin){
+                    index===0&&this.handleClosefeedpepper()
+                    index===1&&this.hanldeCloseMinFeedPepper()
+                    index===2&&this.handleClosefeed()
+                }else{
+                    this.$vux.toast.show({text:'登录后打赏',type:'cancel'})
+                }
+              },
+              handleShare(index){
+                  index==3&&this.handleShareWX()
+             },
+              handleShareWX(){
+               console.log(this.$wechat)
+                 this.$wechat.onMenuShareTimeline({
+                     title: 'hello VUX',
+                })
              },
              changebgColor(color){
                 this.backgroundColor=color
@@ -296,6 +297,8 @@ import AppMinpepper from '@/components/feed/minPepper'
                    this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;').replace(/[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}/g,' ')
                    this.preNextShow=true
                    this.bookName=res.data.bookInfo.bookName
+                   this.isvip=res.data.chapterInfo.chapterIsvip
+                //    this.price=res.data.chapterInfo.price
                    this.chapterName=res.data.chapterInfo.chapterTitle
                    this.rewordParam.authorId=res.data.chapterInfo.bookWriterId
                    this.rewordParam.bookName=res.data.bookInfo.bookName
@@ -319,12 +322,23 @@ import AppMinpepper from '@/components/feed/minPepper'
                     }
                 }) 
              },  
+             refreshuserInfo(){
+               Post_formData2(this,'','/api/person-info',res=>{
+                            if(res.returnCode==200){
+                                this.getUserInfo(res.data) 
+                            }else{
+                                 this.$vux.toast.show({text:'身份过期,重新登录',type:'warn'})
+                                 this.getUserInfo(null)
+                             setTimeout(()=>{
+                                 this.$router.push({path:'/',query:{redirect: '/myWallet'}})
+                             },2000) 
+                         }
+                 })
+             },
              getNextChapterText () {
                    this.confirmKey=0
                    let n=this.chapterList.length-1
                    this.chapterIdNum++ 
-                   console.log(this.chapterIdNum)
-                   this.handleIsAuto()
                   if(this.chapterIdNum<n){
                     this.getNowChapterId()                 
                     // this.setChapterId(this.chapterList[this.chapterIdNum].id)
@@ -332,20 +346,21 @@ import AppMinpepper from '@/components/feed/minPepper'
                     if (this.isLogin) {
                         this.btnShow&&this.buyChapter()                              
                     }
-                        !this.btnShow&&this.getBookText()
-                    this.$refs.content.scrollIntoView();
+                        // !this.btnShow&&this.getBookText()
+                     this.$router.push({path:'/bookRead',query:{isvip:this.isvip,price:this.price,bookId:this.readBookId,chapterId:this.chapterId}})                       
+                    //  this.$refs.content.scrollIntoView();
                   }else{
                     this.messageTitle='目前最后一章'
                     this.ConfirmShow=true
                   }
              },
-            getPreChapterText () {
+                getPreChapterText () {
                    this.confirmKey=0                
                  if (this.chapterIdNum>0) {
                     this.chapterIdNum--  
                     // this.setChapterId(this.chapterList[this.chapterIdNum].id) 
                     this.chapterId=this.chapterList[this.chapterIdNum].id                    
-                    this.getBookText()
+                    this.btnShow&&this.$router.push({path:'/bookRead',query:{isvip:this.isvip,price:this.price,bookId:this.readBookId,chapterId:this.chapterId}})                       
                     this.$refs.content.scrollIntoView();
                  } else {
                      this.messageTitle='第一章了'
@@ -381,10 +396,10 @@ import AppMinpepper from '@/components/feed/minPepper'
                      this.bottomShow=false
                  }
                  if(res===1){
-                 this.$router.push({path:'/bookDetails'});
+                 this.$router.push({path:'/bookDetails',query:{bookId:this.readBookId}});
                  }
                  if(res===2){
-                     this.$router.push({path:'bookComment'})
+                     this.$router.push({path:'bookComment',query:{bookId:this.readBookId}})
                  }
                  if(res===3){
                     this.addBookRack()  
@@ -399,7 +414,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                      this.getPreChapterText()
                  }
                  if(res===8){
-                     this.$router.push({path:'/directory'})
+                     this.$router.push({path:'/directory',query:{bookId:this.readBookId}})
                  }
              },
              up () {
@@ -411,10 +426,11 @@ import AppMinpepper from '@/components/feed/minPepper'
                     this.shareShow=false
                  }
              },
-              change (status) {
+            change (status) {
+                  this.handleIsAuto()
                   setTimeout(()=>{
                       this.$Message.info(status?'订阅成功':'订阅取消');
-                  },100)
+                  },1000)
             },
             handleGo(){
                   this.$router.push('/payMoney')
@@ -445,6 +461,8 @@ import AppMinpepper from '@/components/feed/minPepper'
                          this.btn=true
                          this.bookText=res.data.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
                          this.isLogin&&(this.dialogshow=false)
+                         this.refreshuserInfo()
+                        //  this.btnShow&&this.$vux.toast.show('购买成功!')
                     }else if(res.returnCode===300){
                         this.$vux.toast.show({text:res.msg})
                         this.btn=false
@@ -457,16 +475,15 @@ import AppMinpepper from '@/components/feed/minPepper'
                     this.$router.push({path:'/Login',query:{redirect:'/bookRead'}})
                 }
             },
-            handleIsAuto(type='update'){
+            handleIsAuto (type='update') {
                  let options = {
                     bookid:this.readBookId,
                     type:type,
-                    isSelect:this.isSelect
+                    isSelect:this.btnShow?1:0
                 }
                 Post_formData2(this,options,'/api/userRmemberChose',res=>{
                     if(res.returnCode==200){ 
                         res.data.isClose==1?this.btnShow=true:this.btnShow=false
-                        this.isSelect=res.data.isClose
                     }
                  })
             },
@@ -479,7 +496,8 @@ import AppMinpepper from '@/components/feed/minPepper'
         mounted () {
             this.getBookText()
             this.getNowChapterId()
-            console.log(this.chapterId)
+            console.log(this.btnShow)
+            console.log(this.price)
             if(this.isLogin){
                 this.addReadHistory()                
                 this.btnShow&&this.buyChapter()

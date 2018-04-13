@@ -26,27 +26,47 @@ import {Param_Get_Resful,Post_formData2,formatDate} from '@/config/services'
                  },
                  transitionName: 'slide-left',
                     tabList:[
-                        {title:'私信',link:'/MessageManage',},
-                        {title:'评论',link:'/MessageManage/commentReply'},
-                        {title:'通知',link:'/MessageManage/sysMessage'}
+                        {title:'通知',link:'/MessageManage'},
+                        {title:'私信',link:'/MessageManage/personalLetter'},
+                        {title:'评论',link:'/MessageManage/commentReply'}
                     ],
                     content:0,
-                    showRouter: 0,
+                    showRouter:0,
                     messageList:[],
                     sysMessageList:[]
 
                }    
+         },
+         wacth:{
+            '$route'(){
+                console.log(1)
+            }
          },
          components: {
              Tab,TabItem,Swiper,SwiperItem
          },
          methods: {
             hanldeTabs(index,link){
-                this.showRouter=index
+                console.log(index)
                 this.$router.replace(link)
+                this.getIndex()
+            },
+            getIndex(){
+               let i=this.$route.path
+                switch(i){
+                    case '/MessageManage':
+                       this.showRouter=0
+                       break;
+                    case '/MessageManage/personalLetter':
+                        this.showRouter=1
+                        break;
+                    case '/MessageManage/commentReply':
+                        this.showRouter=2
+                }
             }
          },
          mounted () {
+             this.getIndex()
              Post_formData2(this,'','/api/person-messageCount',res=>{
                console.log(res)
              })

@@ -1,5 +1,7 @@
 <template>
-   <div class='read_history'>
+<div>
+    <headerComponent :list='topList'></headerComponent>
+   <div class='read_history' v-if='showNoData'>
       <div class='commendRead'>
          <div class='commend_book_wrap'  @click="handleBookDetail(item.bookId)" v-for='item in ReadHistoryList'>
             <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
@@ -8,10 +10,9 @@
             <!-- <p class='is_update' :style="{ 'color': item.bookStatus==0?'#FF6F00':'#47B2D8' }">{{item.isUpdate==0?'已完结':'连载中'}}</p>          -->
          </div>    
       </div>
-      <div v-if='showNoData' style='text-align:center;margin-top:.2rem;'>
-          <span>你还有没阅读一本书</span>
-      </div>
    </div>
+   <no-content v-if='!showNoData' :source='source'></no-content>
+</div>
 </template>
 <script>
 import {Post_formData} from '@/config/services'
@@ -20,7 +21,16 @@ export default {
     data(){
         return {
             ReadHistoryList:[],
-            showNoData:false
+            showNoData:true,
+            topList:{
+               title_1:'阅读记录',
+               title_2:'编辑',
+               link:'/bookHistoryEdit'
+            },
+             source:{
+                img:require('../../assets/images/1.png'),
+                text:'没有阅读记录'
+            }
         }
     },
     computed: {
@@ -34,15 +44,14 @@ export default {
     methods:{
         handleBookDetail(bookId){
                  this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
-            },
+         },
         handleReadBookList(){
-                //this.userId  : 1082 测试
                 Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
                     if(res.returnCode==200){
                         this.ReadHistoryList=res.data.list
-                        this.showNoData=false;                       
+                        this.showNoData=true;                       
                     }else{
-                        this.showNoData=true;
+                        this.showNoData=false;
                     }
                 })
         }    

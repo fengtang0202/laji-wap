@@ -9,14 +9,12 @@
               </div>
           <div class='pay_list' v-for='item in payRecordList'>
                 <p >{{item.subscriptionDateTime|dateFormat}}</p>
-                <p>{{item.bookChapterName}}</p>
-                <p>{{item.bookName}}</p>
+                <p>{{item.bookChapterName|str}}</p>
+                <p>{{item.bookName|str}}</p>
                 <p>{{item.subscriptionPrice}}</p>
           </div>
   </div>
-  <div style='text-align:center;' v-if='!show'>
-      <img src="../../assets/images/1.png" alt="">
-  </div>
+  <no-content :source='source'  v-if='!show'></no-content>
 </div>
 </template>
 <script>
@@ -27,11 +25,18 @@ export default{
     data(){
         return {
             payRecordList:[],
-            show:true
+            show:true,
+            source:{
+                img:require('../../assets/images/1.png'),
+                text:'没有相关数据'
+            }
         }  
      },
      filters: {
-         dateFormat
+         dateFormat,
+         str(res){
+             return res.length>6?res.slice(0,6)+'...':res
+         }
      },
      computed:{
         ...mapState(['userInfo'])
@@ -80,11 +85,12 @@ export default{
             p{
                float: left;
                text-align: center;
-               min-width:20%;
+               min-width:13%;
                height:.4rem;
                line-height: .4rem;
                border-bottom:1px solid #E9E9E9;               
             }
        }
    }
+  
 </style>

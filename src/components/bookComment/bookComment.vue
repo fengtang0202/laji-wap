@@ -1,6 +1,7 @@
 <template>
    <div class='book_comment_wrap'>
         <headerComponent :list="topList"></headerComponent>
+        <div v-if='showContent'>
         <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>热门评论({{hotCommentcount}})</p>
             <div class='book_comment_item'  :key='index' v-for='(item,index) in hotCommentList'>
@@ -73,6 +74,8 @@
               </div>
             </div>  
         </div>
+        </div>
+        <no-content v-if='!showContent' :source='source'></no-content>
         <div class='bottom_x'>
    
         </div>
@@ -98,7 +101,6 @@
 import {Post_formData2,Post_formData,Param_Get_Resful} from '@/config/services'
 import {mapState,mapActions} from 'vuex'
 import {Popup,TransferDom} from 'vux'
-import { setTimeout } from 'timers';
 
 export default {
     components:{
@@ -114,6 +116,11 @@ export default {
               title_2:'首页',
               link:'/'
           }, 
+           source:{
+                img:require('../../assets/images/1.png'),
+                text:'没有相关评论'
+              },
+          showContent:true,
           timer:'',
           show:false,
           replyText:'',
@@ -141,18 +148,20 @@ export default {
           getHotComment () {
               Post_formData2(this,{bookid:this.readBookId},'/api/comm-HotCommentInfo',res=>{
                   if(res.returnCode==200){
+                      console.log(res)
                       this.hotCommentList=res.data
-                    //   console.log(res)
+                      this.showContent=true
                       this.hotCommentcount=res.data.length
                       console.log(this.hotCommentList)
-                  }else{
-                  this.$vux.toast.text(res.msg)                     
+                  }else if(res.returnCode===800){
+                      this.showContent=false                     
                   }
               }) 
           },
           handleMakeComment () {
               let fontCountLength = this.replyText.length
-              console.log(fontCountLength)
+              let reg=/[\ud83c-\ud83e][\udc00-\udfff]|[\u2600-\u27ff]/
+             if(!reg.test(this.replyText)){ 
               if(fontCountLength>0&&fontCountLength<50){
                   let options={
                       bookId:this.readBookId,
@@ -164,6 +173,7 @@ export default {
                          if(res.returnCode==200){
                              this.$vux.toast.text('发表成功!')
                              this.show=false
+                             this.showContent=true
                              options.isthumbs=0
                              options.thumbsCount=0
                              options.replyCount=0
@@ -178,6 +188,9 @@ export default {
               } else {
                   this.$vux.toast.text('字数不够')
               }
+             }else{
+                  this.$vux.toast.show({text:'目前不支持表情!',type:'cancel'})
+             }
           },
           getNewComment(){
                Post_formData2(this,{id:this.readBookId,type:1,startPage:1},'/api/comm-getcomminfo',res=>{

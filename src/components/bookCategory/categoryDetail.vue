@@ -70,6 +70,11 @@
                <p class="p_three" v-html="item.bookIntroduction"></p>
             </div>
         </div> 
+        <infinite-loading  @infinite="infiniteHandler"  ref="infiniteLoading">
+            <span slot="no-more">
+                暂无其他数据
+            </span>
+        </infinite-loading>
     </div>
 </template>
 <script>
@@ -133,7 +138,8 @@ import {mapActions} from 'vuex'
                     {name:"七日",key:3},
                     {name:"半个月",key:4},
                     {name:"一月内",key:5},
-                ]
+                ],
+                page:0
             }
         },
         watch:{
@@ -142,6 +148,24 @@ import {mapActions} from 'vuex'
             }
         },
         methods:{
+            infiniteHandler($state){
+                this.page+=1
+                   let options = {
+                    keyWord:this.keyword,
+                    startPage:this.page,
+                    isHotWorld:1
+                 }
+                Post_formData2(this,options,'/api/stacks-search',res=>{
+                    if(res.returnCode==200){
+                        this.filterList = this.filterList.concat(res.data.list);
+                        if(res.data.lastPage>this.page){
+                            $state.loaded()
+                        }else{
+                            $state.complete()
+                        }         
+                    }
+                })
+            },
             handleSearch(){
                 let options = {
                     keyWord:this.keyword,
@@ -150,6 +174,7 @@ import {mapActions} from 'vuex'
                 }
                   Post_formData2(this,options,'/api/stacks-search',res=>{
                     if(res.returnCode==200){
+                        console.log(res.data)
                           if(res.data.list.length>0){
                               this.message = true;
                               this.filterList = res.data.list;

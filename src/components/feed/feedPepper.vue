@@ -6,7 +6,7 @@
                 <div class='con'>
                     <div class="lajiao">
                         <p class='op' >您的辣椒余额:{{money}}</p>
-                        <div class="btn">充值</div>
+                        <div class="btn" @click='handleGo()'>充值</div>
                     </div>
                     <div class="check">
                         <div class="laNum" :key='index' :class="{active:iscode===index}" v-for="(item,index) in pepperList" @click="handleCheck(item.key,index)">
@@ -53,6 +53,9 @@ import { Post_formData2} from '@/config/services'
            handleCheck(res,index){
                 this.iscode = index;
                 this.keyNum = res;
+           },
+           handleGo(){
+              this.$router.push('/payMoney')
            },
            handleReward() {
                let options={

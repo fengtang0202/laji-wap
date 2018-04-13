@@ -1,10 +1,16 @@
 <template>
    <div>
-       <ul class='message_item'>
-                  <li v-for='(item,index) in messageList' :key='index'>
+       <swipeout>
+         <swipeout-item class='message_item' v-for='(item,index) in messageList' :key='index'  transition-mode="follow">               
+                  <div  slot="right-menu">
+                    <swipeout-button @click.native="onButtonClick(item,1)" type="primary">查看</swipeout-button>
+                    <swipeout-button @click.native="onButtonClick(item,0)" type="warn">删除</swipeout-button>                      
+                  </div>
+           <ul slot="content" class="message_content vux-1px-t">
+                  <li>
                       <img class='avatar' :src="item.userHeadPortraitURL" alt="">
                       <div class='message_item_detail'>
-                         <p >
+                         <p>
                          <span>{{item.replyUserName}}</span>
                          <img v-if='item.userSex==0' class='sex' src="../../assets/images/sex-02_03@3x.png" alt="">
                          <img v-if='item.userSex==1' class='sex' src="../../assets/images/sex-03@3x.png" alt="">                         
@@ -15,7 +21,9 @@
                          <p class='content'>评论：{{item.commentContext}}</p>
                       </div>
                   </li>
-        </ul>
+           </ul>
+        </swipeout-item>
+    </swipeout>
    </div>
 </template>
 <script>
@@ -24,7 +32,7 @@
   export default {
       data(){
           return {
-               messageList:[]
+            messageList:[]
           }
       },
       computed : {
@@ -38,6 +46,21 @@
                      console.log(res.data)
                  }
              })
+          },
+           delMessage(item){
+             let options = {
+                id:item.commentId,
+                type:0
+             }
+             Post_formData2(this,options,'/api/comm-delcomminfo',res=>{
+                 if(res.returnCode==200){
+                      this.$vux.toast.show('删除成功');
+                      this.getComment()
+                 }
+             })
+          },
+          onButtonClick(item,type){
+             type==0&&this.delMessage(item)
           }             
       },
       mounted () {

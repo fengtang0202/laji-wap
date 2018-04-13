@@ -65,14 +65,14 @@
             handleReword(){
                let options = {
                    recommendTicketCount	:this.number,
-                   bookid:this.readBookId,
+                   bookid:this.param.bookId,
                    bookName:this.param.bookName,
                    authorId:this.param.authorId
                   }
                       Post_formData2(this,options,'/api/user-RecommendationTicket',res=>{
                       if(res.returnCode===200){
                        this.$vux.toast.show({text:res.msg}) 
-                       this.userInfo.userRecommendTicket-=this.number
+                       this.money-=this.number
                        this.backShow = false;
                        this.dilogShow = false;
                         }else if(res.returnCode==500){
@@ -81,16 +81,18 @@
                           this.dilogShow = false;
                         }else if(res.returnCode==400){
                             this.$vux.toast.show({text:res.msg,type:'warn'})
-                        }
+                     }
                  })
              },
-             mounted(){
-                 if(this.Login){
-                     this.money=this.userInfo.userRecommendTicket   
+            
+        },
+         mounted(){
+                 if(this.isLogin){
+                     this.money=this.userInfo.userRecommendTicket 
                  }
              }
-        }
     }
 </script>
 <style lang="less">
+
 </style>
