@@ -38,7 +38,7 @@
             Box,
         },
         computed : {
-            ...mapState(['userInfo','readBookId','isLogin'])
+            ...mapState(['userInfo','isLogin'])
         },
         methods: {
             change (val) {
@@ -65,7 +65,7 @@
             handleReword(){
                let options = {
                    recommendTicketCount	:this.number,
-                   bookid:this.param.bookId,
+                   bookid:this.$route.query.bookId,                   
                    bookName:this.param.bookName,
                    authorId:this.param.authorId
                   }
@@ -73,6 +73,7 @@
                       if(res.returnCode===200){
                        this.$vux.toast.show({text:res.msg}) 
                        this.money-=this.number
+                       this.userInfo.userRecommendTicket-=this.number
                        this.backShow = false;
                        this.dilogShow = false;
                         }else if(res.returnCode==500){

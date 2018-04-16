@@ -26,6 +26,10 @@ function padLeftZero (str) {
                 let data = new Date(time);
                 return formatDate1(data,'yyyy-MM-dd');
   }
+const formatDate2=time=>{
+    let data=new Date(time)
+    return formatDate1(data,'yyyy-MM-dd hh:mm:ss')
+  }
 const clickTotal=res=>{
     if (res < 1000) {
       return res = 0.1
@@ -33,4 +37,7 @@ const clickTotal=res=>{
       return (res / 10000).toFixed(1)
     }
 }
-export { formatDate, clickTotal}
+const str=(res,size)=>{
+  return res.length > size ? res.slice(0, size) + '....' : res
+}  
+export { formatDate, formatDate2,clickTotal, str}

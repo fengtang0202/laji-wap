@@ -44,7 +44,7 @@ import { Post_formData2} from '@/config/services'
         },
         props:['param'],
         computed : {
-           ...mapState(['userInfo','readBookId','isLogin'])
+           ...mapState(['userInfo','isLogin'])
         },
         components: {
 
@@ -60,7 +60,7 @@ import { Post_formData2} from '@/config/services'
            handleReward() {
                let options={
                    spicyiTicketCount:this.keyNum,
-                   bookid:this.readBookId,
+                   bookid:this.$route.query.bookId,                                   
                    bookName:this.param.bookName,
                    authorId:this.param.authorId
                }
@@ -72,11 +72,13 @@ import { Post_formData2} from '@/config/services'
                        this.backpepperShow = false
                        this.dilogpepperShow = false
                      }else if(res.returnCode===500){
+                       this.backpepperShow = false
+                       this.dilogpepperShow = false
                        this.$vux.toast.show({text:res.msg,type:'cancel'})
                      }else if(res.returnCode===400&&this.isLogin){
                        this.$vux.toast.show({text:res.msg,type:'warn'})
                         //这里还没有测试 
-                       this.$router.push('/Login')
+                       this.$router.push({path:'/Login',query:{redirect: this.$route.path}})
                      }
                      else if(res.returnCode===1000){
                        this.$vux.toast.show({text:res.msg,type:'warn'})
@@ -92,6 +94,7 @@ import { Post_formData2} from '@/config/services'
               if(this.isLogin){
                   this.money=this.userInfo.userMoney
               }
+              console.log(this.$route.query.bookId)
            }
     }
 </script>

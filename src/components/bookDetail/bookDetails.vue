@@ -93,14 +93,16 @@
              <div class="similar-text">
                 <span>同类热门书籍</span>
              </div>
-             <div class="similar-swiper">
-                    <div class="swiper-wrapper">
+               <scroller lock-y :scrollbar-x=false>
+                    <div class="similar-swiper"  :style='{width:width}'>
+                    <div class="swiper-wrapper">                        
                         <div class='swiper-slide' v-for="item in swiperList" @click='handleToBookDetail(item.bookId)' :key="item.bookId">
                            <img  :src="item.bookImage">
-                           <span>{{item.bookName|bookName}}</span>
+                           <span>{{item.bookName|str(5)}}</span>
                          </div>
                     </div>
-             </div>
+                    </div>
+              </scroller>
           </div>
     </div>
 </template>
@@ -108,10 +110,11 @@
     import AppFeed from '@/components/feed/feed.vue'
     import AppFeedpepper from '@/components/feed/feedPepper.vue'
     import AppMinpepper from '@/components/feed/minPepper'
-    import { Loading } from 'vux'
+    import { Loading,Scroller} from 'vux'
     import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
     import {mapState,mapActions} from 'vuex'
-import { setTimeout } from 'timers';
+import { resolve } from 'url';
+import { isPrimitive } from 'util';
     export default {
         name: 'bookDetails',
         data () {
@@ -146,7 +149,8 @@ import { setTimeout } from 'timers';
             Loading,
             AppFeed,
             AppFeedpepper,
-            AppMinpepper
+            AppMinpepper,
+            Scroller
         },
         watch:{
           '$route'(){
@@ -159,9 +163,6 @@ import { setTimeout } from 'timers';
         computed:{
           ...mapState(['userInfo','isLogin']),
         },
-        filters:{
-            bookName:name=>name.length>6?(name.slice(0,5)+'....'):name
-        },
         methods:{
             ...mapActions(['setReadCommentInfo','loginAction','getUserInfo']),
             handleRead (index) {
@@ -173,42 +174,53 @@ import { setTimeout } from 'timers';
                 //          this.$router.push({path:'/bookRead',query:{chapterId:this.chapterId}})
                 //      },1000) 
                 //  }
-                index===0&&this.$router.push({path:'/bookRead',query:{bookId:this.readBookId,chapterId:this.chapterId}})
-            },
+                // index===0&&this.$router.push({path:'/bookRead',query:{bookId:this.readBookId,chapterId:this.chapterId}})
+                index===0&&this.handleImmediatelyRead()  
+           },
             //由于之前考虑了直接看书是从目录一个地方跳转到bookRead 
             //没有考虑立即阅读,这样就导致我去看另一本书的时候chapterId 还是从目录跳转时候的值
             //解决1.要在立即阅读跳转时候修改掉chapterId
-          async handleImmediatelyRead () {
-                if(this.isLogin){
-                    Post_formData2(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
-                       if(res.returnCode=200){
-                          let chapterList=res.data.list
-                          this.handleInitChapterId()
-                          chapterList.forEach(value => {
-                              if(value.bookId==this.readBookId){
-                                this.chapterId=value.chapterId
-                                console.log(this.chapterId,1)
-                                // console.log(this.chapterId)
-                                // return value.chapterId
-                            }
-                        })
-                       }
-                    })
-                }else{
-                    this.handleInitChapterId() 
-                }
-            },
             handleInitChapterId(){
-                 Param_Get_Resful(this,'/api/books-volumeChapterList/'+this.readBookId,res=>{
+                return new Promise((resolve,reject)=>{
+                     Param_Get_Resful(this,'/api/books-volumeChapterList/'+this.readBookId,res=>{
                                if(res.returnCode===200){
                                  for(let item of res.data.chapterInfo){
                                    if(item.resultList.length!==0){
                                        this.chapterId=item.resultList[0].id
-                                       return;
-                                   }
+                                    //    console.log(this.chapterId)
+                                       resolve(item.resultList[0].id)
+                              }
                           }
                      }
-                 })  
+                  })  
+               })
+            },
+           handleImmediatelyReadChapter () {
+             return new Promise((resolve,reject)=>{
+                    Post_formData2(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
+                        console.log(res)
+                        if(res.returnCode=200){
+                          let chapterList=res.data.list
+                          this.handleInitChapterId()
+                          chapterList.forEach(value => {
+                              if(value.bookId==this.readBookId){
+                                  resolve(value.chapterId)
+                             } 
+                          })
+                        }
+                     })  
+               })
+            },
+            handleImmediatelyRead(){
+                if(this.isLogin){
+                   this.handleImmediatelyReadChapter().then(res=>{
+                      this.$router.push({path:'/bookRead',query:{bookId:this.readBookId,chapterId:res}})
+                 })
+               }else{
+                this.handleInitChapterId().then(res=>{
+                    this.$router.push({path:'/bookRead',query:{bookId:this.readBookId,chapterId:res}})                    
+                })
+              }  
             },
             handleCommentDetail(item){
                 this.setReadCommentInfo(item)
@@ -242,6 +254,8 @@ import { setTimeout } from 'timers';
                 this.isShow = true; 
                 Post_formData2(this,{bookid:this.readBookId},'/api/book-bookInfo',res=>{
                     if (res.returnCode==200) {
+                        let size=res.data.similarRecommendation.length+1
+                        this.width=(size*96+size*5)/100+'rem'
                         this.isShow = false;                        
                         this.chapterCount=res.data.chapterCount                        
                         this.infoList = res.data.bookListInfo;
@@ -251,9 +265,6 @@ import { setTimeout } from 'timers';
                         this.rewordParam.authorId=res.data.AuthorInfo.userId
                         this.rewordParam.bookId=this.readBookId
                         this.rewordParam.bookName=res.data.bookListInfo.bookName
-                        // setTimeout(()=>{
-                        //     this.$refs.content.scrollIntoView();
-                        //  },1000) 
                     }else{
                         this.$vux.toast.text(res.msg);
                     }
@@ -313,15 +324,14 @@ import { setTimeout } from 'timers';
             },
             handleToBookDetail(bookId){
                  this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
-                //  this.readBookId=bookId                               
-                //  this.handleInit()
-                //  this.handleComments()
             }
           },
         mounted () {
             this.handleInit();
             this.handleComments();
-            this.handleInitChapterId()
+            // this.handleInitChapterId().then(res=>{
+            //     this.chapterId=res
+            // }) 
             Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
                 if(res.returnCode==500){
                  this.cate[1].name='已在书架'

@@ -7,10 +7,18 @@
                 <p>数量</p>
               </div>
           <div class='pay_list' v-for='item in payRecordList'>
-                <p >{{item.giveDateTime|dateFormat}}</p>
-                <p>{{item.bookName}}</p>
+                <p >{{item.giveDateTime|formatDate2}}</p>
+                <p>{{item.bookName|str(11)}}</p>
                 <p>{{item.spicyiTicketCount}}</p>
           </div>
+           <infinite-loading spinner='bubbles' @infinite="onInfinite" ref="infiniteLoading">
+          <span slot="no-more">
+            目前暂无更多记录
+          </span>
+          <span slot="no-results">
+            目前暂无更多记录
+          </span>
+         </infinite-loading>
   </div>
   <no-content v-if='!show' :source='source'></no-content>
   </div>
@@ -18,25 +26,43 @@
 <script>
 import {Post_formData2} from '../../config/services'
 import {mapState} from 'vuex'
-import {dateFormat } from 'vux'
 export default{
     data(){
         return {
-            payRecordList:null,
+            payRecordList:[],
             show:true,
+            page:0,
             source:{
                 img:require('../../assets/images/1.png'),
                 text:'没有相关数据'
             }
         }  
      },
-     filters: {
-         dateFormat
-     },
      computed:{
         ...mapState(['userInfo'])
      },
      methods:{
+         onInfinite($state){
+             this.page+=1
+             let options={
+                startpage:this.page,
+                userid:this.userInfo.userId,
+             }
+             Post_formData2(this,options,'/api/spicyirewardticketlogByUserId',res=>{
+                 if(res.returnCode==200){
+                     console.log(res)
+                     this.payRecordList=this.payRecordList.concat(res.data.list)
+                     if(res.data.lastPage>this.page){
+                         $state.loaded()
+                        }else{
+                         $state.complete()                             
+                         }
+                     }else{
+                     $state.complete()
+                     this.show=false
+                 }
+             })
+         },
          getPayList(){
              let options={
                 startpage:1,
@@ -52,7 +78,7 @@ export default{
          }
      },
      mounted () {
-         this.getPayList()
+        //  this.getPayList()
      }
 }
 </script>
@@ -66,7 +92,6 @@ export default{
            margin-top:.1rem;
            line-height: .3rem;
            border-bottom:1px solid #E9E9E9;
-        //    margin-left:.1rem;
          p {
              float:left;
              width:33%;

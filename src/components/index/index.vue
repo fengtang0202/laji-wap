@@ -23,10 +23,10 @@
         </div>
         <div class="line">
         </div>
-        <!-- <div class="edit_d">
+    <!-- <div class="edit_d">
             <img src='../../assets/images/newbook@3x.png' class="left_img">
             <span class='le_p'>新书推荐</span>
-        </div>
+         </div>
          <div class="text_con">
             <div class="book" :key='index' v-for="(item,index) in bookList" @click="handleGo(item.bookId)">
                 <img :src='item.bookImage' style="width:.96rem;height:1.27rem;">

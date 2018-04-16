@@ -9,7 +9,7 @@
         </div>       
         <div class="submit" @click="handleSubmit()">提交</div>
    </div>
-</template>
+</template> 
 <script>
     import { Post_formData2, noParam_Get } from '@/config/services'
     import{mapActions} from 'vuex'
@@ -26,7 +26,7 @@
         },
         methods:{
             ...mapActions(['setPhone','setUserCode']),
-            getCode:function(){
+            getCode(){
                 let checkPhone=/^1(3|4|5|6|7|8|9)\d{9}$/;
                 if (checkPhone.test(this.phone)) {
                     noParam_Get(this,'/api/person-checkNickPhone/'+this.phone,res=>{
@@ -50,7 +50,9 @@
                                         }
                                     // })
                                 })
-                            }  
+                            }  else{
+                                this.$vux.toast.text('操作过于频繁，请60S后重试')
+                            }
                         }                        
                     })
                 } else {
@@ -63,7 +65,7 @@
                 }
                 let that = this,
                     time = 60;
-                var sendTimer = setInterval(function(){
+                var sendTimer = setInterval(()=>{
                      that.isOvertime = true;
                     that.iscode = true;
                     time--;

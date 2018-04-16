@@ -18,7 +18,7 @@
            <p style='color:#FB5E6F;font-size:.28rem;text-align:center;margin:.13rem 0;'>¥{{price}}</p>
            <div style='overflow:hidden;border-bottom:1px solid #EFEFEF;'>
               <p style='color:#666666;font-size:.16rem;float:left;margin-left:.14rem'>可用余额:{{userInfo.userMoney}}</p>
-              <p style='color:#4A90E2;font-size:.12rem;float:right;margin-right:.14rem;'>没充值20元送1个金椒</p>
+              <p style='color:#4A90E2;font-size:.12rem;float:right;margin-right:.14rem;'>每充值20元送1个金椒</p>
            </div>
             <p style='text-align:center;margin-top:.1rem;'>
               <button @click='pay()' style='border:0;outline:none;background-color:#F77582;width:80%;height:.4rem;border-radius:.4rem;color:#fff;'>立即支付</button>
@@ -45,7 +45,7 @@ export default{
        isAddTo:0,
        show:false,
        payCategoryList:[
-           {price:1,gift:''},
+           {price:6,gift:''},
            {price:12,gift:''},
            {price:30,gift:'送150辣椒券'},
            {price:50,gift:'送300辣椒券'},

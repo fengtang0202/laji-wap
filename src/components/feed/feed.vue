@@ -64,7 +64,7 @@
             handleReword(){
                let options = {
                    goldenTicketCount:this.number,
-                   bookid:this.param.readBookId,
+                   bookid:this.$route.query.bookId,                   
                    bookName:this.param.bookName,
                    authorId:this.param.authorId
                }

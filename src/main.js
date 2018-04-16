@@ -4,7 +4,6 @@ import router from './router'
 import store from './store'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css';
-import '../static/js/swipe/swiper.min.css'
 import axios from 'axios'
 import FastClick from 'fastclick'
 import VueTouch from 'vue-touch'
@@ -63,7 +62,7 @@ router.beforeEach((to, from, next) => {
            }
           store.state.userInfo=null
           store.state.isLogin=false
-          next({path: '/Login'})
+          next({path: '/Login',query:{redirect:from.path}})
        }
     })
   }else{

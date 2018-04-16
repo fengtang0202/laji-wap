@@ -8,32 +8,39 @@
                 <p>状态</p>
               </div>
           <div class='pay_list' v-for='item in payRecordList'>
-                <p >{{item.dateTimes|dateFormat}}</p>
+                <p >{{item.dateTimes|formatDate2}}</p>
                 <p>{{item.rechargeType|payType}}</p>
                 <p>{{item.money}}</p>
                 <p>{{item.isOK|status}}</p>
           </div>
+          <infinite-loading spinner='bubbles' @infinite="onInfinite" ref="infiniteLoading">
+          <span slot="no-more">
+            目前暂无更多记录
+          </span>
+          <span slot="no-results">
+            目前暂无更多记录
+          </span>
+         </infinite-loading>
   </div>
-    <no-content v-if='!show' :source='source'></no-content>
+    <!-- <no-content v-if='!show' :source='source'></no-content> -->
   </div>
 </template>
 <script>
 import {Post_formData2} from '../../config/services'
 import {mapState} from 'vuex'
-import {dateFormat } from 'vux'
 export default{
     data(){
         return {
             payRecordList:[],
             show:true,
+            page:0,
              source:{
                 img:require('../../assets/images/1.png'),
-                text:'没有相关数据'
+                text:''
             }
         }  
      },
      filters: {
-         dateFormat,
          status(res){
            return res==0?'失败':'成功'
          },
@@ -49,23 +56,29 @@ export default{
         ...mapState(['userInfo'])
      },
      methods:{
-         getPayList(){
+         onInfinite($state){
+             this.page+=1
              let options={
-                startpage:1,
+                startpage:this.page,
                 userid:this.userInfo.userId,
-                page:1
+                page:this.page
              }
              Post_formData2(this,options,'/api/user-RechargeRecord',res=>{
                  if(res.returnCode==200){
-                     this.payRecordList=res.data.list
-                 }else{
+                     this.payRecordList=this.payRecordList.concat(res.data.list)
+                     if(res.data.lastPage>this.page){
+                         $state.loaded()
+                        }else{
+                         $state.complete()                             
+                         }
+                     }else{
+                     $state.complete()
                      this.show=false
                  }
              })
          }
      },
      mounted () {
-         this.getPayList()
      }
 }
 </script>

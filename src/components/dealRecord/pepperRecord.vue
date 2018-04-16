@@ -8,11 +8,19 @@
                 <p>状态</p>
               </div>
           <div class='pay_list' v-for='item in List '>
-                <p >{{item.giveDateTime|dateFormat}}</p>
-                <p>{{item.bookName|bookName}}</p>
+                <p >{{item.giveDateTime|formatDate2}}</p>
+                <p>{{item.bookName|str(5)}}</p>
                 <p>{{item.goldenTicketCount}}</p>
                 <p>成功</p>
           </div>
+            <infinite-loading spinner='bubbles' @infinite="onInfinite" ref="infiniteLoading">
+          <span slot="no-more">
+            目前暂无更多记录
+          </span>
+          <span slot="no-results">
+            目前暂无更多记录
+          </span>
+         </infinite-loading>
   </div>
  <no-conetnt v-if='!show' :source='source'></no-conetnt>
 </div>
@@ -20,45 +28,43 @@
 <script>
 import {Post_formData2} from '../../config/services'
 import {mapState} from 'vuex'
-import {dateFormat } from 'vux'
 export default{
     data(){
         return {
            List:[],
            show:true,
+           page:0,
             source:{
                 img:require('../../assets/images/1.png'),
                 text:'没有相关数据'
             }
         }  
      },
-     filters: {
-         dateFormat,
-         bookName(res){
-            return res.length>5?res.slice(0,5)+'....':res
-         }
-     },
      computed:{
         ...mapState(['userInfo'])
      },
      methods:{
-         getPayList(){
+        onInfinite($state){
+             this.page+=1
              let options={
-                startpage:1,
+                startpage:this.page,
                 userid:this.userInfo.userId,
              }
              Post_formData2(this,options,'/api/userGoldenTicketRecord',res=>{
                  if(res.returnCode==200){
-                     this.List=res.data.list
-                     this.show=true
-                 }else{
+                     console.log(res)
+                     this.List=this.List.concat(res.data.list)
+                     if(res.data.lastPage>this.page){
+                         $state.loaded()
+                        }else{
+                         $state.complete()                             
+                         }
+                     }else{
+                     $state.complete()
                      this.show=false
                  }
              })
          }
-     },
-     mounted () {
-         this.getPayList()
      }
 }
 </script>

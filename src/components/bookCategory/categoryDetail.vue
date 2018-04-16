@@ -63,7 +63,7 @@
             <div class="con-text">
                <p class="p_one" v-html="item.bookName"></p>
                <p class="p_two"><span>作者 : </span>
-               <span  v-html="item.writerName" style="margin-left:.05rem;margin-right:.05rem;"></span>
+               <span   style="margin:0 .05rem;">{{item.writerName|str(7)}}</span>
                <span v-html="item.classificationName"></span>
                <span style='color:#57B0FF;margin-left:.03rem;'>{{item.bookStatus===0?'连载中':''}}</span>
                </p>
