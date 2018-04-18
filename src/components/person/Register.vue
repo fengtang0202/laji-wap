@@ -4,9 +4,11 @@
         <div class="title">注册</div>
 
         <input type="text" class="oInput" placeholder="请输入手机号" v-model.trim="phone">
-        <div class="oInput">
-             <input type="text" class="codeInput" placeholder="请输入验证码" v-model.trim="verificationCode">
-             <p  :class="{code:iscode}" @click="getCode()">{{word}}</p>
+        <div class="codeInput">
+            <div>
+             <input type="text"  placeholder="请输入验证码" v-model.trim="verificationCode">
+            </div>
+             <button  class='code' :disabled='iscode' @click="getCode()">{{word}}</button>
         </div>
         <input type="password" class="oInput" placeholder="请输入密码" v-model.trim="pwd">
         <input type="text" class="oInput" placeholder="请输入昵称" v-model.trim="name">
@@ -47,21 +49,21 @@
             }
         },
         methods:{
-            handleWomen:function(){
+            handleWomen(){
                 this.women = !this.women;
                 if(!this.women){
                    this.man = true;
                    this.sex = 0;
                 }
             },
-            handleMan:function(){
+            handleMan(){
                 this.man =!this.man;
                 if(!this.man){
                    this.women = true;
                    this.sex = 1;
                 }
             },
-            handleRegister:function(){
+            handleRegister(){
                 let checkPhone = /^1(3|4|5|6|7|8|9)\d{9}$/;
                 let checkPassword = /^.{6,20}$/;
                 let checkName = /^.{1,20}$/;
@@ -190,13 +192,13 @@
             font-size:.18rem;
             padding-left:.14rem;
             outline: none;
-            .codeInput{
-               width:2rem;
-               height:.42rem;
-               float:left;
-               border:none;
-               outline: none;
-            }
+            // .codeInput{
+            //    width:1.8rem;
+            //    height:.42rem;
+            //    float:left;
+            //    border:none;
+            //    outline: none;
+            // }
             p{
                 width:.85rem;
                 height:.44rem;
@@ -205,8 +207,36 @@
                 text-align:center;
                 float:right;
             }
-            .code{
-                color:#F77583;
+
+           
+        }
+        .codeInput{
+            width:3.04rem;
+            height:.44rem;
+            margin:.2rem auto;
+            div{
+                width:1.8rem;
+                height:.44rem;
+                border-radius:4px;
+                padding-left:.14rem;
+                border:1px solid #979797;
+                float:left;
+                margin-right:.14rem;
+                input{
+                width:1.52rem;
+                height:.42rem;
+                border:none;
+                outline: none;  
+              }
+            }
+               .code{
+                width:1.1rem;
+                height:.44rem;
+                border:0;
+                outline:none;
+                background: #F77583;
+                color:#fff;
+                border-radius: .04rem;
             }
         }
         .sex{

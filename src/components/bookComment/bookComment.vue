@@ -21,17 +21,17 @@
                       </div>
                 </div>
                  <!-- <p class='bookName'>《{{item.bookName}}》</p>   -->
-                 <p class='content'>{{item.commentContext|content}}</p> 
+                 <p class='content'>{{item.commentContext}}</p> 
                  <div class='zhan'>
-                     <p>
-                     <img v-if='item.isthumbs===0?true:false' @click='handelLike(item)' src="../../assets/images/zan@3x.png" alt="">
-                     <img v-if='item.isthumbs===1?true:false' @click='handelLike(item)' src="../../assets/images/goodzan@3x.png" alt="">
-                     <span>{{item.thumbsCount}}</span>
-                     </p>
-                     <p>
-                     <img @click='handleCommentDetail(item)' src="../../assets/images/message@3x.png" alt="">
-                     <span>{{item.replyCount}}</span>
-                     </p>
+                    <p>
+                        <img @click='handleCommentDetail(item)' src="../../assets/images/message@3x.png" alt="">
+                        <span>{{item.replyCount}}</span>
+                    </p>
+                    <p>
+                        <img v-if='item.isthumbs===0' @click='handelLike(item)' src="../../assets/images/zan@3x.png" alt="">
+                        <img v-if='item.isthumbs===1' @click='handelLike(item)' src="../../assets/images/goodzan@3x.png" alt="">
+                        <span>{{item.thumbsCount}}</span>
+                    </p>
                  </div>             
               </div>
             </div>  
@@ -59,23 +59,23 @@
                       </div>
                 </div>
                  <!-- <p class='bookName'>《{{item.bookName}}》</p>   -->
-                 <p class='content'>{{item.commentContext|content}}</p> 
-                 <div class='zhan'>
-                     <p>
-                     <img v-if='item.isthumbs===0?true:false'   @click='handelLike(item)' src="../../assets/images/zan@3x.png" alt="">
-                     <img v-if='item.isthumbs===1?true:false'   @click='handelLike(item)'  src="../../assets/images/goodzan@3x.png" alt="">
-                     <span>{{item.thumbsCount}}</span>
-                     </p>
+                 <p class='content'>{{item.commentContext}}</p> 
+                 <div class='zhan'>     
                      <p>
                      <img @click='handleCommentDetail(item)' src="../../assets/images/message@3x.png" alt="">
                      <span>{{item.replyCount}}</span>
+                     </p>
+                      <p>
+                     <img v-if='item.isthumbs===0'   @click='handelLike(item)' src="../../assets/images/zan@3x.png" alt="">
+                     <img v-if='item.isthumbs===1'   @click='handelLike(item)'  src="../../assets/images/goodzan@3x.png" alt="">
+                     <span>{{item.thumbsCount}}</span>
                      </p>
                  </div>             
               </div>
             </div>  
         </div>
         </div>
-        <no-content v-if='!showContent' :source='source'></no-content>
+        <No v-if='!showContent'></No>
         <div class='bottom_x'>
    
         </div>
@@ -134,11 +134,6 @@ export default {
     },
     computed: {
       ...mapState(['userInfo','isLogin'])  
-    },
-     filters:{
-      content(str){
-              return str.length>36?str.slice(0,37)+'...':str 
-      }
     },
     methods:{
         ...mapActions(['setReadCommentInfo']),
@@ -231,17 +226,14 @@ export default {
                    }
                 })
                }else{
-                  this.$vux.toast.text('登录后点赞哦!')
+                    this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
                } 
            },
            handleShow(){
                if(this.isLogin){
                    this.show=!this.show
                }else{
-                   this.$vux.toast.text('请先登录!')
-                     setTimeout(()=>{
-                        this.$router.push('/Login')
-                   },2000)
+                this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
                }
            }
     },

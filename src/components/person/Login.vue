@@ -143,19 +143,20 @@
         }
         .re_radio{
             width:100%;
-            height:.3rem;
+            height:.4rem;
             box-sizing:border-box;
             padding:0 .37rem;
+            line-height: .4rem;
             .left_d{
-                width:.2rem;
-                height:.2rem;
+                width:.4rem;
+                height:.4rem;
                 float:left;
+                vertical-align: middle;
             }
             p{
                 float:left;
                 color:#F77583;
                 font-size:.16rem;
-                margin-left:.1rem;
             }
             .right_d{
                 float:right;

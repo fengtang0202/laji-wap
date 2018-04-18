@@ -2,10 +2,10 @@
     <div id="home">
          <div class="top">
             <img src="../assets/images/ico@2x.png" @click='handleTo({path:"/"})' class="logo_two">
-            <div class="btn_top" @click="handleTo({path:'/download'})">下载APP</div>
+            <div class="btn_top" @click="handleIsPhone()">下载APP</div>
             <span class='userId' @click='handleTo({path:"/bookRank"})' >排行榜</span>
             <img   v-if='isLogin' :src="userInfo.userHeadPortraitURL" @click="handleTo({path:'/person'})" class="logo_three">
-            <img v-if='!isLogin' @click="handleTo({path:'/person'})" class="logo_three" src='../assets/images/user@3x.png'>
+            <img   v-if='!isLogin' @click="handleTo({path:'/person'})" class="logo_three" src='../assets/images/user@3x.png'>
          </div>
          <div class="bottom">
              <input type="text" placeholder="搜索作品或作者" class='search' @focus='handleTo({path:"/search"})'/>
@@ -46,6 +46,17 @@
         methods:{
             handleGo(res,index){
                 this.$router.push(res);
+            },
+             handleIsPhone(){
+            var u = navigator.userAgent;
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+            var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if(isAndroid){
+               window.location.href='https://www.lajixs.com/apk/app.apk'
+            }
+            if(isiOS){
+               alert('i am ios')
+              }
             },
             getIndex(){
               let i =this.$route.path
@@ -165,15 +176,16 @@
             .btn{
                font-size:.18rem;
                color:#333;
+               width:.54rem;
+               height:.26rem;
+               text-align: center;
+               border-radius:2px;               
             }
             .isAdd{
-                width:.54rem;
-                height:.26rem;
-                color:#fff;
-                text-align:center;
-                line-height:.26rem;
+                // text-align:center;
+                // line-height:.26rem;
                 background:#FB5E6F;
-                border-radius:2px;
+                color:#fff;
             }
         }
     }

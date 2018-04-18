@@ -1,7 +1,7 @@
 <template>
     <div id="feed">
         <div class="page_mcbg" @click="handleClose()" v-show="backShow"></div>
-        <div class="glod_div"  v-show="dilogShow">
+        <div class="glod_div"  :class='{show:dilogShow}'>
             <div class='goldpepper'>投喂小米椒</div>
             <p class='computerd'>您的小米椒余额:{{money}}</p>
             <div class="oDiv">
@@ -87,11 +87,11 @@
              },
             
         },
-         mounted(){
-                 if(this.isLogin){
-                     this.money=this.userInfo.userRecommendTicket 
-                 }
-             }
+         created(){
+             if(this.isLogin){
+                 this.money=this.userInfo.userRecommendTicket 
+                }
+        }
     }
 </script>
 <style lang="less">

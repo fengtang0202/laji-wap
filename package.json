@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "better-scroll": "^1.9.1",
     "iview": "^2.0.0-rc.19",
     "js-md5": "^0.7.3",
     "qs": "^6.5.1",

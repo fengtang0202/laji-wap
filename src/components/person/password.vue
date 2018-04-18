@@ -3,9 +3,12 @@
         <app-load></app-load>
         <div class="title">忘记密码</div>
         <input type="text" class="oInput" placeholder="请输入手机号" v-model.trim="phone">
-        <div class="oInput">
-             <input type="text" class="codeInput" placeholder="请输入验证码" v-model.trim="verificationCode"> 
-             <p v-bind:class="{code:iscode}" @click="getCode()">{{word}}</p>
+        <div class="codeInput">
+              <div>
+                <input type="text"  placeholder="请输入验证码" v-model.trim="verificationCode">
+             </div> 
+             <button  class='code'  :disabled='iscode' @click="getCode()">{{word}}</button>             
+             <!-- <p v-bind:class="{code:iscode}" @click="getCode()">{{word}}</p> -->
         </div>       
         <div class="submit" @click="handleSubmit()">提交</div>
    </div>
@@ -146,6 +149,35 @@
             }
             .code{
                 color:#F77583;
+            }
+        }
+        .codeInput{
+            width:3.04rem;
+            height:.44rem;
+            margin:.2rem auto;
+            div{
+                width:1.8rem;
+                height:.44rem;
+                border-radius:4px;
+                padding-left:.14rem;
+                border:1px solid #979797;
+                float:left;
+                margin-right:.14rem;
+                input{
+                width:1.52rem;
+                height:.42rem;
+                border:none;
+                outline: none;  
+              }
+            }
+               .code{
+                width:1.1rem;
+                height:.44rem;
+                border:0;
+                outline:none;
+                background: #F77583;
+                color:#fff;
+                border-radius: .04rem;
             }
         }
          .submit{

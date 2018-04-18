@@ -1,11 +1,11 @@
 <template>
-        <div>
+<div>
+        <div :style='{backgroundColor:backgroundColor}'>
             <app-feed  :param='rewordParam' ref="child"  @click="handleClosefeed()"></app-feed>
             <app-feedpepper :param='rewordParam'  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper>
             <AppMinpepper :param='rewordParam' ref='minFeedpepper' @click='hanldeCloseMinFeedPepper()'></AppMinpepper>
-    <v-touch @press='up'>  
    <div class='bookRead'>
-     <div class='feed' :class='{show:navShow}'>
+     <div class='feed' :class='{show2:feedShow}'>
             <div style='float:left'>
                <img :src="item.img"  @click='handleFeedTap(index)'  class='pepper' :key='index' v-for='(item,index) in feedList' alt="">
             </div>
@@ -13,10 +13,10 @@
               <img src="../../assets/images/dropdown@3x.png"   alt="">
             </div>
      </div>
-     <ul class='nav_list' :class='{show:show}'>
+     <ul class='nav_list' :class='{show1:show}'>
          <li v-for='(item,index) in navList' :key='index' @click='handleTap(item.key)'>{{item.text}}</li>
      </ul>
-    <ul class='share_list' :class='{show:shareShow}'>
+    <ul class='share_list' :class='{show3:shareShow}'>
         <li v-for='(item,index) in shareList'  @click='handleShare(index)' :key='index'>
             <img :src="item.img" alt="">
             <p>{{item.text}}</p>
@@ -64,17 +64,25 @@
     <!-- <div style='text-align:center;padding-top:.1rem;' v-if='preShow'>
          <button  class='next_btn' @click='getPreChapterText()'>加载上一章</button>
     </div> -->
-      <div class='book_content'  ref='content' :style='{"fontSize":fontSize+"px","backgroundColor":backgroundColor,"color":fontColor}' :class='{changeColor:show}'>
-      <p class='book_title'>       
-         <span>{{bookName}}</span>
-         <span>{{chapterName}}</span>
-     </p> 
-     <p style='font-size:.2rem;text-align:center;'>{{chapterName}}</p>
-     <p v-html='bookText'>
-     </p>  
+  <!-- <v-touch @press='up'>     -->
+  <!-- </v-touch> -->
+   <!-- <scroll-view
+          :data="bookText"
+          :pulldown="pulldown"
+          @pulldown="loadData" style='height:500px;'>     -->
+      <div class='book_content'  @click='up()' onselectstart="return false"  ref='content' :style='{"fontSize":fontSize/100+"rem","backgroundColor":backgroundColor,"color":fontColor}' :class='{changeColor:show}'>
+         <!-- <h3>{{bookName}}</h3> -->
+         <h3>{{chapterName}}</h3>
+      <!-- <p style='font-size:.2rem;text-align:center;'>{{chapterName}}</p> -->
+      <!-- <pull-to :bottom-load-method="loadmore"   @bottom-state-change="stateChange">                      -->
+          <p v-html='bookText'></p>  
+         <!-- <div class="loading-wrapper"></div>  -->
+      <!-- </pull-to> -->
+      <!-- <div style='height:.5rem;width:100%;'></div> -->
       </div>
+    <!-- </scroll-view> -->
          <!-- <button  class='next_btn' @click='getNextChapterText()'>加载下一章</button> -->
-          <div class='last_nav' v-if='preNextShow'>
+          <div class='last_nav'  :style='{transform: lastNav?"translate(0,0)":"translate(0,.54rem)"}'>
               <ul>
                   <li v-for='item in bottomNavList' @click='handleTap(item.key)'>
                       <div  class='nav_d'>
@@ -85,7 +93,7 @@
               </ul>
          </div>
     </div>
-        <div v-transfer-dom>
+      <div v-transfer-dom>
                 <x-dialog   v-model="dialogshow"  class="dialog-demo">
                     <div style="padding:.7rem 0rem;">
                         <!-- 未登录 -->
@@ -128,24 +136,33 @@
                         </div>
                     </div>
                 </x-dialog>
+                 <!-- <popup v-model="showDirectory" position="right">
+                        <div style="width:3rem;">
+                        </div>
+                  </popup> -->
          </div>
-           </v-touch>         
       </div>
+    </div>
 </template>
 <script>
 import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
 import { setTimeout } from 'timers';
-import {TransferDomDirective as TransferDom,Confirm, XDialog} from 'vux'
+import {TransferDomDirective as TransferDom,Confirm, XDialog,Popup} from 'vux'
 import {mapState,mapActions} from 'vuex'
 import AppFeed from '@/components/feed/feed.vue'
 import AppFeedpepper from '@/components/feed/feedPepper.vue' 
 import AppMinpepper from '@/components/feed/minPepper'
+  import BScroll from 'better-scroll'
+  import Directory from '../directory/directory'
      export default{
          data(){
             return{
+               showDirectory:false, 
+               pulldown:true,
                bookText:'',
                isScroll:false,
                fontSize:18,
+               lastNav:false,
                fontColor:'#000',
                backgroundColor:'#fff',
                show:false,
@@ -161,7 +178,6 @@ import AppMinpepper from '@/components/feed/minPepper'
                chapterList:[],
                bottomShow:false,
                shareShow:false,
-               navShow:false,
                confirmKey:0,
                dialogshow:false,
                preNextShow:false,
@@ -172,6 +188,8 @@ import AppMinpepper from '@/components/feed/minPepper'
                btnShow:false,
                isSelect:0,
                rewordParam:{},
+               iconLink:'',
+               feedShow:false,
                feedList:[
                    {img:require('../../assets/images/Group 3@3x.png')},
                    {img:require('../../assets/images/Group 2@3x.png')},
@@ -203,7 +221,7 @@ import AppMinpepper from '@/components/feed/minPepper'
             }
          },
          components:{
-             Confirm,XDialog,AppFeed,AppFeedpepper,AppMinpepper
+             Confirm,XDialog,AppFeed,AppFeedpepper,AppMinpepper,Popup
         },
          computed: {
              ...mapState(['userInfo','isLogin']),              
@@ -215,11 +233,14 @@ import AppMinpepper from '@/components/feed/minPepper'
             '$route'(){
                 this.chapterId=this.$route.query.chapterId
                 this.getBookText()
-                window.scrollTo(0,0)
+                // window.scrollTo(0,0)
                 this.addReadHistory()
             }
          },
          methods:{
+             loadData(){
+                 this.getNextChapterText()
+             },
              ...mapActions(['getUserInfo']),
              handleFontSize(res){
                   res===1&&this.handleFontSizeAdd()
@@ -295,6 +316,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                         return ;
                     }
                    this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;').replace(/[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}/g,' ')
+                //    this.bookText=this.bookText.concat(res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;').replace(/[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}/g,' '))
                    this.preNextShow=true
                    this.bookName=res.data.bookInfo.bookName
                    this.isvip=res.data.chapterInfo.chapterIsvip
@@ -304,10 +326,11 @@ import AppMinpepper from '@/components/feed/minPepper'
                    this.rewordParam.bookName=res.data.bookInfo.bookName
               })    
              },
+            //  上拉加载数据
              onConfirm(res){
                  //确定以后的操作
                 res==1&&this.addBookRack()
-            },
+             },
             onCancel(){
                 //取消以后的操作
                console.log(1)
@@ -322,7 +345,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                     }
                 }) 
              },  
-             refreshuserInfo(){
+           refreshuserInfo(){
                Post_formData2(this,'','/api/person-info',res=>{
                             if(res.returnCode==200){
                                 this.getUserInfo(res.data) 
@@ -347,8 +370,9 @@ import AppMinpepper from '@/components/feed/minPepper'
                         this.btnShow&&this.buyChapter()                              
                     }
                         // !this.btnShow&&this.getBookText()
-                     this.$router.push({path:'/bookRead',query:{isvip:this.isvip,price:this.price,bookId:this.readBookId,chapterId:this.chapterId}})                       
-                    //  this.$refs.content.scrollIntoView();
+                     this.$router.replace({path:'/bookRead',query:{isvip:this.isvip,price:this.price,bookId:this.readBookId,chapterId:this.chapterId}})                       
+                     this.$refs.content.scrollIntoView();
+                    //  window.scrollTo(0,0)                    
                   }else{
                     this.messageTitle='目前最后一章'
                     this.ConfirmShow=true
@@ -359,9 +383,13 @@ import AppMinpepper from '@/components/feed/minPepper'
                  if (this.chapterIdNum>0) {
                     this.chapterIdNum--  
                     // this.setChapterId(this.chapterList[this.chapterIdNum].id) 
-                    this.chapterId=this.chapterList[this.chapterIdNum].id                    
-                    this.btnShow&&this.$router.push({path:'/bookRead',query:{isvip:this.isvip,price:this.price,bookId:this.readBookId,chapterId:this.chapterId}})                       
+                    this.chapterId=this.chapterList[this.chapterIdNum].id 
+                    if(this.isLogin){
+                        this.btnShow&&this.buyChapter()    
+                    }
+                    this.$router.replace({path:'/bookRead',query:{isvip:this.isvip,price:this.price,bookId:this.readBookId,chapterId:this.chapterId}})                       
                     this.$refs.content.scrollIntoView();
+                    // window.scrollTo(0,0)
                  } else {
                      this.messageTitle='第一章了'
                      this.ConfirmShow=true  
@@ -393,7 +421,7 @@ import AppMinpepper from '@/components/feed/minPepper'
              handleTap(res){
                  if (res===6) {
                      this.shareShow=!this.shareShow
-                     this.bottomShow=false
+                     this.lastNav=false
                  }
                  if(res===1){
                  this.$router.push({path:'/bookDetails',query:{bookId:this.readBookId}});
@@ -415,16 +443,20 @@ import AppMinpepper from '@/components/feed/minPepper'
                  }
                  if(res===8){
                      this.$router.push({path:'/directory',query:{bookId:this.readBookId}})
+                    // this.showDirectory=true
                  }
              },
              up () {
-                 this.navShow=!this.navShow
-                 this.bottomShow=!this.bottomShow
-                 if(!this.navShow){
-                    this.bottomShow=false
-                    this.show=false
-                    this.shareShow=false
+                 setTimeout(()=>{
+                  this.feedShow=!this.feedShow
+                  this.lastNav=!this.lastNav
+                 if(!this.feedShow){
+                     this.lastNav=false
+                     this.show=false
+                     this.shareShow=false                  
+                     this.bottomShow=false
                  }
+                },10) 
              },
             change (status) {
                   this.handleIsAuto()
@@ -432,7 +464,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                       this.$Message.info(status?'订阅成功':'订阅取消');
                   },1000)
             },
-            handleGo(){
+            handleGo () {
                   this.$router.push('/payMoney')
             },
             addReadHistory () {
@@ -496,8 +528,6 @@ import AppMinpepper from '@/components/feed/minPepper'
         mounted () {
             this.getBookText()
             this.getNowChapterId()
-            console.log(this.btnShow)
-            console.log(this.price)
             if(this.isLogin){
                 this.addReadHistory()                
                 this.btnShow&&this.buyChapter()

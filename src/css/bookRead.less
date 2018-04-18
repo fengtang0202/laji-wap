@@ -10,12 +10,12 @@
         .feed{
             height:.64rem;
             background-color: #3D3D3D;
-            opacity: 0;
             width:100%;
+            z-index:999;
             position:fixed;
-            top:0;
-            transition: all .5s;
-            transform: translate(0, -.64rem);                                        
+            transform: translate(0,-64rem);
+            transition: all .3s;
+            top:0;                                     
             .pepper{
                 width:.78rem;
                 height:.3rem;
@@ -37,23 +37,23 @@
         .book_content{
             letter-spacing:.04rem; 
             text-indent: 2em; 
-            padding:.05rem .1rem;
+            padding:.05rem .14rem;
             .book_title{
-                font-size: .16rem;
                 margin-left:-.3rem;
                 color:#999;
             }
          }
         .nav_list{
             width:.88rem;
-            height:2.16rem;
+            height:1.8rem;
             position: fixed;
             right:0;
             top:.64rem;
+            // z-index:99999;
             background-color: #fff;
-            transition: all .5s ;
+            transition: all .3s ;
             opacity: 0;
-            transform: translate(0.88rem, 0);                            
+            transform: translate(0rem,-2.16rem);                            
             li{
                 height:0.36rem;
                 text-align: center;
@@ -62,14 +62,14 @@
             }
         }
         .share_list{
-            height:1.8rem;
+            height:1.81rem;
             position: fixed;
             width:100%;
             bottom:0;
             background-color: #fff;
-            transition: all .5s ;
-            transform: translate(0,1.8rem);   
             opacity: 0;
+            transform: translate(0,1.26rem);
+            transition: all .3s ;
             li{
                 width:25%;
                 height:.9rem;
@@ -97,10 +97,11 @@
             background-color: #3D3D3D;
             position: fixed;
             bottom:0;
+            // z-index: 99999;
             color:#FFF;
             opacity: 1;
             transform: translate(0,1.98rem); 
-            transition: all .5s;                                       
+            transition: all .3s;                                       
             .one_nav{
             height:.62rem;
             border-bottom:1px solid #333;
@@ -167,8 +168,20 @@
             
         }
         .show{
-             transform: translate(0, 0);
+             transform: translate(0, -.54rem);
              opacity: 1;                
+            }
+            .show1{
+             transform: translate(0, 0rem);
+             opacity: 1;          
+            }
+            .show2{
+                transform: translate(0, 0);
+                opacity: 1;  
+            }
+            .show3{
+                opacity:1;
+                transform:translate(0,0);
             }
           .changeColor{
              background-color: #D8D9DC;
@@ -179,11 +192,12 @@
          }
          .last_nav{
              background-color: #3D3D3D;
-             overflow: hidden;
              color:#FFF;
              width:100%;
-            //  position: fixed;
-            //  bottom:0;
+             transform: translate(0,.54rem); 
+             transition: all .3s; 
+             position: fixed;
+             bottom:0;
                img{
                    width:.36rem;
                    height:.36rem;

@@ -38,11 +38,13 @@
               </div>
            </div>
       </div>
-      <group class='nav_list'>
-          <cell v-for='(li,index) in navList' :title="li.title" :key='index' :link="li.link">
-              <img :src="li.img"  slot="icon" alt="">
-          </cell>
-       </group>
+      <div class='nav_list'>
+          <div class='nav_item' v-for='(li,index) in navList' :title="li.title" :key='index' @click='handleLink(li.link)'>
+              <img :src="li.img"  alt="">
+              <span>{{li.title}}</span>
+              <img class='go' src="../../assets/images/more@3x.png" alt="">
+          </div>
+       </div>
        <div class='loginOut_wrap' @click='loginOut()'>
             <span class="loginOut">退出登录</span>
        </div>
@@ -88,6 +90,9 @@
         handleAuthorCenter () {
             this.show=true;
          },
+         handleLink(res){
+           this.$router.push(res)
+         },
          loginOut(){
                let self=this
                console.log(self)
@@ -99,7 +104,7 @@
                                  this.getUserInfo(null)       
                                  this.$router.push(this.$route.query.redirect||'/')
                           },1000)
-                   }
+                     }
                })
          },
          onCancel(){
@@ -221,6 +226,14 @@
          }
          .nav_list{
              border-bottom:.06rem solid #E9E9E9;
+             .nav_item{
+                 height:.5rem;
+                 border-bottom:1px solid #E9E9E9;
+                 line-height: .5rem;
+                 color:#333333;
+                 position: relative;
+                 font-size:.16rem;
+             }
              img{
                 width:.28rem;
                 height:.28rem;
@@ -228,6 +241,14 @@
                 margin-left: .08rem;
                 margin-right:.08rem;
              }
+             .go{
+                 width:.27rem;
+                 height:.27rem;
+                 position: absolute;
+                 right:.13rem;
+                 top:.15rem;
+             }
+
          }
          .loginOut_wrap{
              height:.5rem;

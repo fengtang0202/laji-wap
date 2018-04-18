@@ -31,23 +31,23 @@
                         <img :src="item.bookImage">
                         <div class="con_d">
                             <div class="text_one">
-                                <span class="one_sp" v-html="item.bookName"></span>
+                                <span class="one_sp">{{item.bookName|str(10)}}</span>
                                 <span class="two_sp" >{{item.clickTotal|clickTotal}}万点击</span>
                             </div>
                             <div class="text_two">
                                 <span>作者: </span>
-                                <span v-html="item.writerName"></span>
+                                <span>{{item.writerName|str(12)}}</span>
                                 <p></p>
                                 <span  v-html="item.classificationName"></span>
                                 <p></p>
-                                <span class="oSpan" v-if="item.bookStatus===0">连载中</span>
-                                <span class="oSpan" v-if="item.bookStatus===1">已完结</span>
+                                <span :style='{color:"#47B2DB"}' v-if="item.bookStatus===0">连载中</span>
+                                <span :style='{color:"#FF6F00"}' v-if="item.bookStatus===1">已完结</span>
                             </div>
                             <div class="text_three">
                                 <span :style="{color:i.bookColor,border:'1px solid'}" v-for="(i,index) in item.booklableList" :key='index' v-html="i.bookLableName"></span>
                             </div>
-                            <div class="text_four" v-html="item.bookIntroduction">
-                                
+                            <div class="text_four" >
+                                {{item.bookIntroduction|str(35)}}
                             </div>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                         </span>
                     </infinite-loading>
              </div>
-             <no-content  v-if="!message" :source='source'></no-content>
+             <No   v-if="!message"> </No>
         </div>
        
    </div>

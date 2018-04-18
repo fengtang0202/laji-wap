@@ -41,7 +41,7 @@
 <style lang='less' scoped>
     .category_wrap{
         width:100%;
-        margin-top:.15rem;
+        border-top:3px solid #E9E9E9;
         .category_item_wrap{
              width:.76rem;
              height:1.12rem;

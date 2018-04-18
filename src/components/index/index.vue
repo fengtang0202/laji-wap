@@ -52,19 +52,20 @@
                   <p></p>
                   <span  v-html="item.classificationName"></span>
                   <p></p>
-                  <span class="oSpan" v-if="item.bookStatus===0">连载中</span>
-                  <span class="oSpan" v-if="item.bookStatus===1">已完结</span>
+                  <span  style='color:#47b2d8;' v-if="item.bookStatus===0">连载中</span>
+                  <span  style='color:#ff6f00;' v-if="item.bookStatus===1">已完结</span>
                </div>
                <div class="text_three">
                     <span :style="{color:i.bookColor,border:'1px solid'}" v-for="i in item.booklableList" >{{i.bookLableName}}</span>
                </div>
                <div class="text_four" v-html="item.bookIntroduction">
-                    
+                     
                </div>
             </div>
         </div>
         <div class='add_new_book' v-if='addBook'>
-             <button @click='manualLoad()'>更多新书</button>
+             <span @click='manualLoad()'>更多新书</span>
+             <img src="../../assets/images/more@3x.png"  alt="">
         </div>
         <!-- <infinite-loading  @infinite="infiniteHandler"  ref="infiniteLoading">
         </infinite-loading> -->
@@ -311,13 +312,13 @@
         }
         .add_new_book{
             text-align: center;
-            button{
-                outline: none;
-                border: 0;
-                background-color:#FB5E6F;
-                padding:.1rem;
-                border-radius: .1rem;
-                color:#fff;
+            color:#999;
+            font-size: .14rem;
+            padding:.1rem;
+            img{
+                width:.12rem;
+                height:.2rem;
+                vertical-align:middle;  
             }
         }
         .bottom_d{

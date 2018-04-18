@@ -7,6 +7,8 @@ import 'iview/dist/styles/iview.css';
 import axios from 'axios'
 import FastClick from 'fastclick'
 import VueTouch from 'vue-touch'
+import scrollView from '../src/components/common/scrollView '
+import No from '../src/components/common/no'
 import { ToastPlugin,WechatPlugin,Cell,Group,Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
 Vue.config.productionTip = false
 Vue.use(iView)
@@ -14,7 +16,10 @@ Vue.use(WechatPlugin)
 import headerComponent from '@/components/common/header'
 import Load from '@/components/common/Load'
 import noContent from '@/components/common/noContent'
-import InfiniteLoading from 'vue-infinite-loading';
+import InfiniteLoading from 'vue-infinite-loading'
+import bookItem from '../src/components/common/bookItem'
+import commendItem from '../src/components/common/commendItem'
+import Loading from 'vue'
 // 注册全局组件
 Vue.component('headerComponent',headerComponent)
 Vue.component('appLoad',Load)
@@ -23,6 +28,11 @@ Vue.component('noContent',noContent)
 Vue.component('SwipeoutItem',SwipeoutItem)
 Vue.component('SwipeoutButton',SwipeoutButton)
 Vue.component('InfiniteLoading', InfiniteLoading)
+Vue.component('No',No)
+Vue.component('bookItem',bookItem)
+Vue.component('commendItem',commendItem)
+Vue.component('Loading',Loading)
+// Vue.component('scrollView', scrollView)
 Vue.use(VueTouch, {name: 'v-touch'})
 Vue.use(ToastPlugin,Cell,Group)
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -56,9 +66,11 @@ router.beforeEach((to, from, next) => {
          }
        }else{
            if(store.state.isLogin){
-               Vue.$vux.toast.show({text:'登录过期',type:'warn'})
+               next({ path: '/Login'})                           
+            //    Vue.$vux.toast.show({text:'登录过期',type:'warn'})
            }else{
-               Vue.$vux.toast.show({text:'请先登录',type:'cancel'})
+            //    Vue.$vux.toast.show({text:'请先登录',type:'cancel'})
+               next({ path: '/Login'})            
            }
           store.state.userInfo=null
           store.state.isLogin=false
@@ -69,6 +81,9 @@ router.beforeEach((to, from, next) => {
     next()
   } 
 })
+router.afterEach((to, from, next) => {
+    window.scrollTo(0, 0);
+});
 new Vue({
     el: '#app',
     router,

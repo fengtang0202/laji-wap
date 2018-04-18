@@ -53,7 +53,7 @@
               </div>
             </div> 
             </div>
-            <no-content v-if='!showContent' :source='source'></no-content>
+            <No v-if='!showContent' ></No>
            <div class='replyInput'>
              <span @click='handleShow()'>回复</span>
           </div>

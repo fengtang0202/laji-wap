@@ -22,7 +22,7 @@
           </span>
          </infinite-loading>
   </div>
- <no-conetnt v-if='!show' :source='source'></no-conetnt>
+ <No v-if='!show' :source='source'></No>
 </div>
 </template>
 <script>

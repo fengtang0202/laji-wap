@@ -20,7 +20,7 @@
           </span>
          </infinite-loading>
   </div>
-  <no-content v-if='!show' :source='source'></no-content>
+  <No v-if='!show' :source='source'></No>
   </div>
 </template>
 <script>

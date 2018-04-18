@@ -7,7 +7,7 @@
          <p>正在阅读{{`(${bookRack.length})`}}</p>
          <div class='book_detail_wrap' v-for='item in bookRack' @click="handleBookDetail(item.bookId)">
             <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
-            <span style='font-size:.16rem;'>{{item.bookName|bookName}}</span>
+            <span style='font-size:.16rem;'>{{item.bookName|str(5)}}</span>
             <span class='icon_update' v-if='item.bookStatus==0?true:false'>更新</span>
          </div>
          <div class='add_book' @click="handleGo()">
@@ -18,7 +18,7 @@
          <p>推荐阅读{{`(${commendReadList.length})`}}</p>
          <div class='commend_book_wrap'  @click="handleBookDetail(item.bookId)" v-for='item in commendReadList'>
             <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
-            <p style='font-size:.16rem;'>{{item.bookName|bookName}}</p>   
+            <p style='font-size:.16rem;'>{{item.bookName|str(5)}}</p>   
             <p class='is_update' :style="{ 'color': item.bookStatus==0?'#FF6F00':'#47B2D8' }">{{item.isUpdate==0?'已完结':'连载中'}}</p>         
          </div>    
     </div>
@@ -46,9 +46,6 @@ import {mapActions,mapState} from 'vuex'
         },
         computed:{
             ...mapState(['bookRack','userInfo'])
-        },
-        filters:{
-            bookName:name=>name.length>6?(name.slice(0,5)+'....'):name
         },
         methods: {
             ...mapActions(['getBookRack']),

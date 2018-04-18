@@ -1,21 +1,21 @@
 <template>
  <div>
     <div id="directory">
-        <loading :show="isShow"></loading>
+    <Loading :show="isShow"></Loading>
         <headerComponent :list='topList'></headerComponent>
        <div class='readVolumeList' style='border-bottom:1px solid #EFEFEF;' :key='index' v-for='(item,index) in volumeAndChapterlist'>
                 <p class='volume_wrap'>
                     {{item.volumeName}}
                 </p>
-        <div class='chapter_wrap'  @click='handleToBookRead(i)' v-for="(i,index) in item.resultList" :key='index'>
+         <div class='chapter_wrap'  :id='"a"+i.id' @click='handleToBookRead(i)' v-for="(i,index) in item.resultList" :key='index'>
                 <p class='volume_wrap chapter'>
-                   <span :class='{add:i.chapterIsvip==1}'>{{i.chapterTitle}}</span>
+                   <span :class='{add:i.chapterIsvip==1,active:chapterId==i.id}' >{{i.chapterTitle}}</span>
                    <img class='vip' src="../../assets/images/vip@3x.png" v-if='i.chapterIsvip==1' alt="">
                 </p>
                   <span class='fontLength'>
                     {{i.chapterLength}}
                   </span>
-       </div>  
+         </div>  
         </div>
         <!-- <div style='width:100%;height:.2rem;'></div>
         <div class="page">
@@ -29,7 +29,7 @@
      </div>
 </template>
 <script>   
-    import { Loading,Cell,TransferDom } from 'vux'
+    import {Cell,TransferDom ,Loading} from 'vux'
     import { Post_formData2, noParam_Get,Param_Get_Resful} from '@/config/services'
     import {mapState,mapActions} from 'vuex'
     export default {
@@ -40,7 +40,8 @@
                 chapterList:[],
                 volumeList:[],//所有卷
                 isShow:false,
-                showContent:-1,
+                chapterId:this.$route.query.chapterId,
+                // showContent:-1,
                 dialogshow:false,
                 readBookId:this.$route.query.bookId,
                 topList:{
@@ -65,16 +66,30 @@
                   this.$router.push({path:'/bookRead',query:{isvip:i.chapterIsvip,price:i.price,bookId:this.readBookId,chapterId:i.id}});  
             },
             handleGetVolumeChapter(){
+                this.isShow=true
                  Param_Get_Resful(this,'/api/books-volumeChapterList/'+this.readBookId,res=>{
                      if(res.returnCode===200){
+                         this.isShow=false
+                         console.log(res.data.chapterInfo[0].resultList,1)
                          this.volumeAndChapterlist=res.data.chapterInfo
                          console.log(this.volumeAndChapterlist)
+                          let a="#a"+this.chapterId
+                          this.goAnchor(a)
                      }
                  })
-            }
+            },
+             goAnchor(selector) {
+                 setTimeout(()=>{
+                      this.el = document.querySelector(selector)
+                      this.el.scrollIntoView()
+                 },100)
+             }
         },
-        mounted () {
-            // this.handleInit();
+        mounted(){
+           
+        },
+        created () {
+            // this.handleInit()
             this.handleGetVolumeChapter()
         }
     }
@@ -109,7 +124,9 @@
                 .add{
                     color:#999;
                 }
-               
+                .active{
+                    color:#F77583;
+                }
             }
              .fontLength{
                    border:1px solid #F77583;
@@ -153,7 +170,6 @@
                 margin-left:.48rem;
             }
             .page_p{
-                
                 display:inline-block;
                 width:.53rem;
                 height:.28rem;

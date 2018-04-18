@@ -1,7 +1,7 @@
 <template>  
     <div id="feedPepper">
         <div class="page_mcbg" v-if="backpepperShow" @click="handleClosepepper()"></div>
-        <div class="container"  v-if="dilogpepperShow">
+        <div class="container"  :class='{show:dilogpepperShow}'>
                 <div class="paypepper">打赏辣椒</div>
                 <div class='con'>
                     <div class="lajiao">
@@ -10,7 +10,7 @@
                     </div>
                     <div class="check">
                         <div class="laNum" :key='index' :class="{active:iscode===index}" v-for="(item,index) in pepperList" @click="handleCheck(item.key,index)">
-                            <img :src="item.url" >
+                            <img :class='item.css' :src="item.url" >
                             <p v-html="item.name"></p>
                         </div>
                     </div>
@@ -30,12 +30,12 @@ import { Post_formData2} from '@/config/services'
                 iscode:0,
                 keyNum:188,
                 pepperList:[
-                    {url: require('../../assets/images/188@2x.png'),name:'188辣椒',key:'188'},
-                    {url:require('../../assets/images/288@2x.png'),name:'288辣椒',key:'288'},
-                    {url:require('../../assets/images/588@2x.png'),name:'588辣椒',key:'588'},
-                    {url:require('../../assets/images/888@2x.png'),name:'888辣椒',key:'888'},
-                    {url:require('../../assets/images/1888@2x.png'),name:'1888辣椒',key:'1888'},
-                    {url:require('../../assets/images/8888@2x.png'),name:'8888辣椒',key:'8888'},
+                    {url: require('../../assets/images/188@2x.png'),name:'188辣椒',key:'188',css:'img1'},
+                    {url:require('../../assets/images/288@2x.png'),name:'288辣椒',key:'288',css:'img2'},
+                    {url:require('../../assets/images/588@2x.png'),name:'588辣椒',key:'588',css:'img3'},
+                    {url:require('../../assets/images/888@2x.png'),name:'888辣椒',key:'888',css:'img4'},
+                    {url:require('../../assets/images/1888@2x.png'),name:'1888辣椒',key:'1888',css:'img5'},
+                    {url:require('../../assets/images/8888@2x.png'),name:'8888辣椒',key:'8888',css:'img6'},
                 ],
                 backpepperShow:false,
                 dilogpepperShow:false,

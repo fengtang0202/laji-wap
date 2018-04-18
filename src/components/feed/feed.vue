@@ -1,7 +1,7 @@
 <template>
     <div id="feed">
         <div class="page_mcbg" @click="handleClose()" v-show="backShow"></div>
-        <div class="glod_div"  v-show="dilogShow">
+        <div class="glod_div"  :class='{show:dilogShow}'>
             <div class='goldpepper'>投喂金椒</div>
             <p class='computerd'>您的金椒余额:{{money}}</p>
             <div class="oDiv">

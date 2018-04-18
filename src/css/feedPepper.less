@@ -18,6 +18,9 @@
             height:3.9rem;
             background:#fff;
             position:absolute;
+            transition:all .5s;
+            transform: translate(0,5rem);
+            opacity: 0;
             top:50%;
             left:50%;
             margin-left:-1.875rem;
@@ -34,6 +37,10 @@
             text-align:center;
             line-height:.36rem;
         }
+        .show{
+                transform: translate(0,0);
+                opacity: 1;
+            }
         .con{
             box-sizing:border-box;
             .lajiao{
@@ -74,11 +81,34 @@
                 float:left;
                 margin-left:.25rem;
                 margin-bottom:.25rem;
-                img{
-                    width:.6rem;
-                    height:.56rem;
-                    display:block;
-                    margin:0 auto;
+                .img1{
+                    width:.24rem;
+                    height:.34rem;
+                    margin-top:.18rem;
+                }
+                .img2{
+                   width:.38rem;
+                   height:.37rem;
+                   margin-top:.2rem;
+                }
+                .img3{
+                   width:.47rem;
+                   height:.32rem;
+                   margin-top:.2rem;
+                }
+                .img4{
+                    width:.52rem;
+                    height:.33rem;
+                    margin-top:.19rem;
+                }
+                .img5{
+                   width:.79rem;
+                   height:.36rem;
+                   margin-top:.06rem;
+                }
+                .img6{
+                    width:.79rem;
+                    height:.58rem;
                 }
             }
             .active{

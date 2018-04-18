@@ -10,11 +10,13 @@
          <div class='filter_nav' :class="searchBarFixed == true ? 'isFixed' :''">
             <div class='filter_btn_wrap'  @click='handleOrder()'>
              <span>排行</span>
-              <img src="../../assets/images/d-38@3x.png" :style="{ 'transform':direction?'rotate(0deg)':'rotate(180deg)'}" alt="">
+              <img v-if='!direction' src="../../assets/images/Combine@3x.png" :style="{ 'transform':direction?'rotate(180deg)':'rotate(0deg)'}" alt="">
+              <img v-if='direction' src="../../assets/images/d-38@3x.png" :style="{ 'transform':direction?'rotate(180deg)':'rotate(0deg)'}" alt="">
             </div>
             <div class='filter_btn_wrap' @click='handleFilterBtn()'>
              <span>筛选</span>
-              <img class='filter' :style="{ 'transform':direction1?'rotate(0deg)':'rotate(180deg)'}" src="../../assets/images/d-38@3x.png" alt="">
+              <img v-if='!direction1' src="../../assets/images/Combine@3x.png" :style="{ 'transform':direction1?'rotate(180deg)':'rotate(0deg)'}" alt="">             
+              <img  v-if='direction1' class='filter' :style="{ 'transform':direction1?'rotate(180deg)':'rotate(0deg)'}" src="../../assets/images/d-38@3x.png" alt="">
             </div>
         </div>
         <div class='filter_wrap'>
@@ -97,8 +99,8 @@ import {mapActions} from 'vuex'
                 keyword:'',
                 direction:false,
                 direction1:false,
-                worksClass:'',
-                categoryId:this.$route.query.categoryId,
+                worksClass:this.$route.query.categoryId,
+                // categoryId:this.$route.query.categoryId,
                 categoryRed:0,
                 changeRed:0,
                 statusRed:0,
@@ -124,7 +126,7 @@ import {mapActions} from 'vuex'
                     {name:"30-50万",key:2},
                     {name:"50-100万",key:3},
                     {name:"100-200万",key:4},
-                    {name:"200万",key:5}
+                    {name:"200万以上",key:5}
                 ],
                  status:[
                     {name:"不限",key:0},
@@ -240,7 +242,7 @@ import {mapActions} from 'vuex'
              handleFilter(){
                 this.isShow= true;
                 let options={
-                    startPage:1
+                    startPage:1,
                 }
                 // 分类
                 if (this.worksClass) {

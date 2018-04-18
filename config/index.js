@@ -29,7 +29,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     cacheBusting : false,
     assetsPublicPath: '/',
-    proxyTable: {
+    proxyTable:  {
         '/api': {
             // target: 'http://192.168.0.136:8081/api',
             target:'https://www.lajixs.com/api',
