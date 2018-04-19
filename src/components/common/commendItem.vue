@@ -1,33 +1,40 @@
 <template>
-<div>      
-     <div class="comments_d" @click='handleCommentDetail(i)' :key='index' v-for="(i,index) in list">
-                  <div style="overflow:hidden;height:100%;margin-top:.1rem;">
-                        <img :src="i.userHeadPortraitURL" class="oImg">
-                        <img src="../../assets/images/crown@3x.png" class="t-img">
-                        <div class="con_r">
-                            <div style="margin-bottom:.1rem;">
-                                <span class="name" v-html="i.pseudonym"></span>
-                                <img src="../../assets/images/sex-02_03@3x.png" class="sex" v-if="i.userSex==0">
-                                <img src="../../assets/images/sex-03@3x.png" class="sex" v-if="i.userSex==1">
-                                <p class="grade">lv{{i.userGrade}}</p>
-                            </div>
-                            <div class="text_con" v-html="i.commentContext">
-                            </div>
-                            <div style="height:.2rem;margin-bottom:.1rem;color:#999;">
-                               <p class="r_p">
-                               <img   @click='handel()' src="../../assets/images/goodzan@3x.png" alt="">
-                               <span v-html="i.thumbsCount" style='margin-right:.36rem;'></span>
-                                <img src="../../assets/images/message@3x.png" alt="">
-                                <span v-html="i.replyCount"></span>
-                               </p>
-                            </div>
-                        </div>
-                  </div>
+<div class='commendItem'>      
+            <div class='book_comment_item'  :key='index' v-for='(item,index) in list '>
+              <div class='avatar'>  
+                  <img  :src="item.userHeadPortraitURL" alt="">
               </div>
-    </div>
+              <div class='book_comment_item_detail' >
+                <div class='i_one'>
+                    <div style='float: left;'>
+                        <span style='font-size:.16rem;'>{{item.pseudonym}}</span>
+                        <img src="../../assets/images/sex-03@3x.png" v-if='item.userSex==1' alt="">
+                        <img src="../../assets/images/sex-02_03@3x.png" v-if='item.userSex==0' alt="">                     
+                        <span class='grade'>&nbsp;LV{{item.userGrade}}&nbsp;</span>
+                     </div>
+                     <div style='float:right'>
+                        <span style='font-size:.12rem;'>{{item.commentDateTime|formatDate}}</span>
+                      </div>
+                </div>
+                 <p class='content'>{{item.commentContext}}</p> 
+                 <div class='zhan'>     
+                     <p  @click='handleCommentDetail(item)'>
+                     <img src="../../assets/images/message@3x.png" alt="">
+                     <span>{{item.replyCount}}</span>
+                     </p>
+                      <p @click='handelLike(item)'>
+                     <img v-if='item.isthumbs===0'    src="../../assets/images/zan@3x.png" alt="">
+                     <img v-if='item.isthumbs===1'   src="../../assets/images/goodzan@3x.png" alt="">
+                     <span>{{item.thumbsCount}}</span>
+                     </p>
+                 </div>             
+              </div>
+            </div>  
+        </div>
 </template>
 <script>
     import {mapState,mapActions} from 'vuex'
+    import {Post_formData2} from '../../config/services'
       export default{
           props: {
             list: {
@@ -35,84 +42,101 @@
             default: []
             }
         },
+        computed: {
+          ...mapState(['isLogin'])  
+        },
         methods:{
             ...mapActions(['setReadCommentInfo']),
             handleCommentDetail(item){
                 this.setReadCommentInfo(item)
-                this.$router.push({path:'/bookCommentDetail',query:{bookId:this.readBookId}})
-            }
+                this.$router.push({path:'/bookCommentDetail',query:{bookId:this.$route.query.bookId}})
+            },
+            // 点赞
+             handelLike(item){
+               if(this.isLogin){
+                 Post_formData2(this,{commentId:item.id},'/api/comm-GiveThumbs',res=>{
+                   if(res.returnCode==200) {
+                       if (item.isthumbs==0) {
+                            item.isthumbs=1
+                            item.thumbsCount+=1
+                        } else {
+                            item.thumbsCount-=1                   
+                            item.isthumbs=0                 
+                        }
+                   }
+                })
+               }else{
+                    this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.$route.query.bookId}})
+               } 
+           },
         }
       }
 </script>
 <style lang="less" scoped>
- .comments_d{
-                box-sizing:border-box;
-                padding:0 .14rem;
-                height:1rem;
-                // overflow: hidden;
-                border-bottom:1px solid #e9e9e9;                
-                .oImg{
-                    width:.38rem;
-                    height:.38rem;
-                    border-radius:50%;
-                    margin-top:.1rem;
-                    // position:relative;
-                }
-                .t-img{
-                    width:.22rem;
-                    height:.22rem;
-                    position:absolute;
-                    left:.3rem;
-                    // top:0rem;
-                    z-index:99;
-                }
-                .con_r{
-                    float:right;
-                    width:2.92rem;
-                    height:100%;
-                    .grade{
-                      display:inline-block;
-                      font-size:8px;
-                      background:#7FFFD4;
-                      color:#fff;
-                      height:.14rem;
-                      line-height:.14rem;
-                      border-radius:4px;
-                      padding:0  .02rem;
-                      font-family:"MT-Extra"; 
-                      margin-left:.05rem;
-                      margin-top:-.05rem; 
-                    }
-                }
-                .name{
-                    color:#666;
-                    font-size:.16rem;
-                    margin-right:.05rem;
-                }
-                .sex{
-                    width:.12rem;
-                    height:.12rem;
-                }
-                .text_con{
-                    height:.4rem;
-                    color:#333;
-                    font-size:.12rem;
-                    overflow : hidden;
-                    text-overflow: ellipsis;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                }
-                .r_p{
-                    float:right;
-                    margin-right:.16rem;
-                    margin-bottom:.1rem;
-                    img {
-                      width:.16rem;
-                      height:.16rem;
-                    }
-                 
-                }
-            }
+    .commendItem{
+        .book_comment_item {
+               padding-left:.14rem;
+               margin-top:.1rem;
+               border-bottom:1px solid #EFEFEF;
+               overflow: hidden;
+               width:100%;
+              .avatar { 
+                  width:.52rem;
+                  height:.52rem;
+                  border-radius: 50%;
+                  float: left;
+                  img {
+                     width:.52rem;
+                     height:.52rem;
+                     border-radius: 50%; 
+                  }
+              }
+              .book_comment_item_detail {
+                  float: left;
+                  margin-left:.2rem;
+                  width:2.7rem;
+                  .i_one {
+                          color:#666;
+                          overflow: hidden;                   
+                      img {
+                          width:.12rem;
+                          height:.12rem;
+                      }
+                      .grade{
+                          background-color:#74F3FE;
+                          font-size:.08rem;
+                          color:#fff;
+                          border-radius: .03rem;
+                      }
+                  }
+                  .bookName{
+                      font-size: .14rem;
+                  }
+                  .content{
+                      font-size: .14rem;
+                      margin:.02rem 0;
+                  }
+                  .zhan{
+                      overflow: hidden;
+                      font-size:.12rem;
+                      margin-top:.16rem;
+                      p{
+                          float: right;
+                          margin-right:.16rem;
+                          padding: .1rem 0;
+                      }
+                      img{
+                          width:.16rem;
+                          height:.16rem;
+                          vertical-align: middle;
+                      }
+                      span{
+                          margin-left:.05rem;
+                          margin-right: .36rem;
+                      }
+                  }
+              }
+           }
+}
 </style>
 

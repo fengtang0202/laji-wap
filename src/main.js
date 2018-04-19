@@ -46,7 +46,7 @@ Object.keys(filters).forEach(key => {
 })  
 axios.get('/api/weChartShareSign?URL=https://www.lajixs.com').then(data=>{
     let config=data.data.data
-    console.log(config  )
+    console.log(config)
     Vue.wechat.config({
         debug: false, 
         appId: config.appId,

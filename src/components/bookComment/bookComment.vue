@@ -4,7 +4,8 @@
         <div v-if='showContent'>
         <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>热门评论({{hotCommentcount}})</p>
-            <div class='book_comment_item'  :key='index' v-for='(item,index) in hotCommentList'>
+            <!-- commendItem -->
+            <!-- <div class='book_comment_item'  :key='index' v-for='(item,index) in hotCommentList'>
               <div class='avatar' >
                   <img  :src="item.userHeadPortraitURL" alt="">
               </div>
@@ -20,7 +21,6 @@
                         <span style='font-size:.12rem;'>{{item.commentDateTime|formatDate}}</span>
                       </div>
                 </div>
-                 <!-- <p class='bookName'>《{{item.bookName}}》</p>   -->
                  <p class='content'>{{item.commentContext}}</p> 
                  <div class='zhan'>
                     <p>
@@ -34,15 +34,20 @@
                     </p>
                  </div>             
               </div>
-            </div>  
+            </div>  -->
+             <!--  -->
+        <commendItem :list='hotCommentList'></commendItem>
         </div>
+        <!--  -->
         <!-- <div class='more'>
             <span>更多热评</span>
         </div> -->
         <!-- 最新评论 -->
         <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>最新评论({{newCommentcount}})</p>
-            <div class='book_comment_item'  :key='index' v-for='(item,index) in newCommentList'>
+            <!-- commend item -->
+        <commendItem :list='newCommentList'></commendItem>             
+            <!-- <div class='book_comment_item'  :key='index' v-for='(item,index) in newCommentList'>
               <div class='avatar'>
                   <img  :src="item.userHeadPortraitURL" alt="">
               </div>
@@ -58,7 +63,6 @@
                         <span style='font-size:.12rem;'>{{item.commentDateTime|formatDate}}</span>
                       </div>
                 </div>
-                 <!-- <p class='bookName'>《{{item.bookName}}》</p>   -->
                  <p class='content'>{{item.commentContext}}</p> 
                  <div class='zhan'>     
                      <p>
@@ -72,8 +76,10 @@
                      </p>
                  </div>             
               </div>
-            </div>  
+            </div>   -->
+            <!--  -->
         </div>
+        <!--  -->
         </div>
         <No v-if='!showContent'></No>
         <div class='bottom_x'>
@@ -208,27 +214,6 @@ export default {
           handlereplyDetail(id){
               console.log(id)
           },
-          handleCommentDetail(item){
-              this.setReadCommentInfo(item)
-              this.$router.push({path:'/bookCommentDetail',query:{bookId:this.readBookId}})   
-           },
-           handelLike(item){
-               if(this.isLogin){
-                 Post_formData2(this,{commentId:item.id},'/api/comm-GiveThumbs',res=>{
-                   if(res.returnCode==200) {
-                       if (item.isthumbs==0) {
-                            item.isthumbs=1
-                            item.thumbsCount+=1
-                        } else {
-                            item.thumbsCount-=1                   
-                            item.isthumbs=0                 
-                        }
-                   }
-                })
-               }else{
-                    this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
-               } 
-           },
            handleShow(){
                if(this.isLogin){
                    this.show=!this.show

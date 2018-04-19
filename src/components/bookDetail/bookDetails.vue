@@ -48,7 +48,7 @@
               </div>
               <div style="height:.2rem;margin-top:.1rem;">
                     <div class="expand"  @click="handleLook()">
-                        <img src="../../assets/images/d-38@3x.png" :style="{'transition':'all .3s','transform':isAdd?'rotate(180deg)':'rotate(0deg)'}">              
+                        <img src="../../assets/images/d-38@3x.png" :style="{'transition':'all .3s','transform':isAdd?'rotate(0deg)':'rotate(180deg)'}">              
                     </div>
               </div>
           </div>
@@ -60,30 +60,6 @@
           <div class="comments">
               <p class="top_p">评论区</p>
               <!--评论 -->
-              <!-- <div class="comments_d" @click='handleCommentDetail(i)' :key='index' v-for="(i,index) in commentList">
-                  <div style="overflow:hidden;height:100%;margin-top:.1rem;">
-                        <img :src="i.userHeadPortraitURL" class="oImg">
-                        <img src="../../assets/images/crown@3x.png" class="t-img">
-                        <div class="con_r">
-                            <div style="margin-bottom:.1rem;">
-                                <span class="name" v-html="i.pseudonym"></span>
-                                <img src="../../assets/images/sex-02_03@3x.png" class="sex" v-if="i.userSex==0">
-                                <img src="../../assets/images/sex-03@3x.png" class="sex" v-if="i.userSex==1">
-                                <p class="grade">lv{{i.userGrade}}</p>
-                            </div>
-                            <div class="text_con" v-html="i.commentContext">
-                            </div>
-                            <div style="height:.2rem;margin-bottom:.1rem;color:#999;">
-                               <p class="r_p">
-                               <img   src="../../assets/images/goodzan@3x.png" alt="">
-                               <span v-html="i.thumbsCount" style='margin-right:.36rem;'></span>
-                                <img src="../../assets/images/message@3x.png" alt="">
-                                <span v-html="i.replyCount"></span>
-                               </p>
-                            </div>
-                        </div>
-                  </div>
-              </div> -->
               <commendItem :list='commentList'></commendItem>
               <!--  -->
               <div class="more" @click="handleGo({path:'/bookComment',query:{bookId:readBookId}})">
@@ -117,8 +93,6 @@
     import { Loading,Scroller} from 'vux'
     import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
     import {mapState,mapActions} from 'vuex'
-import { resolve } from 'url';
-import { isPrimitive } from 'util';
     export default {
         name: 'bookDetails',
         data () {
@@ -148,7 +122,9 @@ import { isPrimitive } from 'util';
                 rewordParam:{},
                 readBookId:this.$route.query.bookId,
                 chapterId:0,
-                Condition:false
+                Condition:false,
+                isBook:false,
+                btnShow:false
             }
         },
         components: {
@@ -175,19 +151,13 @@ import { isPrimitive } from 'util';
             ...mapActions(['setReadCommentInfo','loginAction','getUserInfo']),
             handleRead (index) {
                  this.isActive = index;
-                 index==2&&this.addBookRack()
-                 index===0&&this.handleImmediatelyRead()  
-                 if(index==1){
-                     this.Condition=!this.Condition
-                     this.Condition?this.handleAddBook():this.handleRemoveBook()
-                     console.log(this.Condition)
+                 if(this.isLogin){
+                     index===1&&this.handleIsAuto()
+                     index===2&&this.handleBookRack()
+                 }else{
+                    this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 
                  }
-           },
-           handleAddBook(){
-            console.log('开启')  
-           },
-           handleRemoveBook(){
-            console.log('关闭')
+                 index===0&&this.handleImmediatelyRead()  
            },
             //由于之前考虑了直接看书是从目录一个地方跳转到bookRead 
             //没有考虑立即阅读,这样就导致我去看另一本书的时候chapterId 还是从目录跳转时候的值
@@ -208,7 +178,7 @@ import { isPrimitive } from 'util';
             handleImmediatelyReadChapter () {
              return new Promise((resolve,reject)=>{
                     Post_formData2(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
-                        if(res.returnCode=200){
+                        if(res.returnCode==200){
                           let ReadList=res.data.list
                           this.handleInitChapterId()
                           ReadList.forEach(value => {
@@ -302,30 +272,22 @@ import { isPrimitive } from 'util';
                 this.isAdd = !this.isAdd;
                 this.lookShow = !this.lookShow;
             },
+            handleBookRack(){
+                this.addBookRack()
+            },
             addBookRack(){
-                    //  this.confirmKey=1
-                       Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
-                             if(res.returnCode==500){
-                                 this.$vux.toast.text(res.msg)
-                                 return;    
-                             } else {
-                          Post_formData2(this,{userName:this.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
-                            // this.ConfirmShow=true
-                            this.messageTitle='收藏书籍'
-                            this.message='这本书还没有加入书架，现在帮您加入书架吗？'
-                            if (res.returnCode==200) {   
-                                 this.$vux.toast.text(res.msg)
-                                 this.cate[2].name='已在书架'                                 
+                 Post_formData2(this,{userName:this.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
+                            if (res.returnCode==200) {
+                                console.log(res) 
+                                this.isBook=!this.isBook 
+                                this.isBook?this.$vux.toast.text('加入成功!'):this.$vux.toast.text('删除成功!')
+                                this.isBook?this.cate[2].name='已在书架':this.cate[2].name='加入书架'                                 
                             } else if (res.returnCode==400) {
-                                this.messageTitle=res.msg
-                                // this.$vux.toast.show({text:'请先登录',type:'cancel'})
                                 this.loginAction(false)
                                 this.getUserInfo(null)
-                                this.$router.push('/Login')
-                            }
-                         })
+                                this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
                       }
-                  })
+                })
             },
             handleComments(){
                 this.isShow = true;
@@ -349,24 +311,46 @@ import { isPrimitive } from 'util';
             },
             handleToBookDetail(bookId){
                  this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
-            }
+            },
+            isBookRack(){
+              Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
+                if(res.returnCode==500){
+                 this.cate[2].name='已在书架'
+                 this.isBook=true
+              } else{
+                  this.cate[2].name='加入书架'
+                  this.isBook=false
+              }
+           })              
           },
+            handleIsAuto (type='update') {
+                   let options = {
+                    bookid:this.readBookId,
+                    type:type,
+                    isSelect:this.btnShow?1:0
+                }
+                Post_formData2(this,options,'/api/userRmemberChose',res=>{
+                    if(res.returnCode==200){ 
+                        console.log(res)
+                        res.data.isClose==0?this.btnShow=true:this.btnShow=false
+                        res.data.isClose==0?this.cate[1].name='自动订阅':this.cate[1].name='取消订阅'
+                    }
+                 })                
+            },
+        },
         mounted () {
             this.handleInit();
             this.handleComments(); 
-            Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
-                if(res.returnCode==500){
-                 this.cate[2].name='已在书架'
-              }
-          })
           if(this.isLogin){
-           Post_formData2(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
+            this.isBookRack()
+            this.handleIsAuto('search')
+            Post_formData2(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
                let a=[]
-               if(res.returnCode=200){
+               if(res.returnCode==200){
                           let ReadList=res.data.list
                           ReadList.forEach(value => {
-                           value.bookId==this.readBookId?a.push(1):a.push(2)
-                      })
+                          value.bookId==this.readBookId?a.push(1):a.push(2)
+                    })
                      a.includes(1)?this.cate[0].name='继续阅读':this.cate[0].name='立即阅读'
                  }
              })

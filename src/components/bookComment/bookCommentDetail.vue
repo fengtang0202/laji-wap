@@ -17,17 +17,16 @@
                         <span style='font-size:.12rem;'>{{readCommentInfo.commentDateTime|formatDate}}</span>
                       </div>
                 </div>
-                 <!-- <p class='bookName'>《{{readCommentInfo.bookName}}》</p>   -->
                  <p class='content'>{{readCommentInfo.commentContext}}</p> 
                  <div class='zhan'>
                      <p>
-                     <img  v-if='readCommentInfo.isthumbs==0?true:false' @click='handelLike()'  src="../../assets/images/zan@3x.png"  alt="">
-                     <img  v-if='readCommentInfo.isthumbs==1?true:false' @click='handelLike()' src="../../assets/images/goodzan@3x.png" alt="">
-                     <span>{{readCommentInfo.thumbsCount}}</span>
-                     </p>
-                     <p>
                      <img src="../../assets/images/message@3x.png" alt="">
                      <span>{{readCommentInfo.replyCount}}</span>
+                     </p>
+                       <p  @click='handelLike()' >
+                     <img  v-if='readCommentInfo.isthumbs==0?true:false'  src="../../assets/images/zan@3x.png"  alt="">
+                     <img  v-if='readCommentInfo.isthumbs==1?true:false'  src="../../assets/images/goodzan@3x.png" alt="">
+                     <span>{{readCommentInfo.thumbsCount}}</span>
                      </p>
                  </div>             
               </div>
@@ -51,7 +50,7 @@
                  <!-- <p class='bookName'>《{{readCommentInfo.bookName}}》</p>   -->
                  <p class='content'>{{item.replyCommentsContent}}</p>           
               </div>
-            </div> 
+             </div> 
             </div>
             <No v-if='!showContent' ></No>
            <div class='replyInput'>

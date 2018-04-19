@@ -82,9 +82,9 @@
       </div>
     <!-- </scroll-view> -->
          <!-- <button  class='next_btn' @click='getNextChapterText()'>加载下一章</button> -->
-          <div class='last_nav'  :style='{transform: lastNav?"translate(0,0)":"translate(0,.54rem)"}'>
+          <div class='last_nav'  :style='{transform: lastNav?"translate(0,0)":"translate(0,.54rem)",opacity:lastNav?1:0}'>
               <ul>
-                  <li v-for='item in bottomNavList' @click='handleTap(item.key)'>
+                  <li v-for='item in bottomNavList' :key='item.key' @click='handleTap(item.key)'>
                       <div  class='nav_d'>
                          <img :src="item.img" alt="">
                       </div>
@@ -153,10 +153,11 @@ import AppFeed from '@/components/feed/feed.vue'
 import AppFeedpepper from '@/components/feed/feedPepper.vue' 
 import AppMinpepper from '@/components/feed/minPepper'
   import BScroll from 'better-scroll'
-  import Directory from '../directory/directory'
+//   import Directory from '../directory/directory'
      export default{
          data(){
             return{
+                contentHeight:0,
                showDirectory:false, 
                pulldown:true,
                bookText:'',
@@ -190,6 +191,10 @@ import AppMinpepper from '@/components/feed/minPepper'
                rewordParam:{},
                iconLink:'',
                feedShow:false,
+               isBook:false,
+               scroll:0,
+               clientHeight:0,
+               scrollHeight:0,
                feedList:[
                    {img:require('../../assets/images/Group 3@3x.png')},
                    {img:require('../../assets/images/Group 2@3x.png')},
@@ -396,27 +401,43 @@ import AppMinpepper from '@/components/feed/minPepper'
                  }
             },
             addBookRack(){
-                    if(this.isLogin){
-                    Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
-                             if(res.returnCode==500){
-                                 this.$vux.toast.text(res.msg)
-                                 return;    
-                             } else {
-                       Post_formData2(this,{userName:this.userInfo.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
-                            this.messageTitle='收藏书籍'
-                            this.message='这本书还没有加入书架，现在帮您加入书架吗？'
-                            if (res.returnCode==200) {   
-                                 this.$vux.toast.text(res.msg)
-                            } else if (res.returnCode==400) {
-                                this.messageTitle=res.msg
-                                this.$router.push('/')
-                            }
-                         })
-                    }
-                  })
-               }else{
-                   this.$router.push('/')
-               }
+                    // if(this.isLogin){
+                         Post_formData2(this,{userName:this.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
+                            if (res.returnCode==200) {
+                                console.log(res) 
+                                this.isBook=!this.isBook 
+                                this.isBook?this.$vux.toast.text('加入成功!'):this.$vux.toast.text('移出成功!')
+                                this.isBook?this.navList[2].text='已在书架':this.navList[2].text='加入书架'                                 
+                            } else if (res.returnCode==400){
+                                this.loginAction(false)
+                                this.getUserInfo(null)
+                                // isvip=0&price=6&bookId=3114&chapterId=14768
+                                this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})
+                        }else{
+                                this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                         
+                      }
+                })
+            //         Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
+            //                  if(res.returnCode==500){
+            //                      this.$vux.toast.text(res.msg)
+            //                      return;    
+            //                  } else {
+            //            Post_formData2(this,{userName:this.userInfo.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
+            //                 this.messageTitle='收藏书籍'
+            //                 this.message='这本书还没有加入书架，现在帮您加入书架吗？'
+            //                 if (res.returnCode==200) {   
+            //                      this.$vux.toast.text(res.msg)
+            //                 } else if (res.returnCode==400) {
+            //                     this.messageTitle=res.msg
+            //                     this.$router.push('/')
+            //                 }
+            //              })
+            //         }
+            //       })
+            //    }else{
+            //        this.$router.push('/')
+            //    }
+        //    
             },
              handleTap(res){
                  if (res===6) {
@@ -430,7 +451,11 @@ import AppMinpepper from '@/components/feed/minPepper'
                      this.$router.push({path:'bookComment',query:{bookId:this.readBookId}})
                  }
                  if(res===3){
-                    this.addBookRack()  
+                     if(this.isLogin){
+                         this.addBookRack()  
+                     }else{
+                        this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                                                  
+                     }
                  } 
                  if(res===9){
                     this.bottomShow=!this.bottomShow
@@ -442,12 +467,12 @@ import AppMinpepper from '@/components/feed/minPepper'
                      this.getPreChapterText()
                  }
                  if(res===8){
-                     this.$router.push({path:'/directory',query:{bookId:this.readBookId}})
+                     this.$router.push({path:'/directory',query:{bookId:this.readBookId,chapterId:this.$route.query.chapterId}})
                     // this.showDirectory=true
                  }
              },
              up () {
-                 setTimeout(()=>{
+                //  setTimeout(()=>{
                   this.feedShow=!this.feedShow
                   this.lastNav=!this.lastNav
                  if(!this.feedShow){
@@ -456,7 +481,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                      this.shareShow=false                  
                      this.bottomShow=false
                  }
-                },10) 
+                // },10) 
              },
             change (status) {
                   this.handleIsAuto()
@@ -523,16 +548,50 @@ import AppMinpepper from '@/components/feed/minPepper'
                 this.btnShow=!this.btnShow
                 this.btnShow?this.isSelect=1:this.isSelect=0
                 this.handleIsAuto()
-            }
-        },
+            },
+           isBookRack(){
+              Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
+                if(res.returnCode==500){
+                 this.navList[2].text='已在书架'
+                 this.isBook=true
+              } else{
+                  this.navList[2].text='加入书架'
+                  this.isBook=false
+              }
+           })  
+        }, 
+          menu() {
+                this.scroll = document.documentElement.scrollTop || document.body.scrollTop;
+                this.clientHeight=document.documentElement.clientHeight||document.body.clientHeight;
+                this.scrollHeight=document.body.scrollHeight||document.documentElement.scrollHeight
+                console.log(this.scroll ,1)
+                console.log(this.clientHeight ,2)
+                console.log(this.clientHeight ,3)                
+                if( this.scrollHeight+ this.clientHeight==this.scroll){
+                　　　　alert("已经到最底部了！!");
+                }
+         }, 
+    },
         mounted () {
-            this.getBookText()
-            this.getNowChapterId()
+            // this.$nextTick(()=>{
+            //     this.contentHeight=document.getElementsByClassName('book_content').clientHeight
+            // })
             if(this.isLogin){
+                this.isBookRack()
                 this.addReadHistory()                
                 this.btnShow&&this.buyChapter()
                 this.handleIsAuto('search')
             }
+            this.$nextTick(()=>{
+                window.addEventListener('scroll', this.menu)
+            })
+         },
+         created(){
+            this.getBookText()
+            this.getNowChapterId()
+            this.$nextTick(()=>{
+                console.log(document.querySelector('.book_content').offsetHeight,222)
+            })
          }
      }
 </script>

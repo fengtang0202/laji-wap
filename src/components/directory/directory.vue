@@ -79,11 +79,16 @@
                  })
             },
              goAnchor(selector) {
-                 setTimeout(()=>{
-                      this.el = document.querySelector(selector)
-                      this.el.scrollIntoView()
-                 },100)
-             }
+                    this.$nextTick(() => {
+                    this.el = document.querySelector(selector)
+                    if(this.el<400){
+                         window.scrollTo(0,0)
+                    }else{
+                        let height = this.el.offsetTop-156
+                        window.scrollTo(0,height)
+                    }
+                  })
+              }
         },
         mounted(){
            

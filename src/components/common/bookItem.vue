@@ -9,7 +9,7 @@
                </div>
                <div class="text_two">
                   <span>作者: </span>
-                  <span v-html="item.writerName"></span>
+                  <span>{{item.writerName|str(8)}}</span>
                   <p></p>
                   <span  v-html="item.classificationName"></span>
                   <p></p>
@@ -20,7 +20,7 @@
                     <span :style="{color:i.bookColor,border:'1px solid'}" v-for="i in item.booklableList" v-html="i.bookLableName"></span>
                </div>
                <div class="text_four">
-                     {{item.bookIntroduction}}
+                     {{item.bookIntroduction|str(45)}}
                </div>
             </div>
         </div>

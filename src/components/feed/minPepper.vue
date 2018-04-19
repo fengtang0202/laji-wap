@@ -64,7 +64,7 @@
             },
             handleReword(){
                let options = {
-                   recommendTicketCount	:this.number,
+                   recommendTicketCount	: this.number,
                    bookid:this.$route.query.bookId,                   
                    bookName:this.param.bookName,
                    authorId:this.param.authorId
@@ -72,8 +72,9 @@
                       Post_formData2(this,options,'/api/user-RecommendationTicket',res=>{
                       if(res.returnCode===200){
                        this.$vux.toast.show({text:res.msg}) 
-                       this.money-=this.number
-                       this.userInfo.userRecommendTicket-=this.number
+                    //    这里是有点问题的
+                       this.money=0
+                       this.userInfo.userRecommendTicket=0
                        this.backShow = false;
                        this.dilogShow = false;
                         }else if(res.returnCode==500){

@@ -1,14 +1,23 @@
 <template>
 <div>
  <div class='book_rcak_wrap'>
-    <headerComponent  :list='topList'>
-    </headerComponent>
+    <div class='header'>
+         <div @click="$router.go(-1)">
+             <img src="../../assets/images/back@2x.png" style='width:.4rem;heigh:.4rem;vertical-align: middle;' alt="">
+         </div>    
+         <div class='title_1'>我的书架</div>
+         <div>
+            <span class='title_2' @click='hanldeShow()'>{{word}}</span>
+            <span class='title_2' @click="handleDelBook()" v-if='delShow'>删除</span>
+         </div>
+    </div>
     <div class='readNow'>
-         <p>正在阅读{{`(${bookRack.length})`}}</p>
-         <div class='book_detail_wrap' v-for='item in bookRack' @click="handleBookDetail(item.bookId)">
+         <p>正在阅读{{`(${ReadNowList.length})`}}</p>
+         <div class='book_detail_wrap' v-for='item in ReadNowList' @click="handleBookDetail(item.bookId)">
             <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
             <span style='font-size:.16rem;'>{{item.bookName|str(5)}}</span>
             <span class='icon_update' v-if='item.bookStatus==0?true:false'>更新</span>
+            <input type="checkbox" v-model="item.checked" v-if='delShow' class='del_btn'>
          </div>
          <div class='add_book' @click="handleGo()">
              <img  src="../../assets/images/addBook@3x.png" alt="">
@@ -32,35 +41,62 @@ import {mapActions,mapState} from 'vuex'
     export default {
         data(){
             return{
-                topList:{
-                    title_1:'我的书架',
-                    title_2:'编辑',
-                    link:'/bookEdit'
-                },
+                word:'编辑',
                 source:{
                 img:require('../../assets/images/1.png'),
                 text:'没有阅读记录'
                },
-                commendReadList:[]
+                commendReadList:[],
+                ReadNowList:[],
+                delShow:false,
+                delId:[]
             }
         },
         computed:{
-            ...mapState(['bookRack','userInfo'])
+            ...mapState(['userInfo'])
         },
         methods: {
-            ...mapActions(['getBookRack']),
             getCommendBook(){
                 Post_formData2(this,'','/api/bookshelf-recommendPosition',res=>{
-                    this.commendReadList=res.data
+                    if(res.returnCode==200){
+                        this.commendReadList=res.data
+                    }
                 })
             },
+            hanldeShow(){
+                 this.delShow=!this.delShow
+                 this.delShow?this.word='完成':this.word='编辑'
+            },
+          handleDelBook(){
+            this.ReadNowList.forEach(value=>{
+            if(value.checked==true){
+                this.delId.push(value.id)
+              }
+            })
+            if(this.delId.length!==0){
+             Post_formData2(this,{id:[...new Set(this.delId)].toString()},'/api/bookshelf-deluserbookshelf',res=>{
+                   if(res.returnCode==200){
+                       this.$vux.toast.text('删除成功!')
+                       this.delId=[]
+                       this.getReadNow()
+                   }
+              })
+            }
+          },
             getReadNow(){
                 Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/bookshelf-getuserbookshelf',res=>{
-                   res.returnCode==200&&this.getBookRack(res.data.list)
+                      if(res.returnCode==200){
+                          this.ReadNowList=res.data.list
+                          this.ReadNowList.forEach(value=>{
+                              value.checked=false 
+                         })
+                      }else if(res.returnCode){
+                          this.ReadNowList=[]
+                     }
                 })
             },
             handleBookDetail(bookId){
-                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
+                !this.delShow&&this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
             },
             handleGo(){
                 this.$router.push({path:'/editorRecommend'})
@@ -75,6 +111,25 @@ import {mapActions,mapState} from 'vuex'
 <style lang='less' scoped>
   .book_rcak_wrap{
       width:100%;
+        .header{    
+            height:.44rem;
+            display:flex;
+            flex-direction: row;
+            justify-content: space-between;
+            border-bottom:.01rem solid #E9E9E9;
+             .title_1{
+              font-size: .18rem;
+          }
+          .title_2{
+              font-size: .14rem;
+              color:#F77583;
+              line-height: .44rem;
+              margin-right:.3rem;
+          }
+         div{
+            margin:auto .1rem;       
+          }
+        }
       .readNow{
           margin-left:.18rem;
           margin-top:.12rem;
@@ -90,10 +145,27 @@ import {mapActions,mapState} from 'vuex'
              margin-top:.12rem;
              position: relative;
              overflow: hidden;
+             .del_btn{
+             -webkit-appearance: none;
+             outline: none;
+             border:0;
+             width:.22rem;
+             height:.22rem;
+             position: absolute;
+             background-color:#F77583;
+             border-radius: .05rem;
+             top:0;
+             left:0;
+             }
+                .del_btn:checked{
+                    background:url('../../assets/images/y-checked.png');
+                    background-size: .22rem .22rem;
+                }
              .icon_update{
                position: absolute;
                top:0;
                right:-.03rem;
+               padding:.01rem;
                background-color: #6EC282;
                width:.32rem;
                height:.18rem;

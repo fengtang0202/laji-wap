@@ -2,7 +2,7 @@
     <div id="Login">
         <app-load></app-load>
         <div class="title">登录</div>
-        <input type="text" class="oInput" placeholder="请输入手机号" v-model.trim="phone">
+        <input type="text" class="oInput"  placeholder="请输入手机号" v-model.trim="phone">
         <input type="password" class="oInput" placeholder="请输入密码"  v-model.trim="password">
         <div class="re_radio">
             <img src="../../assets/images/login.png" class="left_d" v-if="show" @click="handleCheck()">
@@ -34,6 +34,15 @@
               phone:'',
               password:'',
               show:true
+            }
+        },
+        directives: {
+            focus: {
+                inserted (el, {value}) {
+                    if (value) {
+                        el.focus();
+                          }
+                     }
             }
         },
          computed: {
@@ -109,6 +118,9 @@
                this.password = cookie.get().userPassword;
                this.show=false;
             }
+            // this.$nextTick(()=>{
+            //     this.$refs.input.focus()
+            // })
         }
     }
 </script>
@@ -137,6 +149,7 @@
             border:1px solid #979797;
             display:block;
             margin:.2rem auto;
+            // caret-color:red; 
             color:#999;
             font-size:.18rem;
             padding-left:.14rem;

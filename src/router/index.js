@@ -25,10 +25,8 @@ import person from '@/components/person/person'
 import personInfo from '@/components/person/personInfo'
 import wechatPay from '@/components/pay/wechatPay'
 import bookRack from '@/components/bookReadManage/bookRack'
-import bookEdit from '@/components/bookReadManage/bookEdit'
 import bookRank from '@/components/bookRank/bookRank'
 import readHistory from '@/components/person/readHistory'
-import bookHistoryEdit from '@/components/bookReadManage/bookHistoryEdit'
 import bookRead from '@/components/bookRead/bookRead'
 import bookComment from '@/components/bookComment/bookComment'
 import bookCommentDetail from '@/components/bookComment/bookCommentDetail'
@@ -98,20 +96,10 @@ let routers=[
         requireAuth: true,
       }
     },
-    // {path:'/bookStacks',component:bookStacks},
     {path:'/bookRack',component:bookRack, meta: {
         requireAuth: true
       }
     },
-    {path:'/bookEdit',component:bookEdit, meta: {
-        requireAuth: true
-      }
-    },
-   {
-    path: '/bookHistoryEdit', component: bookHistoryEdit, meta: {
-      requireAuth: true
-    }
-   },
     {path:'/bookRank',component:bookRank},
     {path:'/readHistory',component:readHistory, meta: {
         requireAuth: true

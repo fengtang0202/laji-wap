@@ -6,7 +6,8 @@
                  <p class='price'>{{item.price+'元'}}</p>
                  <p class='price'>{{item.price*100+'小辣椒'}}</p>
                  <p class='gift'>{{item.gift}}</p> 
-                 <span class='icon' v-if='item.gift?true:false'>赠送</span>         
+                 <!-- <span class='icon' v-if='item.gift?true:false'>赠送</span> -->
+                   <img src="../../assets/images/Path@3x.png" class='icon' v-if='item.gift?true:false' alt="">
             </div>
       </div>  
       <div v-html='formHtml'>
@@ -113,16 +114,18 @@ export default{
            .icon{
                 font-size: .1rem;
                 position: absolute;
-                right:-.2rem;
-                top: -.17rem;
-                width:.6rem;
-                height:.15rem;
-                -webkit-transform: rotate(45deg);
-                transform: rotate(45deg);
-                -webkit-transform-origin: left bottom;
-                transform-origin: left bottom;
-                color: #fff;
-                background-color: #FB5E6F;
+                right:-.01rem;
+                top:-.01rem;
+                width:.32rem;
+                height:.32rem;
+                // width:.6rem;
+                // height:.15rem;
+                // -webkit-transform: rotate(45deg);
+                // transform: rotate(45deg);
+                // -webkit-transform-origin: left bottom;
+                // transform-origin: left bottom;
+                // color: #fff;
+                // background-color: #FB5E6F;
             }
          }
          .isAdd{

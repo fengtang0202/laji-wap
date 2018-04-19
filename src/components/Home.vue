@@ -4,8 +4,8 @@
             <img src="../assets/images/ico@2x.png" @click='handleTo({path:"/"})' class="logo_two">
             <div class="btn_top" @click="handleIsPhone()">下载APP</div>
             <span class='userId' @click='handleTo({path:"/bookRank"})' >排行榜</span>
-            <img   v-if='isLogin' :src="userInfo.userHeadPortraitURL" @click="handleTo({path:'/person'})" class="logo_three">
-            <img   v-if='!isLogin' @click="handleTo({path:'/person'})" class="logo_three" src='../assets/images/user@3x.png'>
+             <img   v-if='isLogin' :src="userInfo.userHeadPortraitURL" @click="handleTo({path:'/person'})" class="logo_three">
+             <img   v-if='!isLogin' @click="handleTo({path:'/person'})" class="logo_three" src='../assets/images/user@3x.png'>
          </div>
          <div class="bottom">
              <input type="text" placeholder="搜索作品或作者" class='search' @focus='handleTo({path:"/search"})'/>
@@ -115,13 +115,14 @@
                 text-align:center;
                 line-height:.24rem;
                 float:left;
-                margin:.1rem .14rem 0;
+                margin:.12rem .14rem 0;
             }
             .userId{
                 font-size:.16rem;
                 color:#FB5E6F;
-                margin-top:.1rem;
                 float:left;
+                padding-top:.1rem;
+                padding-bottom:.16rem;
                 margin-left:.6rem;
             }
             .logo_three{

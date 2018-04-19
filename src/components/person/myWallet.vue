@@ -1,11 +1,12 @@
 <template>
    <div class='wallet'>
-     <div class='header'>
-         <p style='text-align:center;'>
-             <span style='margin-left:1.48rem;font-size:.18rem;'>我的钱包</span>
-             <span style='margin-left:.7rem;' @click='handleGo("/dealManage")'>交易记录</span>
+     <div class='wallet_wrap'>
+         <p>
+             <img src="../../assets/images/backw@3x.png" @click="$router.go(-1)" style='width:.11rem;height:.2rem;margin-left:.1rem' alt="">
+             <span style='margin-left:1.2rem;font-size:.18rem;'>我的钱包</span>
+             <span style='margin-left:.8rem;' @click='handleGo("/dealManage")'>交易记录</span>
          </p>
-         <p style='text-align:center;'>
+         <p style='text-align:center;margin-top:.1rem;'>
              <span style='font-size:.3rem;'>{{userInfo.userMoney}}</span>
              <span style='font-size:.12rem'>辣椒</span>
              <img src="../../assets/images/d-28@3x.png"  alt="">
@@ -35,6 +36,11 @@ import {Post_formData2} from '@/config/services'
                    {img:require('../../assets/images/d-48@3x.png'),price:0,type:'小米椒',gift:'每日登陆小米椒+1，隔天清零，快去送给你喜欢的作者吧！'},
                    {img:require('../../assets/images/juan@3x.png'),price:0,type:'代金券',gift:'只用于作品订阅，阅读券优先于辣椒使用'}
               ],
+              topList:{
+                  title_1:'我的钱包',
+                  title_2:'首页',
+                  link:'/'
+              }
              }  
          },
          computed : {
@@ -70,7 +76,7 @@ import {Post_formData2} from '@/config/services'
 </script>
 <style lang='less' scoped>
   .wallet{
-      .header{
+      .wallet_wrap{
          height:1.96rem;
          background:-webkit-gradient(linear, 0 0, 0 bottom, from(#F55968), to(#ED9C8C));  
          color:#fff;

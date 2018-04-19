@@ -24,8 +24,8 @@
          <div class='orderList_wrap'  :style="{'height':direction?'1.3rem':'0'}">
           <div class="select" style="height:1.1rem;">          
            <ul>
-              <li style="font-size:.18rem;color:#333;width:.73rem;">排行榜</li>
-              <li v-for = '(item,index) in category' :class="{ red:categoryRed == index}" :key='index' @click="getCategory(item.key,index)"><span v-html="item.name"></span></li>        
+              <li style="font-size:.18rem;color:#333;width:.73rem;margin-top:.16rem;">排行榜</li>
+              <li  style='margin-top:.16rem;' :style='{"margin-left":index==0?".08rem":".17rem;"}' v-for = '(item,index) in category' :class="{ red:categoryRed == index}" :key='index' @click="getCategory(item.key,index)"><span v-html="item.name"></span></li>        
            </ul>
         </div>
          </div>
@@ -35,25 +35,25 @@
              <div class="select" style="height:1.4rem;">          
                 <ul>
                     <li style="font-size:.18rem;color:#333;width:.73rem;">作品类别</li>
-                    <li v-for="(item,index) in classList" :key='index' :class="{ red:changeRed == index}" @click="getData(item.id,index)"><span v-html="item.classificationName"></span></li>             
+                    <li style='margin-bottom:.1rem'  v-for="(item,index) in classList" :key='index' :class="{ red:changeRed == index}" @click="getData(item.id,index)"><span v-html="item.classificationName"></span></li>             
                 </ul>
              </div>
             <div class="select" style="height:.8rem;">          
            <ul>
               <li style="font-size:.18rem;color:#333;">作品字数</li>
-              <li v-for="(item,index) in words" :key='index' :class="{ red:numRed == index}" @click="getWords(item.key,index)"><span v-html="item.name"></span></li>
+              <li style='margin-bottom:.1rem' v-for="(item,index) in words" :key='index' :class="{ red:numRed == index}" @click="getWords(item.key,index)"><span v-html="item.name"></span></li>
            </ul>
           </div>
           <div class="select" style="height:.5rem;">          
            <ul>
               <li style="font-size:.18rem;color:#333;">作品状态</li>
-              <li v-for="(item,index) in status" :key='index' :class="{ red:statusRed == index}" @click="getStutas(item.key,index)"><span v-html="item.name"></span></li>        
+              <li style='margin-bottom:.1rem' v-for="(item,index) in status" :key='index' :class="{ red:statusRed == index}" @click="getStutas(item.key,index)"><span v-html="item.name"></span></li>        
            </ul>
          </div>
         <div class="select" style="height:.8rem;">          
            <ul>
               <li style="font-size:.18rem;color:#333;">更新时间</li>
-              <li v-for="(item,index) in time" :key='index' :class="{ red:timeRed == index}" @click="getTime(item.key,index)"><span v-html="item.name"></span></li>
+              <li style='margin-bottom:.1rem' v-for="(item,index) in time" :key='index' :class="{ red:timeRed == index}" @click="getTime(item.key,index)"><span v-html="item.name"></span></li>
            </ul>
         </div>
          </div>
@@ -67,7 +67,9 @@
                <p class="p_two"><span>作者 : </span>
                <span   style="margin:0 .05rem;">{{item.writerName|str(7)}}</span>
                <span v-html="item.classificationName"></span>
-               <span style='color:#57B0FF;margin-left:.03rem;'>{{item.bookStatus===0?'连载中':''}}</span>
+               <span  style='color:#47b2d8; margin-left:.03rem;' v-if="item.bookStatus===0">连载中</span>
+               <span  style='color:#ff6f00;margin-left:.03rem;' v-if="item.bookStatus===1">已完结</span>
+               <!-- <span style='color:#57B0FF;'>{{item.bookStatus===0?'连载中':''}}</span> -->
                </p>
                <p class="p_three" v-html="item.bookIntroduction"></p>
             </div>
@@ -155,7 +157,8 @@ import {mapActions} from 'vuex'
                    let options = {
                     keyWord:this.keyword,
                     startPage:this.page,
-                    isHotWorld:1
+                    isHotWorld:1,
+                    bookClassificationid:this.worksClass
                  }
                 Post_formData2(this,options,'/api/stacks-search',res=>{
                     if(res.returnCode==200){
@@ -172,7 +175,8 @@ import {mapActions} from 'vuex'
                 let options = {
                     keyWord:this.keyword,
                     startPage:1,
-                    isHotWorld:1
+                    isHotWorld:1,
+                    bookClassificationid:this.worksClass
                 }
                   Post_formData2(this,options,'/api/stacks-search',res=>{
                     if(res.returnCode==200){
@@ -292,7 +296,7 @@ import {mapActions} from 'vuex'
                             this.classList.unshift(cate);
                          }else{
                             this.$vux.toast.text(res.msg);
-                        }                            
+                     }                            
                 })
             },
              handleToBookDetail(bookId){
@@ -303,6 +307,7 @@ import {mapActions} from 'vuex'
         mounted(){
             this.handleFilter()
             this.handleClass()
+            this.changeRed=this.worksClass
         }
     }
 </script>
