@@ -16,7 +16,8 @@
          <div class='book_detail_wrap' v-for='item in ReadNowList' @click="handleBookDetail(item.bookId)">
             <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
             <span style='font-size:.16rem;'>{{item.bookName|str(5)}}</span>
-            <span class='icon_update' v-if='item.bookStatus==0?true:false'>更新</span>
+            <!-- <span class='icon_update' v-if='item.bookStatus==0?true:false'>更新</span> -->
+            <img class='icon_update' src="../../assets/images/updateR.png"  v-if='item.bookStatus==0?true:false' alt="">
             <input type="checkbox" v-model="item.checked" v-if='delShow' class='del_btn'>
          </div>
          <div class='add_book' @click="handleGo()">
@@ -165,13 +166,8 @@ import {mapActions,mapState} from 'vuex'
                position: absolute;
                top:0;
                right:-.03rem;
-               padding:.01rem;
-               background-color: #6EC282;
                width:.32rem;
                height:.18rem;
-               font-size:.1rem;
-               border-radius: .1rem;
-               color:#fff;
              }
          }
           .add_book{

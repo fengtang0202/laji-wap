@@ -1,7 +1,7 @@
 <template>
    <div class='book_comment_detail'>
        <headerComponent :list="topList"></headerComponent>
-            <div class='book_comment_item'>
+            <div class='book_comment_item' v-if='showContent'>
               <div class='avatar'>
                   <img  :src="readCommentInfo.userHeadPortraitURL" alt="">
               </div>
@@ -52,9 +52,9 @@
               </div>
              </div> 
             </div>
-            <No v-if='!showContent' ></No>
-           <div class='replyInput'>
-             <span @click='handleShow()'>回复</span>
+           <No v-if='showNoContent' message='暂无相关回复'></No>
+           <div class='replyInput' @click='handleShow()'>
+             <span >回复</span>
           </div>
           <div v-transfer-dom>
             <popup v-model="show">
@@ -64,7 +64,7 @@
                         <p style='color:#F77583;float:right' @click='handleReply()'>发表</p>
                     </div>
                     <div class='text_box'>
-                       <textarea  v-model='replyText' style='width:100%;height:1.2rem;border:0;outline:none;padding:.1rem' ></textarea>
+                       <textarea   v-focus v-model='replyText' style='width:100%;height:1.2rem;border:0;outline:none;padding:.1rem' ></textarea>
                     </div>
                 </div>
             </popup>
@@ -80,9 +80,12 @@ import { setTimeout } from 'timers';
         data(){
             return {
                 replyList:[],
-                showContent:true,
+                showContent:false,
+                showNoContent:false,
                 replyText:'',
                 readBookId:this.$route.query.bookId,
+                commendId:this.$route.query.commendId,
+                readCommentInfo:'',
                 topList:{
                     title_1:'评论详情',
                     title_2:'首页',
@@ -102,24 +105,30 @@ import { setTimeout } from 'timers';
             Popup
         },
         computed : {
-           ...mapState(['readCommentInfo','isLogin','userInfo'])
+           ...mapState(['isLogin','userInfo'])
         },
-        filters:{
-      content (str) {
-              return str.length>36?str.slice(0,37)+'...':str 
-       }
-    },
         methods:{
            getCommentReply(){
-               Post_formData2(this,{commentid:this.readCommentInfo.id,startPage:1},'/api/comm-replyInfo',res=>{
+               Post_formData2(this,{commentid:this.commendId,startPage:1},'/api/comm-replyInfo',res=>{
                  if(res.returnCode===200){
                      if(res.data.list.length==0){
-                         this.showContent=false
+                         this.showNoContent=true
                          return;
                      }
                      this.replyList=res.data.list
+                     this.showNoContent=false
                  }
               })
+           },
+           getCommentInfo(){
+                Post_formData2(this,{id:this.commendId,type:0,startPage:1},'/api/comm-getcomminfo',res=>{
+                    this.showContent=false
+                    if(res.returnCode===200){
+                        this.readCommentInfo=res.data
+                        this.showContent=true
+                        console.log(this.readCommentInfo)
+                    }
+                })
            },
            handleReply(){
             let reg=/[\ud83c-\ud83e][\udc00-\udfff]|[\u2600-\u27ff]/
@@ -130,7 +139,7 @@ import { setTimeout } from 'timers';
                     replyCommentsContent:this.replyText,
                     userName:this.userInfo.userName,
                     bookName:this.readCommentInfo.bookName,
-                    commentId:this.readCommentInfo.id,
+                    commentId:this.commendId,
                     puserId:this.readCommentInfo.userId
                  }
                  Post_formData2(this,options,'/api/add-replyInfo',res=>{
@@ -176,15 +185,13 @@ import { setTimeout } from 'timers';
                if(this.isLogin){
                    this.show=!this.show
                }else{
-                   this.$vux.toast.text('请先登录!')
-                   setTimeout(()=>{
-                       this.$router.push('/Login')
-                   },2000)
+                  this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId+'&commendId='+this.commendId}})
                }
            }
         },
         mounted () {
             this.getCommentReply()
+            this.getCommentInfo()
         }
     }
 </script>

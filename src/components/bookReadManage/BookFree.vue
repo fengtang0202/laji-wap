@@ -4,15 +4,8 @@
       <loading :show="isShow"></loading>
       <div v-if='showContent'>
               <bookItem :list='freeList'></bookItem>
-        </div>
-        <!-- <infinite-loading @infinite="onInfinite" ref="infiniteLoading">
-          <span slot="no-more">
-            加载完
-          </span>
-          <span slot="no-results">
-            目前暂无更多书籍
-          </span>
-        </infinite-loading> -->
+        <!--  -->
+      </div>
     </div>
      <No v-if='!showContent'></No>
     </div>
@@ -20,60 +13,41 @@
 <script>
     import { Loading } from 'vux'
     import { Post_formData2, noParam_Get } from '@/config/services'
-    export default {
+     export default {
         name: 'free',
         data () {
             return {
                isShow:false,
                freeList:[],
-               showContent:true,
-                source:{
-                img:require('../../assets/images/1.png'),
-                text:'没有相关数据'
-            }
+               showContent:true
             }
         },
         components: {
-            Loading,
+            Loading
         },
         methods:{
             handleMore(){
                this.isShow = true;
                 noParam_Get(this,'/api/sys-freetimelimit',res=>{
-                    this.isShow = false;
+                    // this.isShow = false;
                     if(res.returnCode==200){
                            this.freeList = res.data.data;
                            this.showContent=true
-                           console.log(res)
+                           this.isShow=false
+                           console.log(this.freeList)
                     }else{
                         this.showContent=false
+                        this.isShow=false
                     }
                 })
             },
             handleGo(id){
                 this.$router.push({path:'/bookdetails',query:{bookId:id}})
-            },
-            // onInfinite($state){
-            //             noParam_Get(this,'/api/sys-freetimelimit',res=>{
-            //                 console.log(res)
-            //                 if(res.returnCode==200){
-            //                     // let lists = res.data.data;
-            //                     // this.freeList = this.freeList.concat(lists);
-            //                 //     if(res.data.length>this.freeList.length){                                   
-            //                 //         $state.loaded()
-            //                 //     }else {
-            //                 //         $state.complete()
-            //                 //     }
-            //                 // }else{
-            //                 //         $state.complete()                                
-            //                 }
-            //         })
-                    
-            // }
-        },
-       created(){
-           this.handleMore()
-       }
+            }
+        },  
+      mounted () {
+          this.handleMore()
+      }
     }
 </script>
 
@@ -83,5 +57,77 @@
         box-sizing:border-box;
         border-top:3px solid #E9E9E9;
         font-family:'PingFangSC-Regular';
+        padding-bottom: .5rem;
+        .text_d{
+            box-sizing:border-box;
+            padding:0 .15rem;
+            height:1.05rem;
+            margin-top:.27rem;
+            overflow: hidden;
+            img{
+                width:.78rem;
+                height:1.05rem;
+                float:left;
+            }
+            .con_d{
+                float:right;
+                width:2.54rem;
+                height:1.05rem;
+            }
+            .text_one{
+                margin-top:-.02rem;
+                .one_sp{
+                    font-size:.16rem;
+                    color:#333;
+                }
+                .two_sp{
+                    font-size:.12rem;
+                    color:#F73D51;
+                    margin-left:.14rem;
+                }
+            }
+            .text_two{
+                font-size:.12rem;
+                color:#999;
+                border:1px solid #fff;
+                height:.2rem;
+                span{
+                    float:left;
+                }
+                .oSpan{
+                    color:#2BF6C7;
+                }
+                p{
+                    width:.02rem;
+                    height:.1rem;
+                    background:#FFAAAA;
+                    float:left;
+                    margin:.05rem .1rem 0;
+                }
+            }
+            .text_three{
+                height:.2rem;
+                font-size:.12rem;
+                span{
+                    float:left;
+                    margin-right:.1rem;
+                    padding:0 .05rem;
+                    border-radius:.2rem;
+                    color: #71E281;
+                }
+            }
+            .text_four{
+                margin-top:.03rem;
+                width:2.54rem;
+                font-size:.14rem;
+                height:.4rem;
+                color:#666;
+                overflow : hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+        }
     }
 </style>

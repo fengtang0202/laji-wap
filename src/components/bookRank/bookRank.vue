@@ -16,7 +16,7 @@
                   <p style='font-size:.16rem'>{{item.bookName|str(9)}}</p>
                   <p style='color:#999'>
                       <span>作者:{{item.writerName|str(5)}}</span>
-                      <span class='gold'>{{item.tempTicketSum}}金票</span> 
+                      <span class='gold' v-if='item.tempTicketSum>0'>{{item.tempTicketSum|tempTicketSum}}{{RankType|danwei}}</span> 
                   </p>
                   <p style='color:#666;'>{{item.bookIntroduction|str(22)}}</p>
                   <img v-if='index===0' class='metal' src="../../assets/images/gold.png" alt="">
@@ -73,15 +73,17 @@ import {Post_formData2,handleScroll} from '@/config/services'
             }
         },
         filters: {
-            bookName(res){
-              return  res.length>10? res.slice(0,8)+"...":res 
+            danwei(res){
+             return res==1 && '金票' ||res==2&&'小米椒'||res==3&&'点击'||res==4&&''||res==5&&'' ||res==6&&'条' ||res==7&& '' ||res==8&&'辣椒'||''
             }
         },
         methods:{
             handleTapDay(index,key){
                 this.changeDayColor=index
                 this.dayType=key
-                this.hanleRankBook()
+                if(this.dayList.length!==1){
+                    this.hanleRankBook()
+                }
                 window.scrollTo(0,0)                             
             },
             handleTapItem (index,key) {
@@ -108,6 +110,7 @@ import {Post_formData2,handleScroll} from '@/config/services'
                            {day:'总',key:'total'}
                       ]
                   this.handleNewBook()
+                  return;
               } 
               this.RankType=key
               this.hanleRankBook()
@@ -125,13 +128,15 @@ import {Post_formData2,handleScroll} from '@/config/services'
                         this.rankBookList=res.data[this.dayType].list
                      }else{
                         console.log(this.dayType)
+                        this.rankBookList=[]
                    }
                 })
              },
           onInfinite($state){
                   let self = this;
-                  this.page+=1
+                  this.page=1
                  function load() {
+                  self.page+=1
                         Post_formData2(self,{type:self.RankType,page:self.page},'/api/ranking-book',res=>{
                              let lists=null
                            if(res.returnCode==200){

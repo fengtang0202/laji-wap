@@ -22,6 +22,7 @@
                     <span class="title"  :key='index' v-for="(item,index) in labelList" v-html="item.bookLableName" :style="{color:item.bookColor}"></span>
                  </div> 
               </div>
+                 <img src="../../assets/images/qinyue.png"  v-if='isQ' class='qianyue' alt="">
           </div>
           <div class="check_d">              
               <div class="reader" v-for="(item,index) in cate"  :key='index' :class="{addCate:isActive===index}" @click="handleRead(index)"><span v-html="item.name"></span></div>
@@ -124,7 +125,8 @@
                 chapterId:0,
                 Condition:false,
                 isBook:false,
-                btnShow:false
+                btnShow:false,
+                isQ:false
             }
         },
         components: {
@@ -248,12 +250,19 @@
             handleInit () {
                 this.isShow = true; 
                 Post_formData2(this,{bookid:this.readBookId},'/api/book-bookInfo',res=>{
+                    console.log(res)
                     if (res.returnCode==200) {
                         let size=res.data.similarRecommendation.length+1
                         this.width=(size*96+size*5)/100+'rem'
                         this.isShow = false;                        
-                        this.chapterCount=res.data.chapterCount                        
+                        this.chapterCount=res.data.chapterCount                   
                         this.infoList = res.data.bookListInfo;
+                        let qy=this.infoList.bookAuthorization
+                        if(qy==1||qy==2){
+                            this.isQ=true
+                        }else{
+                            this.isQ=false
+                        }     
                         this.classId = res.data.bookListInfo.bookClassificationId;
                         this.labelList = res.data.bookLable;
                         this.swiperList=res.data.similarRecommendation
@@ -312,7 +321,7 @@
             handleToBookDetail(bookId){
                  this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
             },
-            isBookRack(){
+           isBookRack(){
               Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
                 if(res.returnCode==500){
                  this.cate[2].name='已在书架'
@@ -322,7 +331,7 @@
                   this.isBook=false
               }
            })              
-          },
+            },
             handleIsAuto (type='update') {
                    let options = {
                     bookid:this.readBookId,

@@ -16,7 +16,7 @@
                         <span style='font-size:.12rem;'>{{item.commentDateTime|formatDate}}</span>
                       </div>
                 </div>
-                 <p class='content'>{{item.commentContext}}</p> 
+                 <p class='content'>{{item.commentContext|str(36)}}</p> 
                  <div class='zhan'>     
                      <p  @click='handleCommentDetail(item)'>
                      <img src="../../assets/images/message@3x.png" alt="">
@@ -33,7 +33,7 @@
         </div>
 </template>
 <script>
-    import {mapState,mapActions} from 'vuex'
+    import {mapState} from 'vuex'
     import {Post_formData2} from '../../config/services'
       export default{
           props: {
@@ -46,10 +46,8 @@
           ...mapState(['isLogin'])  
         },
         methods:{
-            ...mapActions(['setReadCommentInfo']),
             handleCommentDetail(item){
-                this.setReadCommentInfo(item)
-                this.$router.push({path:'/bookCommentDetail',query:{bookId:this.$route.query.bookId}})
+                this.$router.push({path:'/bookCommentDetail',query:{bookId:this.$route.query.bookId,commendId:item.id}})
             },
             // 点赞
              handelLike(item){

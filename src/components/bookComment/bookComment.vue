@@ -5,40 +5,8 @@
         <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>热门评论({{hotCommentcount}})</p>
             <!-- commendItem -->
-            <!-- <div class='book_comment_item'  :key='index' v-for='(item,index) in hotCommentList'>
-              <div class='avatar' >
-                  <img  :src="item.userHeadPortraitURL" alt="">
-              </div>
-              <div class='book_comment_item_detail' >
-                <div class='i_one'>
-                    <div style='float: left;'>
-                        <span style='font-size:.16rem;'>{{item.pseudonym}}</span>
-                        <img src="../../assets/images/sex-03@3x.png" v-if='item.userSex==1' alt="">
-                        <img src="../../assets/images/sex-02_03@3x.png" v-if='item.userSex==0' alt="">                     
-                        <span class='grade'>&nbsp;LV{{item.userGrade}}&nbsp;</span>
-                     </div>
-                     <div style='float:right'>
-                        <span style='font-size:.12rem;'>{{item.commentDateTime|formatDate}}</span>
-                      </div>
-                </div>
-                 <p class='content'>{{item.commentContext}}</p> 
-                 <div class='zhan'>
-                    <p>
-                        <img @click='handleCommentDetail(item)' src="../../assets/images/message@3x.png" alt="">
-                        <span>{{item.replyCount}}</span>
-                    </p>
-                    <p>
-                        <img v-if='item.isthumbs===0' @click='handelLike(item)' src="../../assets/images/zan@3x.png" alt="">
-                        <img v-if='item.isthumbs===1' @click='handelLike(item)' src="../../assets/images/goodzan@3x.png" alt="">
-                        <span>{{item.thumbsCount}}</span>
-                    </p>
-                 </div>             
-              </div>
-            </div>  -->
-             <!--  -->
         <commendItem :list='hotCommentList'></commendItem>
         </div>
-        <!--  -->
         <!-- <div class='more'>
             <span>更多热评</span>
         </div> -->
@@ -46,47 +14,16 @@
         <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>最新评论({{newCommentcount}})</p>
             <!-- commend item -->
-        <commendItem :list='newCommentList'></commendItem>             
-            <!-- <div class='book_comment_item'  :key='index' v-for='(item,index) in newCommentList'>
-              <div class='avatar'>
-                  <img  :src="item.userHeadPortraitURL" alt="">
-              </div>
-              <div class='book_comment_item_detail' >
-                <div class='i_one'>
-                    <div style='float: left;'>
-                        <span style='font-size:.16rem;'>{{item.pseudonym}}</span>
-                        <img src="../../assets/images/sex-03@3x.png" v-if='item.userSex==1' alt="">
-                        <img src="../../assets/images/sex-02_03@3x.png" v-if='item.userSex==0' alt="">                     
-                        <span class='grade'>&nbsp;LV{{item.userGrade}}&nbsp;</span>
-                     </div>
-                     <div style='float:right'>
-                        <span style='font-size:.12rem;'>{{item.commentDateTime|formatDate}}</span>
-                      </div>
-                </div>
-                 <p class='content'>{{item.commentContext}}</p> 
-                 <div class='zhan'>     
-                     <p>
-                     <img @click='handleCommentDetail(item)' src="../../assets/images/message@3x.png" alt="">
-                     <span>{{item.replyCount}}</span>
-                     </p>
-                      <p>
-                     <img v-if='item.isthumbs===0'   @click='handelLike(item)' src="../../assets/images/zan@3x.png" alt="">
-                     <img v-if='item.isthumbs===1'   @click='handelLike(item)'  src="../../assets/images/goodzan@3x.png" alt="">
-                     <span>{{item.thumbsCount}}</span>
-                     </p>
-                 </div>             
-              </div>
-            </div>   -->
-            <!--  -->
+            <commendItem :list='newCommentList'></commendItem>             
         </div>
         <!--  -->
         </div>
-        <No v-if='!showContent'></No>
+        <No v-if='!showNoContent'></No>
         <div class='bottom_x'>
    
         </div>
-        <div class='replyInput'>
-            <span @click='handleShow()'>发表评价</span>
+        <div class='replyInput' @click='handleShow()'>
+            <span >发表评价</span>
         </div>
         <div v-transfer-dom>
             <popup v-model="show">
@@ -96,7 +33,7 @@
                         <p style='color:#F77583;float:right' @click='handleMakeComment()'>发表</p>
                     </div>
                     <div class='text_box'>
-                       <textarea  v-model='replyText' style='width:100%;height:1.2rem;border:0;outline:none;padding:.1rem' ></textarea>
+                       <textarea  placeholder='请输入你对这本书的评价...' v-focus v-model='replyText' style='width:100%;height:1.2rem;border:0;outline:none;padding:.1rem' ></textarea>
                     </div>
                 </div>
             </popup>
@@ -122,11 +59,8 @@ export default {
               title_2:'首页',
               link:'/'
           }, 
-           source:{
-                img:require('../../assets/images/1.png'),
-                text:'没有相关评论'
-              },
-          showContent:true,
+          showNoContent:false,
+          showContent:false,
           timer:'',
           show:false,
           replyText:'',
@@ -142,16 +76,13 @@ export default {
       ...mapState(['userInfo','isLogin'])  
     },
     methods:{
-        ...mapActions(['setReadCommentInfo']),
             canlce(){
                this.show=false;
             },
           getHotComment () {
               Post_formData2(this,{bookid:this.readBookId},'/api/comm-HotCommentInfo',res=>{
                   if(res.returnCode==200){
-                      console.log(res)
                       this.hotCommentList=res.data
-                      this.showContent=true
                       this.hotCommentcount=res.data.length
                       console.log(this.hotCommentList)
                   }else if(res.returnCode===800){
@@ -197,12 +128,15 @@ export default {
                Post_formData2(this,{id:this.readBookId,type:1,startPage:1},'/api/comm-getcomminfo',res=>{
                   if(res.returnCode==200){
                       if(res.data.list.length!=0){
+                      this.showContent=true
+                      this.showNoContent=true
                       this.newCommentList=res.data.list
                       this.newCommentcount=res.data.list.length
                       this.bookName=res.data.list[0].bookName
                       }
                   }else{
-                          
+                      this.showContent=false
+                      this.showNoContent=false    
                   }
               }) 
           },
@@ -217,6 +151,7 @@ export default {
            handleShow(){
                if(this.isLogin){
                    this.show=!this.show
+                   
                }else{
                 this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
                }

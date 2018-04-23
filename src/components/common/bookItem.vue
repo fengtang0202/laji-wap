@@ -20,7 +20,7 @@
                     <span :style="{color:i.bookColor,border:'1px solid'}" v-for="i in item.booklableList" v-html="i.bookLableName"></span>
                </div>
                <div class="text_four">
-                     {{item.bookIntroduction|str(45)}}
+                     {{item.bookIntroduction}}
                </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
      export default{
          data(){
              return{
-
+               dataList:[]
              }
          },
           props: {
@@ -39,7 +39,12 @@
             type: Array,
             default: []
             }
-        },
+          },
+          watch:{
+             'list':function(val){
+                   this.dataList=val   
+              }
+          },
         methods: {
              handleGo(id){
                  this.$router.push({path:'/bookDetails',query:{bookId:id}});

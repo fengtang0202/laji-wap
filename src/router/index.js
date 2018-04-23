@@ -18,14 +18,23 @@ import bookFree from '@/components/bookReadManage/bookFree'
 import editorRecommend from '@/components/editorRecommend/editorRecommend'
 import bookDetails from '@/components/bookDetail/bookDetails'
 import directory from '@/components/directory/directory'
-import download from '@/components/download/download'
 import search from '@/components/search/search'
 import feedPepper from '@/components/feed/feedPepper'
 import person from '@/components/person/person'
 import personInfo from '@/components/person/personInfo'
 import wechatPay from '@/components/pay/wechatPay'
 import bookRack from '@/components/bookReadManage/bookRack'
+// 排行榜
 import bookRank from '@/components/bookRank/bookRank'
+// import golden from '@/components/bookRank/golden'
+// import minPaperRank from '@/components/bookRank/minPaperRank'
+// import clickRank from '@/components/bookRank/clickRank'
+// import newBookRank from '@/components/bookRank/newBookRank'
+// import sellRank from '@/components/bookRank/sellRank'
+// import debateRank from '@/components/bookRank/debateRank'
+// import updateRank from '@/components/bookRank/updateRank'
+// import rewardRank from '@/components/bookRank/rewardRank'
+//
 import readHistory from '@/components/person/readHistory'
 import bookRead from '@/components/bookRead/bookRead'
 import bookComment from '@/components/bookComment/bookComment'
@@ -74,7 +83,6 @@ let routers=[
         ]
     },
     {path: '/directory', name: 'directory', component: directory},
-    {path: '/download', name: 'download', component: download},
     {path: '/search', name: 'search', component: search},
     {path: '/feedPepper', name: 'feedPepper', component: feedPepper,
     meta: {
@@ -100,7 +108,18 @@ let routers=[
         requireAuth: true
       }
     },
-    {path:'/bookRank',component:bookRank},
+    {path:'/bookRank',component:bookRank,
+    // children:[
+    //        {path:'/',component:golden},
+    //        {path:'minPaperRank',component:minPaperRank},
+    //        {path:'clickRank',component:clickRank},
+    //        {path:'newBookRank',component:newBookRank},
+    //        {path:'sellRank',component:sellRank},
+    //        {path:'debateRank',component:debateRank},           
+    //        {path:'updateRank',component:updateRank},
+    //        {path:'rewardRank',component:rewardRank}           
+    // ]
+  },
     {path:'/readHistory',component:readHistory, meta: {
         requireAuth: true
       }

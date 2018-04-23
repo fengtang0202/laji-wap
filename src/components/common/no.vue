@@ -1,8 +1,15 @@
 <template>
    <div  class='no_content'>
-      暂无相关数据
+      {{message}}
    </div>  
 </template>
+<script>
+    export default {
+        props:[
+            'message'
+        ]        
+    }
+</script>
 <style lang="less" scoped>
     .no_content{
         text-align:center;

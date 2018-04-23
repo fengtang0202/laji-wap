@@ -1,11 +1,11 @@
 <template>
-<div>
+     <div>
         <div :style='{backgroundColor:backgroundColor}'>
             <app-feed  :param='rewordParam' ref="child"  @click="handleClosefeed()"></app-feed>
             <app-feedpepper :param='rewordParam'  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper>
             <AppMinpepper :param='rewordParam' ref='minFeedpepper' @click='hanldeCloseMinFeedPepper()'></AppMinpepper>
    <div class='bookRead'>
-     <div class='feed' :class='{show2:feedShow}'>
+    <div class='feed' :class='{show2:feedShow}'>
             <div style='float:left'>
                <img :src="item.img"  @click='handleFeedTap(index)'  class='pepper' :key='index' v-for='(item,index) in feedList' alt="">
             </div>
@@ -18,7 +18,7 @@
      </ul>
     <ul class='share_list' :class='{show3:shareShow}'>
         <li v-for='(item,index) in shareList'  @click='handleShare(index)' :key='index'>
-            <img :src="item.img" alt="">
+            <img :src="item.img" alt="" :class='item.css'>
             <p>{{item.text}}</p>
         </li>
         <li></li>
@@ -70,12 +70,12 @@
           :data="bookText"
           :pulldown="pulldown"
           @pulldown="loadData" style='height:500px;'>     -->
-      <div class='book_content'  @click='up()' onselectstart="return false"  ref='content' :style='{"fontSize":fontSize/100+"rem","backgroundColor":backgroundColor,"color":fontColor}' :class='{changeColor:show}'>
+      <div class='book_content'  @click='up()'   ref='content' :style='{"fontSize":fontSize+"em","backgroundColor":backgroundColor,"color":fontColor}' :class='{changeColor:show}'>
          <!-- <h3>{{bookName}}</h3> -->
          <h3>{{chapterName}}</h3>
       <!-- <p style='font-size:.2rem;text-align:center;'>{{chapterName}}</p> -->
       <!-- <pull-to :bottom-load-method="loadmore"   @bottom-state-change="stateChange">                      -->
-          <p v-html='bookText'></p>  
+          <p v-html='bookText' onselectstart="return false"></p>  
          <!-- <div class="loading-wrapper"></div>  -->
       <!-- </pull-to> -->
       <!-- <div style='height:.5rem;width:100%;'></div> -->
@@ -88,7 +88,7 @@
                       <div  class='nav_d'>
                          <img :src="item.img" alt="">
                       </div>
-                         <p class='nav_text'>{{item.text}}</p>                      
+                         <p class='nav_text' :class='item.css' >{{item.text}}</p>                      
                    </li>
               </ul>
          </div>
@@ -162,7 +162,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                pulldown:true,
                bookText:'',
                isScroll:false,
-               fontSize:18,
+               fontSize:1.125,
                lastNav:false,
                fontColor:'#000',
                backgroundColor:'#fff',
@@ -209,19 +209,19 @@ import AppMinpepper from '@/components/feed/minPepper'
                    {text:'分享本书',key:6}
                ],
                shareList:[
-                   {text:'新浪微博',img:require('../../assets/images/sinaweibo @3x.png')},
-                   {text:'QQ空间',img:require('../../assets/images/qqqzone @3x.png')},
-                   {text:'微信好友',img:require('../../assets/images/wechat @3x.png')},
-                   {text:'微信朋友圈',img:require('../../assets/images/pengyouqun@3x.png')},
-                   {text:'微信收藏',img:require('../../assets/images/wechatfavorite @3x.png')},
-                   {text:'QQ',img:require('../../assets/images/qqshare@3x.png')},                   
+                   {text:'新浪微博',img:require('../../assets/images/sinaweibo @3x.png'),css:'img1'},
+                   {text:'QQ空间',img:require('../../assets/images/qqqzone @3x.png'),css:'img2'},
+                   {text:'微信好友',img:require('../../assets/images/wechat @3x.png'),css:'img3'},
+                   {text:'微信朋友圈',img:require('../../assets/images/pengyouqun@3x.png'),css:'img4'},
+                   {text:'微信收藏',img:require('../../assets/images/wechatfavorite @3x.png'),css:'img5'},
+                   {text:'QQ',img:require('../../assets/images/qqshare@3x.png'),css:'img6'},                   
                ],
                colorList:['#F7F7F7','#E5DFCA','#C3D3E9','#C2D9BE','#E5CAC2','#1F263A'],
                bottomNavList:[
-                   {img:require('../../assets/images/pre@3x.png'),text:'上一章',key:7},
-                   {img:require('../../assets/images/Combined Shape@3x.png'),text:'目录',key:8},
-                   {img:require('../../assets/images/Combined Shape1@3x.png'),text:'设置',key:9},
-                   {img:require('../../assets/images/nextCopy@3x.png'),text:'下一章',key:10}
+                   {img:require('../../assets/images/pre@3x.png'),text:'上一章',key:7,css:'p1'},
+                   {img:require('../../assets/images/Combined Shape@3x.png'),text:'目录',key:8,css:'p2'},
+                   {img:require('../../assets/images/Combined Shape1@3x.png'),text:'设置',key:9,css:'p3'},
+                   {img:require('../../assets/images/nextCopy@3x.png'),text:'下一章',key:10,css:'p4'}
                ]
             }
          },
@@ -252,22 +252,21 @@ import AppMinpepper from '@/components/feed/minPepper'
                   res===0&&this.handleFontSizeSubtract()
              },
              handleFontSizeAdd(){
-                    if(this.fontSize<28){
-                        this.fontSize+=1
+                    if(this.fontSize<2){
+                        this.fontSize+=.1
                     }else{
                         this.$vux.toast.text('字体最大了,保护好眼睛!')
                     }
              },
              handleFontSizeSubtract (){
-                 if(this.fontSize>20){
-                     this.fontSize--
+                 if(this.fontSize>1.125){
+                     this.fontSize-=.1
                  }else{
                      this.$vux.toast.text('字体最小了,保护好眼睛!')
                  }
              },
               handleClosefeed(){
                 this.$refs.child.handleClose();
-                console.log(1)
              },
               handleClosefeedpepper(){
                 this.$refs.childfeedpepper.handleClosepepper();
@@ -350,7 +349,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                     }
                 }) 
              },  
-           refreshuserInfo(){
+            refreshuserInfo(){
                Post_formData2(this,'','/api/person-info',res=>{
                             if(res.returnCode==200){
                                 this.getUserInfo(res.data) 
@@ -365,7 +364,7 @@ import AppMinpepper from '@/components/feed/minPepper'
              },
              getNextChapterText () {
                    this.confirmKey=0
-                   let n=this.chapterList.length-1
+                   let n=this.chapterList.length
                    this.chapterIdNum++ 
                   if(this.chapterIdNum<n){
                     this.getNowChapterId()                 
@@ -417,35 +416,17 @@ import AppMinpepper from '@/components/feed/minPepper'
                                 this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                         
                       }
                 })
-            //         Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
-            //                  if(res.returnCode==500){
-            //                      this.$vux.toast.text(res.msg)
-            //                      return;    
-            //                  } else {
-            //            Post_formData2(this,{userName:this.userInfo.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
-            //                 this.messageTitle='收藏书籍'
-            //                 this.message='这本书还没有加入书架，现在帮您加入书架吗？'
-            //                 if (res.returnCode==200) {   
-            //                      this.$vux.toast.text(res.msg)
-            //                 } else if (res.returnCode==400) {
-            //                     this.messageTitle=res.msg
-            //                     this.$router.push('/')
-            //                 }
-            //              })
-            //         }
-            //       })
-            //    }else{
-            //        this.$router.push('/')
-            //    }
-        //    
             },
              handleTap(res){
                  if (res===6) {
                      this.shareShow=!this.shareShow
                      this.lastNav=false
                  }
+                 if(res===5){
+                     this.$vux.toast.text('举报成功!')
+                 }
                  if(res===1){
-                 this.$router.push({path:'/bookDetails',query:{bookId:this.readBookId}});
+                     this.$router.push({path:'/bookDetails',query:{bookId:this.readBookId}});
                  }
                  if(res===2){
                      this.$router.push({path:'bookComment',query:{bookId:this.readBookId}})
@@ -563,19 +544,18 @@ import AppMinpepper from '@/components/feed/minPepper'
           menu() {
                 this.scroll = document.documentElement.scrollTop || document.body.scrollTop;
                 this.clientHeight=document.documentElement.clientHeight||document.body.clientHeight;
-                this.scrollHeight=document.body.scrollHeight||document.documentElement.scrollHeight
-                console.log(this.scroll ,1)
-                console.log(this.clientHeight ,2)
-                console.log(this.clientHeight ,3)                
-                if( this.scrollHeight+ this.clientHeight==this.scroll){
-                　　　　alert("已经到最底部了！!");
+                this.scrollHeight=document.body.scrollHeight||document.documentElement.scrollHeight            
+                console.log(this.scroll)
+               if( this.scroll+ this.clientHeight==this.scrollHeight){
+                　　　　this.lastNav=true;
+                       this.feedShow=true;
+                }else{
+                    this.lastNav=false;
+                    this.feedShow=false;
                 }
          }, 
-    },
+       },
         mounted () {
-            // this.$nextTick(()=>{
-            //     this.contentHeight=document.getElementsByClassName('book_content').clientHeight
-            // })
             if(this.isLogin){
                 this.isBookRack()
                 this.addReadHistory()                
@@ -586,6 +566,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                 window.addEventListener('scroll', this.menu)
             })
          },
+        //给body加  padding-bottom
          created(){
             this.getBookText()
             this.getNowChapterId()

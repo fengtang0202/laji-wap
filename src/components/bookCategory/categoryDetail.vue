@@ -3,10 +3,10 @@
         <loading :show="isShow"></loading>        
          <headerComponent :list="topList"></headerComponent>
          <div class='fixbar'>
-            <div class="search_top">
+            <!-- <div class="search_top">
             <input type="text" placeholder="搜索作者或者作品" v-model="keyword" >
             <img src="../../assets/images/search@2x.png">
-            </div>
+           </div> -->
          <div class='filter_nav' :class="searchBarFixed == true ? 'isFixed' :''">
             <div class='filter_btn_wrap'  @click='handleOrder()'>
              <span>排行</span>

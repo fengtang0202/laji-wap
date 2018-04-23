@@ -24,8 +24,8 @@
            <div class='person_info_detail'>
               <div>
                   <span class='user_name'>{{userInfo.pseudonym}}</span>
-                  <img class='user_sex' src="../../assets/images/sex_women@2x.png" v-if="userInfo.userSex===0?true:false" alt="">
-                  <img class='user_sex' src="../../assets/images/sex_men@2x.png" v-if='userInfo.userSex===1?true:false' alt="">
+                  <img class='user_sex' src="../../assets/images/sex_women@2x.png" v-if="userInfo.userSex===1" alt="">
+                  <img class='user_sex' src="../../assets/images/sex_men@2x.png" v-if='userInfo.userSex===0' alt="">
               </div>
               <div class='grade_wrap'>
                  <p class='grade' :style='{width:userInfo.userGrade/20*100+"%"}'>
@@ -83,6 +83,13 @@
                     {img:require('../../assets/images/contactUs2@2x.png'),title:'联系客服',link:'/contactUs'},
                     {img:require('../../assets/images/grade@2x.png'),title:'等级制度',link:'/gradeSystem'},
                 ]
+            }
+        },
+        watch:{
+            'isLogin':function(val){
+                if(!val){
+                    this.$route.push('/Login')
+                }
             }
         },
         methods:{

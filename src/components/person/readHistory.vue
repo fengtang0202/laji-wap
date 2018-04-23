@@ -4,7 +4,7 @@
          <div @click="$router.go(-1)">
              <img src="../../assets/images/back@2x.png" style='width:.4rem;heigh:.4rem;vertical-align: middle;' alt="">
          </div>    
-         <div class='title_1'>我的书架</div>
+         <div class='title_1'>阅读记录</div>
          <div>
             <span class='title_2' @click='hanldeShow()'>{{word}}</span>
             <span class='title_2' @click="handleDelBook()" v-if='delShow'>删除</span>
@@ -21,7 +21,7 @@
          </div>    
       </div>
    </div>
-   <No v-if='!showNoData'></No>
+   <No v-if='!showNoData' message='还有没有阅读记录'></No>
 </div>
 </template>
 <script>

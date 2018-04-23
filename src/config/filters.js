@@ -37,7 +37,24 @@ const clickTotal=res=>{
       return (res / 10000).toFixed(1)
     }
 }
+const type=val=>{
+  if (val == 1) { return '金椒' }
+  if (val == 2) { return '小米椒' }
+  if (val == 3) { return '点击' }
+  if (val == 4) { return '' }
+  if (val == 5) { return '' }
+  if (val == 6) { return '条' }
+  if (val == 7) { return '' }
+  if (val == 8) { return '辣椒' }
+}
+const tempTicketSum = res => {
+  if (res < 1000) {
+    return res 
+  } else {
+    return (res / 10000).toFixed(1)+'w'
+  }
+}
 const str=(res,size)=>{
-  return res.length > size ? res.slice(0, size) + '....' : res
+  return res.length > size ? res.slice(0, size) + '...' : res
 }  
-export { formatDate, formatDate2,clickTotal, str}
+export { formatDate, formatDate2, clickTotal, str, type, tempTicketSum}

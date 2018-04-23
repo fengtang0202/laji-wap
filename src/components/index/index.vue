@@ -1,9 +1,9 @@
 <template>
     <div id="index">
         <loading :show="isShow"></loading>
-        <swiper auto height="100px" dots-position="center">
-           <swiper-item v-for='(item,index) in pictureList' :key='index' >
-                <img  :src="item.bookImage" @click='handleGo(item.bookId)' style="width:100%;height:.98rem;" >
+        <swiper auto :aspect-ratio='i' dots-position="center">
+           <swiper-item v-for='(item,index) in pictureList' :key='index'>
+                <img  :src="item.bookImage" @click='handleGo(item.bookId)' style="width:100%;" >
            </swiper-item>
        </swiper>
         <div class="edit">
@@ -97,6 +97,7 @@
         data () {
             return {
                  bookList:[],
+                 i:0.4,
                  total:10,
                  newList:[],
                  distance:false,
@@ -153,8 +154,19 @@
                   index==0&&this.$router.push('/')
                   index==1&&this.handle('/bookRack','登录后才能看书架')
                   index==2&&this.handle('/payMoney','登录后才能充值')
-                  index==3&&this.$router.push('/download')
+                  index==3&&this.handleDownApp()
                   index==4&&this.$router.push('/contactUs')
+            },
+            handleDownApp(){
+                var u = navigator.userAgent;
+                var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+                var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+                if(isAndroid){
+                window.location.href='https://www.lajixs.com/apk/app.apk'
+                }
+                if(isiOS){
+                alert('i am ios')
+                }
             },
             handleNewbook(){
                 this.isShow = true;                
@@ -315,7 +327,7 @@
             text-align: center;
             color:#999;
             font-size: .14rem;
-            padding:.1rem;
+            padding:0 .1rem;
             img{
                 width:.12rem;
                 height:.2rem;

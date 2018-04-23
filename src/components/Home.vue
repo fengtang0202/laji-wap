@@ -2,10 +2,16 @@
     <div id="home">
          <div class="top">
             <img src="../assets/images/ico@2x.png" @click='handleTo({path:"/"})' class="logo_two">
-            <div class="btn_top" @click="handleIsPhone()">下载APP</div>
+            <downApp></downApp>
             <span class='userId' @click='handleTo({path:"/bookRank"})' >排行榜</span>
-             <img   v-if='isLogin' :src="userInfo.userHeadPortraitURL" @click="handleTo({path:'/person'})" class="logo_three">
-             <img   v-if='!isLogin' @click="handleTo({path:'/person'})" class="logo_three" src='../assets/images/user@3x.png'>
+            <div class='logo_three' >
+                <router-link to='/person'>
+                  <img   v-if='isLogin'     :src="userInfo.userHeadPortraitURL" >
+                </router-link>
+                <router-link to='/Login'>                
+                   <img   v-if='!isLogin' src='../assets/images/user@3x.png' >
+                </router-link>                 
+            </div>
          </div>
          <div class="bottom">
              <input type="text" placeholder="搜索作品或作者" class='search' @focus='handleTo({path:"/search"})'/>
@@ -46,17 +52,6 @@
         methods:{
             handleGo(res,index){
                 this.$router.push(res);
-            },
-             handleIsPhone(){
-            var u = navigator.userAgent;
-            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
-            var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-            if(isAndroid){
-               window.location.href='https://www.lajixs.com/apk/app.apk'
-            }
-            if(isiOS){
-               alert('i am ios')
-              }
             },
             getIndex(){
               let i =this.$route.path
@@ -121,16 +116,24 @@
                 font-size:.16rem;
                 color:#FB5E6F;
                 float:left;
-                padding-top:.1rem;
-                padding-bottom:.16rem;
-                margin-left:.6rem;
+                // padding-top:.1rem;
+                line-height: .5rem;
+                margin-left:.4rem;
             }
             .logo_three{
-                width:.34rem;
-                height:.33rem;
                 float:right;
                 border-radius: 50%;
-                margin-top:.08rem;
+                height:.5rem;
+                width:.5rem;
+                text-align: right;
+                line-height: .5rem;
+                margin-left:.0.08rem;
+                cursor:pointer;
+                img{
+                    width:.34rem;
+                    height:.33rem;
+                    vertical-align: middle;
+                }
             }
         }
         .bottom{

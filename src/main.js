@@ -9,6 +9,7 @@ import FastClick from 'fastclick'
 import VueTouch from 'vue-touch'
 import scrollView from '../src/components/common/scrollView '
 import No from '../src/components/common/no'
+import downApp from '../src/components/common/downApp'
 import { ToastPlugin,WechatPlugin,Cell,Group,Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
 Vue.config.productionTip = false
 Vue.use(iView)
@@ -19,6 +20,7 @@ import noContent from '@/components/common/noContent'
 import InfiniteLoading from 'vue-infinite-loading'
 import bookItem from '../src/components/common/bookItem'
 import commendItem from '../src/components/common/commendItem'
+import bookRankList from '../src/components/bookRank/bookRankList'
 import Loading from 'vue'
 // 注册全局组件
 Vue.component('headerComponent',headerComponent)
@@ -32,6 +34,8 @@ Vue.component('No',No)
 Vue.component('bookItem',bookItem)
 Vue.component('commendItem',commendItem)
 Vue.component('Loading',Loading)
+Vue.component('downApp', downApp)
+Vue.component('bookRankList',bookRankList)
 // Vue.component('scrollView', scrollView)
 Vue.use(VueTouch, {name: 'v-touch'})
 Vue.use(ToastPlugin,Cell,Group)
@@ -44,18 +48,21 @@ import * as filters from '@/config/filters'
 Object.keys(filters).forEach(key => {  
     Vue.filter(key, filters[key])  
 })  
-axios.get('/api/weChartShareSign?URL=https://www.lajixs.com').then(data=>{
-    let config=data.data.data
-    console.log(config)
-    Vue.wechat.config({
-        debug: false, 
-        appId: config.appId,
-        timestamp:config.timestamp,
-        nonceStr: config.nonceStr,
-        signature: config.signature,
-        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', 'chooseImage']
-    })
-})
+import directives from "./config/directives"
+Vue.use(directives);
+
+// axios.get('/api/weChartShareSign?URL=https://www.lajixs.com').then(data=>{
+//     let config=data.data.data
+//     console.log(config)
+//     Vue.wechat.config({
+//         debug: false, 
+//         appId: config.appId,
+//         timestamp:config.timestamp,
+//         nonceStr: config.nonceStr,
+//         signature: config.signature,
+//         jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', 'chooseImage']
+//     })
+// })
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth) {// 判断该路由是否需要登录权限
@@ -65,17 +72,18 @@ router.beforeEach((to, from, next) => {
              next();
          }
        }else{
-           if(store.state.isLogin){
-               next({ path: '/Login'})                           
+        //    if(store.state.isLogin){
+            //    next({ path: '/Login'})                           
             //    Vue.$vux.toast.show({text:'登录过期',type:'warn'})
-           }else{
-            //    Vue.$vux.toast.show({text:'请先登录',type:'cancel'})
-               next({ path: '/Login'})            
-           }
+        //    }else{
+        //     //    Vue.$vux.toast.show({text:'请先登录',type:'cancel'})
+        //        next({ path: '/Login'})            
+        //    }
           store.state.userInfo=null
           store.state.isLogin=false
           next({path: '/Login',query:{redirect:from.path}})
        }
+    //   }
     })
   }else{
     next()

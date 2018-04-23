@@ -18,7 +18,9 @@ export default {
         }
     },
     mounted () {
-       
+       this.$nextTick(()=>{
+           document.querySelector('#app').scrollIntoView()
+       })
     },
     //监听路由的路径，可以通过不同的路径去选择不同的切换效果
     watch: {
@@ -38,6 +40,8 @@ export default {
     height:100%;
     // 移动端字体设置
     font-family:Helvetica;
+    // padding-bottom:.4rem;
+    // padding-top:.57rem;
     font-size:.16rem;
     color:#333;
     background:#fff;
