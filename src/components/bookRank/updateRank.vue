@@ -1,0 +1,102 @@
+<template>
+   <div>
+       <div class='day'>
+           <span class='day_btn' v-for='(item,index) in dayList' :key='item.key' :style='{"color":changeDayColor===index?"#FE5C6C":"#000"}' @click='handleTapDay(index,item.key,item.link)'>{{item.day}}</span>
+       </div> 
+     <bookRankList :dataList='rankBookList' :dayList='dayList' RankType='8'></bookRankList>
+      <infinite-loading @infinite="infiniteHandler">
+           <span slot="no-more">
+            目前暂无更多书籍
+          </span>
+          <span slot="no-results">
+            目前暂无更多书籍
+          </span>
+      </infinite-loading>
+   </div>
+</template>
+<script>
+import {Post_formData2} from '@/config/services'
+     export default{
+        data(){
+           return{
+             dayType:this.$route.query.dayType,
+             rankBookList:[],
+             dayList:[
+                 {day:'周',key:'week',link:'updateRank?dayType=week'},
+                 {day:'月',key:'month',link:'updateRank?dayType=month'},
+                 {day:'总',key:'total',link:'updateRank?dayType=total'}
+             ], 
+             page:0,
+             changeDayColor:0
+           }
+        },
+         watch:{
+           '$route.params'(){
+                this.handleInitDay()
+           }
+        },
+        methods:{
+           handleInitDay(){
+                 let dayType=this.$route.query.dayType
+                 switch(dayType){
+                     case 'week':
+                     this.changeDayColor=0
+                     break;
+                     case 'month':
+                     this.changeDayColor=1
+                      break;
+                     case 'total':
+                     this.changeDayColor=2
+                     break;
+                 }
+              },
+             infiniteHandler($state){
+                let self = this;
+                self.page+=1
+                Post_formData2(self,{type:7,page:self.page},'/api/ranking-book',res=>{
+                             let lists=null
+                          if(res.returnCode==200){
+                                  lists=res.data[self.dayType].list
+                                  console.log(res)
+                                  self.rankBookList = self.rankBookList.concat(lists);
+                                if(res.data[self.dayType].lastPage>self.page){ 
+                                        $state.loaded()
+                                    }else{
+                                        $state.complete()
+                                 }
+                              }else{
+                              $state.complete()                                
+                         }
+                    })
+              },
+               handleTapDay(index,key,link){
+                this.dayType=key
+                 this.page=1
+                this.handleBook()
+                this.$router.replace(link)
+                window.scrollTo(0,0)                             
+            },
+              handleBook(){
+                Post_formData2(this,{type:7,page:this.page},'/api/ranking-book',res=>{
+                 if(res.returnCode==200){
+                   this.rankBookList = res.data[this.dayType].list
+                }
+             })
+           }
+        },
+        created(){
+          this.handleInitDay()
+        }
+     }
+</script>
+<style lang="less" scoped>
+.day{
+         height:.44rem;
+         text-align: right;
+         line-height: .44rem;
+         font-size:.16rem;
+         .day_btn{
+             padding:.15rem;
+         }
+}
+</style>

@@ -1,7 +1,6 @@
 <template>
-   <div>
-       <div class='book_list_wrap'>
-          <div class='book_item_wrap' v-for='(item,index) in dataList'  :key='index' @click='handleToDetail(item.bookId)'>
+   <div> 
+       <div class='book_item_wrap' v-for='(item,index) in dataList'  :key='index' @click='handleToDetail(item.bookId)'>
               <img :src="item.bookImage" style='width:.81rem;height:1.08rem' alt="">
               <div class='book_detail'>
                   <p style='font-size:.16rem'>{{item.bookName|str(9)}}</p>
@@ -15,9 +14,7 @@
                   <img v-if='index===2' class='metal' src="../../assets/images/copper.png" alt="">
               </div>
           </div>
-       </div>
-
-</div>
+    </div>
 </template>
 <script>
   export default{
@@ -26,22 +23,47 @@
 
          }
       },
+       filters: {
+            danwei(res){
+             return res==1 && '金票' ||res==2&&'小米椒'||res==3&&'点击'||res==4&&''||res==5&&'' ||res==6&&'条' ||res==7&& '' ||res==8&&'辣椒'||''
+            }
+        },
       props:{
          dataList:{
              type:Array,
              default:[]
          },
-         dayList:{
-             type:Array,
-             default:[]
-         }
+         RankType:{
+             type:String,
+             default:1
+         },
+         changeDayColor:0
       },
       methods: {
-          
+          handleTapDay(index,key,link){
+                // this.changeDayColor=index
+                this.dayType=key
+                this.$router.replace(link)                        
+         },
+          handleToDetail(bookId){
+                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
+            },
+      },
+      created(){
+        //   this.changeDayColor=0
       }
   }    
 </script>
 <style lang="less" scoped>
+ .day{
+         height:.44rem;
+         text-align: right;
+         line-height: .44rem;
+         font-size:.16rem;
+         .day_btn{
+             padding:.15rem;
+         }
+     }
      .nav{
         width:.72rem;
         height:3.52rem;

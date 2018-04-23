@@ -1,37 +1,13 @@
 <template>
    <div class='bookRank_wrap'>
        <headerComponent :list='topList'></headerComponent>
-       <div class='day'>
-           <span class='day_btn' v-for='(item,index) in dayList' :key='item.key' :style='{"color":changeDayColor===index?"#FE5C6C":"#000"}' @click='handleTapDay(index,item.key)'>{{item.day}}</span>
-       </div>
        <div class='nav' id='nav'  :class="searchBarFixed == true ? 'isFixed' :''">
           <ul>
-              <li v-for='(item,index) in rankList' @click='handleTapItem(index,item.key)' :class='{isAdd:index===changeItemColor}' :key='item.key'><span>{{item.name}}</span></li>
+              <li v-for='(item,index) in rankList' @click='handleTapItem(index,item.key,item.link)' :class='{isAdd:index===changeItemColor}' :key='item.key'><span>{{item.name}}</span></li>
           </ul>
        </div>
        <div class='book_list_wrap'>
-          <div class='book_item_wrap' v-for='(item,index) in rankBookList'  :key='index' @click='handleToDetail(item.bookId)'>
-              <img :src="item.bookImage" style='width:.81rem;height:1.08rem' alt="">
-              <div class='book_detail'>
-                  <p style='font-size:.16rem'>{{item.bookName|str(9)}}</p>
-                  <p style='color:#999'>
-                      <span>作者:{{item.writerName|str(5)}}</span>
-                      <span class='gold' v-if='item.tempTicketSum>0'>{{item.tempTicketSum|tempTicketSum}}{{RankType|danwei}}</span> 
-                  </p>
-                  <p style='color:#666;'>{{item.bookIntroduction|str(22)}}</p>
-                  <img v-if='index===0' class='metal' src="../../assets/images/gold.png" alt="">
-                  <img v-if='index===1' class='metal' src="../../assets/images/silver.png" alt="">
-                  <img v-if='index===2' class='metal' src="../../assets/images/copper.png" alt="">
-              </div>
-          </div>
-          <infinite-loading @infinite="onInfinite" ref="infiniteLoading">
-          <span slot="no-more">
-            目前暂无更多书籍
-          </span>
-          <span slot="no-results">
-            目前暂无更多书籍
-          </span>
-         </infinite-loading>
+           <router-view></router-view>
        </div>
    </div>
 </template>
@@ -55,20 +31,18 @@ import {Post_formData2,handleScroll} from '@/config/services'
                  {day:'总',key:'total'}
              ],
              changeDayColor:0,
-             changeItemColor:0,
+             changeItemColor:0, 
              rankBookList:[],
-             RankType:1,
-             dayType:'month',
              page:0,
              rankList:[
-                    {name:"金椒榜",key:1},
-                    {name:"推荐榜",key:2},
-                    {name:"点击榜",key:3},
-                    {name:"新书榜",key:4},
-                    {name:"畅销榜",key:5},
-                    {name:"吐槽榜",key:6},
-                    {name:"更新榜",key:7},
-                    {name:"打赏榜",key:8}
+                    {name:"金椒榜",key:1,link:'/bookRank?dayType=month'},
+                    {name:"推荐榜",key:2,link:'/bookRank/minPaperRank?dayType=week'},
+                    {name:"点击榜",key:3,link:'/bookRank/clickRank?dayType=week'},
+                    {name:"新书榜",key:4,link:'/bookRank/newBookRank'},
+                    {name:"畅销榜",key:5,link:'/bookRank/sellRank?dayType=week'},
+                    {name:"吐槽榜",key:6,link:'/bookRank/debateRank?dayType=week'},
+                    {name:"更新榜",key:7,link:'/bookRank/updateRank?dayType=week'},
+                    {name:"打赏榜",key:8,link:'/bookRank/rewardRank?dayType=week'}
              ]
             }
         },
@@ -77,103 +51,58 @@ import {Post_formData2,handleScroll} from '@/config/services'
              return res==1 && '金票' ||res==2&&'小米椒'||res==3&&'点击'||res==4&&''||res==5&&'' ||res==6&&'条' ||res==7&& '' ||res==8&&'辣椒'||''
             }
         },
+        watch:{
+             '$route'(to,from){
+               this.handleInitItemIndex()
+            }
+        },
         methods:{
+            handleInitItemIndex(){
+                let path=this.$route.path
+                console.log(path)
+                   switch(path){
+                    case '/bookRank':
+                     this.changeItemColor=0
+                     break;
+                     case '/bookRank/minPaperRank':
+                     this.changeItemColor=1
+                     break;
+                     case '/bookRank/clickRank':
+                     this.changeItemColor=2
+                     break;                     
+                     case '/bookRank/newBookRank':
+                     this.changeItemColor=3
+                     break;
+                     case '/bookRank/sellRank':
+                     this.changeItemColor=4
+                     break;                     
+                     case '/bookRank/debateRank':
+                     this.changeItemColor=5
+                     break;                     
+                     case '/bookRank/updateRank':
+                     this.changeItemColor=6
+                     break;                     
+                     case '/bookRank/rewardRank':
+                     this.changeItemColor=7
+                     break;
+                }              
+            },
             handleTapDay(index,key){
-                this.changeDayColor=index
+                // this.changeDayColor=index
                 this.dayType=key
                 if(this.dayList.length!==1){
                     this.hanleRankBook()
                 }
                 window.scrollTo(0,0)                             
             },
-            handleTapItem (index,key) {
-              this.changeItemColor=index
-              this.changeDayColor=0
-              if(key==1){
-                  this.dayType='month'
-                  this.dayList=[
-                           {day:'月',key:'month'},
-                           {day:'总',key:'total'}
-                 ]
-              }else if(key!==4){
-                  this.dayType='week'
-                  if(this.dayList[0].day!='周'){
-                      this.dayList=[
-                           {day:'周',key:'week'},
-                           {day:'月',key:'month'},
-                           {day:'总',key:'total'}
-                      ]
-                  }
-              }
-              if(key==4){
-                  this.dayList=[
-                           {day:'总',key:'total'}
-                      ]
-                  this.handleNewBook()
-                  return;
-              } 
-              this.RankType=key
-              this.hanleRankBook()
-              window.scrollTo(0,0)             
-            },
-            handleNewBook(){
-                 Post_formData2(this,{type:4,page:1},'/api/ranking-book',res=>{
-                       this.rankBookList=res.data.newBookRankingList.list
-                 })
-            },
-            hanleRankBook () {
-                 Post_formData2(this,{type:this.RankType,page:1},'/api/ranking-book',res=>{
-                     console.log(res)
-                     if(res.data[this.dayType]!==undefined){
-                        this.rankBookList=res.data[this.dayType].list
-                     }else{
-                        console.log(this.dayType)
-                        this.rankBookList=[]
-                   }
-                })
-             },
-          onInfinite($state){
-                  let self = this;
-                  this.page=1
-                 function load() {
-                  self.page+=1
-                        Post_formData2(self,{type:self.RankType,page:self.page},'/api/ranking-book',res=>{
-                             let lists=null
-                           if(res.returnCode==200){
-                                if(self.RankType!=4){
-                                     lists = res.data[self.dayType].list
-                                }else{
-                                     lists=res.data.newBookRankingList.list
-                                 }
-                                    self.rankBookList = self.rankBookList.concat(lists);
-                                if(self.RankType!=4){
-                                    if(res.data[self.dayType].lastPage>=self.page){                                   
-                                        $state.loaded()
-                                   }else {
-                                        $state.complete()
-                                  }
-                                }else{
-                                    if(res.data.newBookRankingList.lastPage>=self.page){
-                                        $state.loaded()
-                                    }else{
-                                        $state.complete()
-                                    }
-                              }
-                            }else{
-                              $state.complete()                                
-                         }
-                    })
-                 }
-                setTimeout(() => {
-                    load();
-                },500);  
-            },
-             handleToDetail(bookId){
+            handleToDetail(bookId){
                  this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
              },
-             handleScroll(){
-                 handleScroll(this,'#nav')
-             }
+            handleTapItem (index,key,link) {
+              this.changeItemColor=index
+              this.changeDayColor=0
+              this.$router.replace({path:link})
+            },
         },
         mounted () {
             // this.hanleRankBook()
@@ -181,6 +110,7 @@ import {Post_formData2,handleScroll} from '@/config/services'
             this.$nextTick(()=>{
                 window.addEventListener('scroll',this.handleScroll)
             })
+            this.handleInitItemIndex()
         },
         destroyed () {
             window.removeEventListener('scroll',this.handleScroll)
@@ -208,6 +138,8 @@ import {Post_formData2,handleScroll} from '@/config/services'
         box-shadow: 0 0 .1rem rgba(0,0,0,0.1);
         border-radius:5px;
         float: left;
+        position: fixed;
+        top:.88rem;
         li{
             list-style: none;
             height:.44rem;
