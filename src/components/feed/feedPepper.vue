@@ -76,9 +76,9 @@ import { Post_formData2} from '@/config/services'
                        this.dilogpepperShow = false
                        this.$vux.toast.show({text:res.msg,type:'cancel'})
                      }else if(res.returnCode===400&&this.isLogin){
-                       this.$vux.toast.show({text:res.msg,type:'warn'})
+                    //    this.$vux.toast.show({text:res.msg,type:'warn'})
                         //这里还没有测试 
-                       this.$router.push({path:'/Login',query:{redirect: this.$route.path}})
+                            this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.$route.query.bookId}})
                      }
                      else if(res.returnCode===1000){
                        this.$vux.toast.show({text:res.msg,type:'warn'})

@@ -36,7 +36,7 @@ import {Post_formData2,handleScroll} from '@/config/services'
              page:0,
              rankList:[
                     {name:"金椒榜",key:1,link:'/bookRank?dayType=month'},
-                    {name:"推荐榜",key:2,link:'/bookRank/minPaperRank?dayType=week'},
+                    {name:"小米椒",key:2,link:'/bookRank/minPaperRank?dayType=week'},
                     {name:"点击榜",key:3,link:'/bookRank/clickRank?dayType=week'},
                     {name:"新书榜",key:4,link:'/bookRank/newBookRank'},
                     {name:"畅销榜",key:5,link:'/bookRank/sellRank?dayType=week'},
@@ -139,6 +139,8 @@ import {Post_formData2,handleScroll} from '@/config/services'
         border-radius:5px;
         float: left;
         position: fixed;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
         top:.88rem;
         li{
             list-style: none;

@@ -2,16 +2,16 @@
 <div>
   <div class='pay_wrap' v-if='show'>
               <div class='pay_title'>
-                <p style='margin-left:.2rem;'>时间</p>
-                <p style='margin-left:.4rem;'>章节名</p>
+                <p >时间</p>
+                <p >章节名</p>
                 <p>作品名称</p>
                 <p>辣椒</p>
               </div>
           <div class='pay_list' v-for='item in payRecordList'>
                 <p >{{item.subscriptionDateTime|formatDate2}}</p>
-                <p>{{item.bookChapterName|str(4)}}</p>
-                <p>{{item.bookName|str(7)}}</p>
-                <p>{{item.subscriptionPrice}}</p>
+                <p>{{item.bookChapterName|str(5)}}</p>
+                <p class='add1'>{{item.bookName|str(7)}}</p>
+                <p class='add'>{{item.subscriptionPrice}}</p>
           </div>
            <infinite-loading spinner='bubbles' @infinite="onInfinite" ref="infiniteLoading">
           <span slot="no-more">
@@ -79,9 +79,9 @@ export default{
            line-height: .3rem;
            border-bottom:1px solid #E9E9E9;
         //    margin-left:.1rem;
-         p {
+         p:not(:last-child) {
              float:left;
-             width:20%;
+             width:29%;
              text-align: center;
          }
        }
@@ -89,13 +89,23 @@ export default{
            overflow: hidden;
            font-size: .14rem;
            margin-left:.1rem;
+           border-bottom:1px solid #E9E9E9;   
+           position: relative;                       
             p{
                float: left;
                text-align: center;
                min-width:13%;
                height:.4rem;
                line-height: .4rem;
-               border-bottom:1px solid #E9E9E9;               
+            }
+            .add1{
+                position: absolute;
+                right:.5rem;
+                width:1.1rem;
+            }
+            .add{
+                position: absolute;
+                right:.1rem;
             }
        }
    }

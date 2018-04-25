@@ -30,8 +30,8 @@
         methods:{
             ...mapActions(['setPhone','setUserCode']),
             getCode(){
-                let checkPhone=/^1(3|4|5|6|7|8|9)\d{9}$/;
-                if (checkPhone.test(this.phone)) {
+                // let checkPhone=/^1(3|4|5|6|7|8|9)\d{9}$/;
+                // if (checkPhone.test(this.phone)) {
                     noParam_Get(this,'/api/person-checkNickPhone/'+this.phone,res=>{
                         if(res.returnCode ==200){
                             this.$vux.toast.text('您的手机号未注册');
@@ -49,7 +49,7 @@
                                         if(res.returnCode==200){
                                             this.$vux.toast.text('验证码已发送');
                                         }else{
-                                            this.$vux.toast.text(res.msg);
+                                            // this.$vux.toast.text(res.msg);
                                         }
                                     // })
                                 })
@@ -58,9 +58,9 @@
                             }
                         }                        
                     })
-                } else {
-                    this.$vux.toast.text('请输入正确手机号')
-                }
+                // } else {
+                //     this.$vux.toast.text('请输入正确手机号')
+                // }
             },
             sendMessage(){
                 if(this.isOvertime){

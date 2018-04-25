@@ -9,7 +9,7 @@
           <div class='pay_list' v-for='item in payRecordList'>
                 <p >{{item.giveDateTime|formatDate2}}</p>
                 <p>{{item.bookName|str(11)}}</p>
-                <p>{{item.spicyiTicketCount}}</p>
+                <p class='add'>{{item.spicyiTicketCount}}</p>
           </div>
            <infinite-loading spinner='bubbles' @infinite="onInfinite" ref="infiniteLoading">
           <span slot="no-more">
@@ -101,6 +101,7 @@ export default{
        .pay_list{
            overflow: hidden;
            font-size: .14rem;
+           position: relative;
             p{
                float: left;
                text-align: center;
@@ -108,6 +109,10 @@ export default{
                min-width:30%;
                line-height: .4rem;
                border-bottom:1px solid #E9E9E9;               
+            }
+            .add{
+                position: absolute;
+                right:.1rem;
             }
        }
    }

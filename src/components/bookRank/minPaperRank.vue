@@ -3,7 +3,7 @@
        <div class='day'>
            <span class='day_btn' v-for='(item,index) in dayList' :key='item.key' :style='{"color":changeDayColor===index?"#FE5C6C":"#000"}' @click='handleTapDay(index,item.key,item.link)'>{{item.day}}</span>
        </div> 
-     <bookRankList :dataList='rankBookList' :dayList='dayList' RankType='2'></bookRankList>
+     <bookRankList  :dataList='rankBookList' :dayList='dayList' RankType='2'></bookRankList>
       <infinite-loading @infinite="infiniteHandler">
            <span slot="no-more">
             目前暂无更多书籍
@@ -16,6 +16,7 @@
 </template>
 <script>
 import {Post_formData2} from '@/config/services'
+import { setTimeout } from 'timers';
      export default{
         data(){
            return{
@@ -38,13 +39,12 @@ import {Post_formData2} from '@/config/services'
         methods:{
              infiniteHandler($state){
                 let self = this;
-                self.page+=1
+                 self.page+=1
+                 console.log(self.page)
                 Post_formData2(self,{type:2,page:self.page},'/api/ranking-book',res=>{
-                             let lists=null
                           if(res.returnCode==200){
-                                  lists=res.data[self.dayType].list
-                                  console.log(res)
-                                  self.rankBookList = self.rankBookList.concat(lists);
+                              console.log(res.data.week)
+                                  self.rankBookList = self.rankBookList.concat(res.data[self.dayType].list);
                                 if(res.data[self.dayType].lastPage>self.page){ 
                                         $state.loaded()
                                     }else{
@@ -77,14 +77,16 @@ import {Post_formData2} from '@/config/services'
                 window.scrollTo(0,0)                             
             },
               handleBook(){
-                Post_formData2(this,{type:2,page:this.page},'/api/ranking-book',res=>{
+                Post_formData2(this,{type:2,page:1},'/api/ranking-book',res=>{
                  if(res.returnCode==200){
                    this.rankBookList = res.data[this.dayType].list
+                //    console.log(this.rankBookList)
                 }
              })
            }
         },
         created(){
+        //   this.handleBook()
           this.handleInitDay()  
         }
      }

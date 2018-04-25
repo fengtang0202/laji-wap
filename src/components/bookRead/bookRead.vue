@@ -1,24 +1,30 @@
 <template>
      <div>
-        <div :style='{backgroundColor:backgroundColor}'>
+       <div :style='{backgroundColor:backgroundColor}'>
             <app-feed  :param='rewordParam' ref="child"  @click="handleClosefeed()"></app-feed>
             <app-feedpepper :param='rewordParam'  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper>
             <AppMinpepper :param='rewordParam' ref='minFeedpepper' @click='hanldeCloseMinFeedPepper()'></AppMinpepper>
-   <div class='bookRead'>
+  <div class='bookRead'>
+       <div class='clickDiv' @click='up()'>
+
+      </div>
     <div class='feed' :class='{show2:feedShow}'>
-            <div style='float:left'>
-               <img :src="item.img"  @click='handleFeedTap(index)'  class='pepper' :key='index' v-for='(item,index) in feedList' alt="">
-            </div>
             <div class='nav' @touchend='show=!show'>
               <img src="../../assets/images/dropdown@3x.png"   alt="">
             </div>
-     </div>
+            <div style='float:right'>
+               <img v-lazy='item.img' :style='{width:index==1&&".71rem"||index==2&&".57rem"}' @click='handleFeedTap(index)'  class='pepper' :key='index' v-for='(item,index) in feedList' alt="">
+            </div>
+            <div class='black' @click="$router.go(-1)">
+              <img  src="../../assets/images/left.png" alt="">
+            </div>
+    </div>
      <ul class='nav_list' :class='{show1:show}'>
          <li v-for='(item,index) in navList' :key='index' @click='handleTap(item.key)'>{{item.text}}</li>
      </ul>
     <ul class='share_list' :class='{show3:shareShow}'>
         <li v-for='(item,index) in shareList'  @click='handleShare(index)' :key='index'>
-            <img :src="item.img" alt="" :class='item.css'>
+            <img v-lazy='item.img' alt="" :class='item.css'>
             <p>{{item.text}}</p>
         </li>
         <li></li>
@@ -41,16 +47,6 @@
                   <li v-for='(item,index) in colorList' :key='index' @click='changebgColor(item)' :style='{"backgroundColor":item}'></li>
               </ul>
          </div>
-         <!-- <div class='last_nav'>
-              <ul>
-                  <li v-for='item in bottomNavList' @click='handleTap(item.key)'>
-                      <div  class='nav_d'>
-                         <img :src="item.img" alt="">
-                         <span style='font-size:.12rem;'>{{item.text}}</span>
-                      </div>
-                  </li>
-              </ul>
-         </div> -->
          <div v-transfer-dom>
           <confirm v-model="ConfirmShow"
             color='#000'
@@ -59,34 +55,17 @@
             @on-confirm="onConfirm">
           <p style="text-align:center;color:#333333;font-size:.13rem;">{{message}}</p>
           </confirm>
-      </div>
+        </div>
     </div>
-    <!-- <div style='text-align:center;padding-top:.1rem;' v-if='preShow'>
-         <button  class='next_btn' @click='getPreChapterText()'>加载上一章</button>
-    </div> -->
-  <!-- <v-touch @press='up'>     -->
-  <!-- </v-touch> -->
-   <!-- <scroll-view
-          :data="bookText"
-          :pulldown="pulldown"
-          @pulldown="loadData" style='height:500px;'>     -->
-      <div class='book_content'  @click='up()'   ref='content' :style='{"fontSize":fontSize+"em","backgroundColor":backgroundColor,"color":fontColor}' :class='{changeColor:show}'>
-         <!-- <h3>{{bookName}}</h3> -->
+      <div class='book_content'     ref='content' :style='{"fontSize":fontSize+"em","backgroundColor":backgroundColor,"color":fontColor}' :class='{changeColor:show}'>
          <h3>{{chapterName}}</h3>
-      <!-- <p style='font-size:.2rem;text-align:center;'>{{chapterName}}</p> -->
-      <!-- <pull-to :bottom-load-method="loadmore"   @bottom-state-change="stateChange">                      -->
           <p v-html='bookText' onselectstart="return false"></p>  
-         <!-- <div class="loading-wrapper"></div>  -->
-      <!-- </pull-to> -->
-      <!-- <div style='height:.5rem;width:100%;'></div> -->
       </div>
-    <!-- </scroll-view> -->
-         <!-- <button  class='next_btn' @click='getNextChapterText()'>加载下一章</button> -->
           <div class='last_nav'  :style='{transform: lastNav?"translate(0,0)":"translate(0,.54rem)",opacity:lastNav?1:0}'>
               <ul>
                   <li v-for='item in bottomNavList' :key='item.key' @click='handleTap(item.key)'>
                       <div  class='nav_d'>
-                         <img :src="item.img" alt="">
+                         <img v-lazy='item.img' alt="">
                       </div>
                          <p class='nav_text' :class='item.css' >{{item.text}}</p>                      
                    </li>
@@ -152,20 +131,20 @@ import {mapState,mapActions} from 'vuex'
 import AppFeed from '@/components/feed/feed.vue'
 import AppFeedpepper from '@/components/feed/feedPepper.vue' 
 import AppMinpepper from '@/components/feed/minPepper'
-  import BScroll from 'better-scroll'
+//   import BScroll from 'better-scroll'
 //   import Directory from '../directory/directory'
      export default{
          data(){
             return{
-                contentHeight:0,
+               contentHeight:0,
                showDirectory:false, 
                pulldown:true,
                bookText:'',
                isScroll:false,
                fontSize:1.125,
                lastNav:false,
-               fontColor:'#000',
-               backgroundColor:'#fff',
+               fontColor:'#685640',
+               backgroundColor:'#faefda',
                show:false,
                message:'',
                btn:true,
@@ -194,6 +173,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                isBook:false,
                scroll:0,
                clientHeight:0,
+               backLink:'',
                scrollHeight:0,
                feedList:[
                    {img:require('../../assets/images/Group 3@3x.png')},
@@ -242,10 +222,15 @@ import AppMinpepper from '@/components/feed/minPepper'
                 this.addReadHistory()
             }
          },
+        //   beforeRouteLeave(to,from,next){
+        //       if(to.path=='/directory'){
+        //           this.$router.push({path:'/bookDetails',query:{bookId:this.readBookId}})
+        //           next()
+        //       }else{
+        //          next()
+        //       }
+        //   },
          methods:{
-             loadData(){
-                 this.getNextChapterText()
-             },
              ...mapActions(['getUserInfo']),
              handleFontSize(res){
                   res===1&&this.handleFontSizeAdd()
@@ -315,11 +300,16 @@ import AppMinpepper from '@/components/feed/minPepper'
                         this.$vux.toast.show('作者偷懒中....')
                         return;
                     }
-                    if (res.returnCode==1000) {
-                        this.$vux.toast.show({text:'服务器异常',type:'warn'})
-                        return ;
-                    }
-                   this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;').replace(/[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}/g,' ')
+                    // if (res.returnCode==1000) {
+                    //     this.$vux.toast.show({text:'服务器异常',type:'warn'})
+                    //     return ;
+                    // }
+                    let words=res.data.chapterInfo.chapterLength
+                    let money = words/1000
+                    // words%1000>0&&(money+=1)    
+                   //1000 字 3分钱
+                    this.price=parseInt(money*3)
+                    this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;').replace(/[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}/g,' ')
                 //    this.bookText=this.bookText.concat(res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;').replace(/[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}/g,' '))
                    this.preNextShow=true
                    this.bookName=res.data.bookInfo.bookName
@@ -342,6 +332,7 @@ import AppMinpepper from '@/components/feed/minPepper'
              getNowChapterId(){
                    Param_Get_Resful(this,`/api/chapter-allchapters/${this.readBookId}`,res=>{
                       this.chapterList=res.data
+                      console.log(this.chapterList)
                       for(let n in this.chapterList){
                         if(this.chapterList[n].id==this.chapterId){
                             this.chapterIdNum=n
@@ -505,12 +496,13 @@ import AppMinpepper from '@/components/feed/minPepper'
                         this.$vux.toast.show({text:res.msg})
                         this.btn=false
                     }else if(res.returnCode===400){
-                        this.$vux.toast.show({text:res.msg})  
-                        this.$router.push({path:'/Login',query:{redirect:'/bookRead'}})
+                        // this.$vux.toast.show({text:res.msg})  
+                        this.$router.push({path:'/Login',query:{redirect:`/bookRead?isvip=${this.isvip}&price=${this.price}&bookId=${this.readBookId}&chapterId=${this.chapterId}`}})
                       }
                   })
                 }else{
-                    this.$router.push({path:'/Login',query:{redirect:'/bookRead'}})
+                    // this.$router.push({path:'/Login',query:{redirect:'/bookRead'}})
+                     this.$router.push({path:'/Login',query:{redirect:`/bookRead?isvip=${this.isvip}&price=${this.price}&bookId=${this.readBookId}&chapterId=${this.chapterId}`}})                    
                 }
             },
             handleIsAuto (type='update') {
@@ -545,8 +537,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                 this.scroll = document.documentElement.scrollTop || document.body.scrollTop;
                 this.clientHeight=document.documentElement.clientHeight||document.body.clientHeight;
                 this.scrollHeight=document.body.scrollHeight||document.documentElement.scrollHeight            
-                console.log(this.scroll)
-               if( this.scroll+ this.clientHeight==this.scrollHeight){
+              if( this.scroll+ this.clientHeight==this.scrollHeight){
                 　　　　this.lastNav=true;
                        this.feedShow=true;
                 }else{
@@ -562,17 +553,18 @@ import AppMinpepper from '@/components/feed/minPepper'
                 this.btnShow&&this.buyChapter()
                 this.handleIsAuto('search')
             }
+            console.log(this.backLink,'from')
             this.$nextTick(()=>{
                 window.addEventListener('scroll', this.menu)
             })
+         },
+         destroyed () {
+             window.removeEventListener('scroll',this.menu)
          },
         //给body加  padding-bottom
          created(){
             this.getBookText()
             this.getNowChapterId()
-            this.$nextTick(()=>{
-                console.log(document.querySelector('.book_content').offsetHeight,222)
-            })
          }
      }
 </script>

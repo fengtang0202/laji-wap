@@ -64,7 +64,7 @@
                         <p style='color:#F77583;float:right' @click='handleReply()'>发表</p>
                     </div>
                     <div class='text_box'>
-                       <textarea   v-focus v-model='replyText' style='width:100%;height:1.2rem;border:0;outline:none;padding:.1rem' ></textarea>
+                       <textarea  placeholder="请输入回复" v-focus v-model='replyText' style='width:100%;height:1.2rem;border:0;outline:none;padding:.1rem' ></textarea>
                     </div>
                 </div>
             </popup>

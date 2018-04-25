@@ -16,8 +16,7 @@
          <div class='book_detail_wrap' v-for='item in ReadNowList' @click="handleBookDetail(item.bookId)">
             <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
             <span style='font-size:.16rem;'>{{item.bookName|str(5)}}</span>
-            <!-- <span class='icon_update' v-if='item.bookStatus==0?true:false'>更新</span> -->
-            <img class='icon_update' src="../../assets/images/updateR.png"  v-if='item.bookStatus==0?true:false' alt="">
+            <img class='icon_update'  src="../../assets/images/updateR.png"  v-if='item.nowChapterid!=item.lastUpdateChapterId' alt="">
             <input type="checkbox" v-model="item.checked" v-if='delShow' class='del_btn'>
          </div>
          <div class='add_book' @click="handleGo()">
@@ -39,6 +38,7 @@
 import { Post_formData2,Post_formData} from '@/config/services'
 import { join } from 'path';
 import {mapActions,mapState} from 'vuex'
+import { resolve } from 'url';
     export default {
         data(){
             return{
@@ -50,7 +50,8 @@ import {mapActions,mapState} from 'vuex'
                 commendReadList:[],
                 ReadNowList:[],
                 delShow:false,
-                delId:[]
+                delId:[],
+                ReadHistoryList:[]
             }
         },
         computed:{
@@ -88,10 +89,11 @@ import {mapActions,mapState} from 'vuex'
                 Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/bookshelf-getuserbookshelf',res=>{
                       if(res.returnCode==200){
                           this.ReadNowList=res.data.list
+                          console.log(this.ReadNowList)
                           this.ReadNowList.forEach(value=>{
                               value.checked=false 
                          })
-                      }else if(res.returnCode){
+                      }else if(res.returnCode==500){
                           this.ReadNowList=[]
                      }
                 })
@@ -100,13 +102,13 @@ import {mapActions,mapState} from 'vuex'
                 !this.delShow&&this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
             },
             handleGo(){
-                this.$router.push({path:'/editorRecommend'})
+                this.$router.push({path:'/'})
             }
         },
-        mounted(){
+         mounted(){
             this.getCommendBook()
             this.getReadNow()
-        }
+         }
     }
 </script>
 <style lang='less' scoped>

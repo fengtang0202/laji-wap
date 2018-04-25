@@ -49,7 +49,8 @@
                     title_2:'首页',
                     link:'/'
                 },
-                volumeAndChapterlist:null
+                volumeAndChapterlist:null,
+                price:0
             }
         },
         components: {
@@ -57,7 +58,7 @@
         },
         directives: {
            TransferDom
-         },
+        },
         methods:{
             handleBack(){
                  window.history.go(-1);
@@ -70,11 +71,9 @@
                  Param_Get_Resful(this,'/api/books-volumeChapterList/'+this.readBookId,res=>{
                      if(res.returnCode===200){
                          this.isShow=false
-                         console.log(res.data.chapterInfo[0].resultList,1)
                          this.volumeAndChapterlist=res.data.chapterInfo
-                         console.log(this.volumeAndChapterlist)
-                          let a="#a"+this.chapterId
-                          this.goAnchor(a)
+                         let a="#a"+this.chapterId
+                         this.goAnchor(a)
                      }
                  })
             },
@@ -93,6 +92,7 @@
         mounted(){
            
         },
+        
         created () {
             // this.handleInit()
             this.handleGetVolumeChapter()

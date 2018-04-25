@@ -64,10 +64,12 @@
                 }
             },
             handleRegister(){
-                let checkPhone = /^1(3|4|5|6|7|8|9)\d{9}$/;
+                // let checkPhone = /^1(3|4|5|6|7|8|9)\d{9}$/;
                 let checkPassword = /^.{6,20}$/;
                 let checkName = /^.{1,20}$/;
-                    if(checkPhone.test(this.phone)&&checkPassword.test(this.pwd)&&checkName.test(this.name)&&this.sex!==''){
+                    if(
+                        // checkPhone.test(this.phone)&&
+                        checkPassword.test(this.pwd)&&checkName.test(this.name)&&this.sex!==''){
                             noParam_Get(this,'/api/person-checkNickPhone/'+this.phone,res=>{
                                 if(res.returnCode==200){
                                     this.handleCheckname();
@@ -75,9 +77,11 @@
                                     this.$vux.toast.text(res.msg);
                                 }
                             })
-                    }else if(!checkPhone.test(this.phone)){
-                        this.$vux.toast.text('请输入正确手机号码');
-                    }else if(!checkPassword.test(this.pwd)){
+                    }
+                    // else if(!checkPhone.test(this.phone)){
+                    //     this.$vux.toast.text('请输入正确手机号码');
+                    // }
+                    else if(!checkPassword.test(this.pwd)){
                         this.$vux.toast.text('请输入6-20位的密码');
                     }else if(!checkName.test(this.name)){
                         this.$vux.toast.text('请输入小于20位的昵称');
@@ -131,19 +135,19 @@
                 },1000)
             },
             getCode(){
-                let checkPhone = /^1(3|4|5|7|8)\d{9}$/;
-                if(checkPhone.test(this.phone)){
+                // let checkPhone = /^1(3|4|5|7|8)\d{9}$/;
+                // if(checkPhone.test(this.phone)){
                      noParam_Get(this,'/api/person-checkNickPhone/'+this.phone,res=>{
                          if(res.returnCode==200){
                                 this.sendMessage();
                                 this.setCode();
                          }else{
-                            this.$vux.toast.text(res.msg);
+                            // this.$vux.toast.text(res.msg);
                          }
                      })
-                }else{
-                    this.$vux.toast.text('请输入正确手机号');
-                }
+                // }else{
+                //     this.$vux.toast.text('请输入正确手机号');
+                // }
             },
             setCode(){
                 if(!this.isOvertime){
@@ -156,7 +160,7 @@
                             if(res.returnCode==200){
                                 this.$vux.toast.text('验证码已发送');
                             }else{
-                                this.$vux.toast.text(res.msg);
+                                // this.$vux.toast.text(res.msg);
                             }
                         // })
                     })

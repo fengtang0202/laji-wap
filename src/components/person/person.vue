@@ -40,7 +40,7 @@
       </div>
       <div class='nav_list'>
           <div class='nav_item' v-for='(li,index) in navList' :title="li.title" :key='index' @click='handleLink(li.link)'>
-              <img :src="li.img"  alt="">
+              <img v-lazy='li.img'  alt="">
               <span>{{li.title}}</span>
               <img class='go' src="../../assets/images/more@3x.png" alt="">
           </div>
@@ -211,7 +211,7 @@
                   border-radius:.05rem;
                   margin:.1rem 0;
               .grade{
-                  background-color:#75D5F8; 
+                  background-color:#fb5e6f; 
                   height:.05rem;
                   border-radius:.05rem;
                   position: relative;
@@ -225,7 +225,7 @@
                     line-height: .13rem;
                     right:0;
                     top:-.04rem;
-                    background-color:#75D5F8;
+                    background-color:#fb5e6f;
                   }
                 }   
               }

@@ -6,7 +6,7 @@
                   <p style='font-size:.16rem'>{{item.bookName|str(9)}}</p>
                   <p style='color:#999'>
                       <span>作者:{{item.writerName|str(5)}}</span>
-                      <span class='gold' v-if='item.tempTicketSum>0'>{{item.tempTicketSum|tempTicketSum}}{{RankType|type}}</span> 
+                      <span class='gold' v-if='RankType!=4&&RankType!=5&&RankType!=7'>{{item.tempTicketSum|tempTicketSum}}{{RankType|type}}</span> 
                   </p>
                   <p style='color:#666;'>{{item.bookIntroduction|str(22)}}</p>
                   <img v-if='index===0' class='metal' src="../../assets/images/gold.png" alt="">
@@ -89,6 +89,7 @@
          width:2.7rem;
          float:right;
          margin-right:.05rem;
+         overflow: hidden;
          .book_item_wrap{
              height:1.24rem;
              margin-bottom:.07rem;
@@ -108,7 +109,7 @@
                     color:#F73D51;
                     border:1px solid #F73D51;
                     position: absolute;
-                    right:.16rem;
+                    right:0rem;
                     border-radius: 4px;
                     font-size: .12rem;
                     padding:0 .04rem;

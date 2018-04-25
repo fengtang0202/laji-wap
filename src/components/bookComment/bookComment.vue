@@ -18,7 +18,7 @@
         </div>
         <!--  -->
         </div>
-        <No v-if='!showNoContent'></No>
+        <No v-if='showNoContent' message='暂无评论'></No>
         <div class='bottom_x'>
    
         </div>
@@ -86,7 +86,8 @@ export default {
                       this.hotCommentcount=res.data.length
                       console.log(this.hotCommentList)
                   }else if(res.returnCode===800){
-                      this.showContent=false                     
+                    //   this.showContent=false
+                      this.showNoContent=true                     
                   }
               }) 
           },
@@ -129,14 +130,14 @@ export default {
                   if(res.returnCode==200){
                       if(res.data.list.length!=0){
                       this.showContent=true
-                      this.showNoContent=true
                       this.newCommentList=res.data.list
                       this.newCommentcount=res.data.list.length
                       this.bookName=res.data.list[0].bookName
+                      }else{
+                         this.showNoContent=true                              
                       }
                   }else{
-                      this.showContent=false
-                      this.showNoContent=false    
+                         this.showNoContent=true    
                   }
               }) 
           },

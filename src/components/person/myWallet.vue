@@ -1,11 +1,15 @@
 <template>
    <div class='wallet'>
      <div class='wallet_wrap'>
-         <p>
-             <img src="../../assets/images/backw@3x.png" @click="$router.go(-1)" style='width:.11rem;height:.2rem;margin-left:.1rem' alt="">
-             <span style='margin-left:1.2rem;font-size:.18rem;'>我的钱包</span>
-             <span style='margin-left:.8rem;' @click='handleGo("/dealManage")'>交易记录</span>
-         </p>
+         <div class='width:100%;height:.44rem;'  @click="$router.go(-1)">
+             <div class='back'>
+               <img src="../../assets/images/backw@3x.png" alt="">
+             </div>
+             <div style='height:.44rem;line-height:.44rem;'>
+               <span style='margin-left:1rem;font-size:.18rem;'>我的钱包</span>
+               <span style='margin-left:.5rem;' @click='handleGo("/dealManage")'>交易记录</span>
+             </div>
+         </div>
          <p style='text-align:center;margin-top:.1rem;'>
              <span style='font-size:.3rem;'>{{userInfo.userMoney}}</span>
              <span style='font-size:.12rem'>辣椒</span>
@@ -101,6 +105,16 @@ import {Post_formData2} from '@/config/services'
              }
          }
       } 
+      .back{
+          float:left;
+          width:.44rem;
+          height:.44rem;
+          line-height:.44rem;
+          text-align:center;
+          img{
+              width:.11rem;height:.2rem;
+          }
+      }
       .peper{
          height:.57rem;
          border-bottom: 1px solid #EFEFEF;

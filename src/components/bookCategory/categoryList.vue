@@ -20,20 +20,21 @@
                    categoryList:[]
                }
            },
-           mounted(){
+          mounted(){
              this.isShow=true;
              noParam_Get(this,'/api/ranking-classification',res=>{
                  if(res.returnCode==200){
                      this.isShow=false;
                      this.categoryList=res.data
+                     console.log(res.data)
                  }else{
-                    this.$vux.toast.text(res.msg);
+                    // this.$vux.toast.text(res.msg);
                  }
              })
            },
          methods: {
              handleToDetail(res,name){
-                this.$router.push({path:'/categoryDetail',query:{categoryId:res,classificationName:name}})
+                this.$router.push({path:'/categoryDetail',query:{categoryId:res,classificationName:name,order:0,word:0,status:0,updateTime:0}})
              }
           }
        }

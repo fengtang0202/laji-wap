@@ -139,21 +139,21 @@
                             this.bookList = res.data.HostXiaoBianRecommend;
                             this.pictureList = res.data.pictureCarousel;
                         }else{
-                            this.$vux.toast.text(res.msg);
+                            // this.$vux.toast.text(res.msg);
                         }
                 })
             },
             handle(link,msg){
-                if(this.isLogin){
+                // if(this.isLogin){
                     this.$router.push(link)
-                  }else{
-                    this.$vux.toast.text(msg)
-                }
+                //   }else{
+                    // this.$vux.toast.text(msg)
+                // }
              },
             handleTap(index){
                   index==0&&this.$router.push('/')
-                  index==1&&this.handle('/bookRack','登录后才能看书架')
-                  index==2&&this.handle('/payMoney','登录后才能充值')
+                  index==1&&this.handle('/bookRack')
+                  index==2&&this.handle('/payMoney')
                   index==3&&this.handleDownApp()
                   index==4&&this.$router.push('/contactUs')
             },
@@ -180,8 +180,8 @@
                                 this.newList= this.newList.concat(res.data.list);
                             }
                             this.lastPage=res.data.lastPage
-                      }else{
-                            this.$vux.toast.text(res.msg);
+                          }else{
+                            // this.$vux.toast.text(res.msg);
                         }
                 })
             },

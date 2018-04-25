@@ -153,13 +153,16 @@
             ...mapActions(['setReadCommentInfo','loginAction','getUserInfo']),
             handleRead (index) {
                  this.isActive = index;
+                  if(index===0){
+                      this.handleImmediatelyRead()
+                      return;
+                  }  
                  if(this.isLogin){
                      index===1&&this.handleIsAuto()
                      index===2&&this.handleBookRack()
                  }else{
                     this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 
                  }
-                 index===0&&this.handleImmediatelyRead()  
            },
             //由于之前考虑了直接看书是从目录一个地方跳转到bookRead 
             //没有考虑立即阅读,这样就导致我去看另一本书的时候chapterId 还是从目录跳转时候的值

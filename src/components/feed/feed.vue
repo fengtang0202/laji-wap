@@ -77,6 +77,8 @@
                         this.dilogShow = false;
                         }else if(res.returnCode==500){
                           this.$vux.toast.show({text:res.msg,type:'cancel'}) 
+                        }else if(res.returnCode==400){
+                            this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.$route.query.bookId}})                            
                         }
                      })
              }

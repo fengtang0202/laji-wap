@@ -3,7 +3,7 @@
        <swipeout>
          <swipeout-item class='message_item' v-for='(item,index) in messageList' :key='index'  transition-mode="follow">               
                   <div  slot="right-menu">
-                    <swipeout-button @click.native="onButtonClick(item,1)" type="primary">查看</swipeout-button>
+                    <!-- <swipeout-button @click.native="onButtonClick(item,1)" type="primary">查看</swipeout-button> -->
                     <swipeout-button @click.native="onButtonClick(item,0)" type="warn">删除</swipeout-button>                      
                   </div>
            <ul slot="content" class="message_content vux-1px-t">

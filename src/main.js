@@ -6,14 +6,16 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css';
 import axios from 'axios'
 import FastClick from 'fastclick'
-import VueTouch from 'vue-touch'
-import scrollView from '../src/components/common/scrollView '
+import VueTouch from 'vue-touch';
+import  VueLazyload from 'vue-lazyload'
+// import scrollView from '../src/components/common/scrollView '
 import No from '../src/components/common/no'
 import downApp from '../src/components/common/downApp'
 import { ToastPlugin,WechatPlugin,Cell,Group,Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
 Vue.config.productionTip = false
 Vue.use(iView)
 Vue.use(WechatPlugin)
+Vue.use(VueLazyload)
 import headerComponent from '@/components/common/header'
 import Load from '@/components/common/Load'
 import noContent from '@/components/common/noContent'
@@ -51,18 +53,18 @@ Object.keys(filters).forEach(key => {
 import directives from "./config/directives"
 Vue.use(directives);
 
-// axios.get('/api/weChartShareSign?URL=https://www.lajixs.com').then(data=>{
-//     let config=data.data.data
-//     console.log(config)
-//     Vue.wechat.config({
-//         debug: false, 
-//         appId: config.appId,
-//         timestamp:config.timestamp,
-//         nonceStr: config.nonceStr,
-//         signature: config.signature,
-//         jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', 'chooseImage']
-//     })
-// })
+axios.get('/api/weChartShareSign?URL=https://www.lajixs.com').then(data=>{
+    let config=data.data.data
+    console.log(config)
+    Vue.wechat.config({
+        // debug: false, 
+        appId: config.appId,
+        timestamp:config.timestamp,
+        nonceStr: config.nonceStr,
+        signature: config.signature,
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', 'chooseImage']
+    })
+})
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth) {// 判断该路由是否需要登录权限

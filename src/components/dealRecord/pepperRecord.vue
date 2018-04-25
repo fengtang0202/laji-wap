@@ -2,16 +2,16 @@
 <div>
   <div class='pay_wrap' v-if='show'>
               <div class='pay_title'>
-                <p style='margin-left:.2rem;'>时间</p>
-                <p style='margin-left:.4rem;'>作品名称</p>
-                <p>数量</p>
-                <p>状态</p>
+                <p >时间</p>
+                <p>作品名称</p>
+                <p style='width:25%'>数量</p>
+                <p style='width:10%'>状态</p>
               </div>
           <div class='pay_list' v-for='item in List '>
                 <p >{{item.giveDateTime|formatDate2}}</p>
-                <p>{{item.bookName|str(5)}}</p>
-                <p>{{item.goldenTicketCount}}</p>
-                <p>成功</p>
+                <p>{{item.bookName|str(7)}}</p>
+                <p class='add1'>{{item.goldenTicketCount}}</p>
+                <p class='add'>成功</p>
           </div>
             <infinite-loading spinner='bubbles' @infinite="onInfinite" ref="infiniteLoading">
           <span slot="no-more">
@@ -22,7 +22,7 @@
           </span>
          </infinite-loading>
   </div>
- <No v-if='!show' :source='source'></No>
+ <No v-if='!show' message='暂无记录'></No>
 </div>
 </template>
 <script>
@@ -34,10 +34,6 @@ export default{
            List:[],
            show:true,
            page:0,
-            source:{
-                img:require('../../assets/images/1.png'),
-                text:'没有相关数据'
-            }
         }  
      },
      computed:{
@@ -81,7 +77,7 @@ export default{
         //    margin-left:.1rem;
          p {
              float:left;
-             width:20%;
+             width:30%;
              text-align: center;
          }
        }
@@ -89,6 +85,7 @@ export default{
            overflow: hidden;
            font-size: .14rem;
            margin-left:.1rem;
+           position: relative;
             p{
                float: left;
                text-align: center;
@@ -96,6 +93,14 @@ export default{
                height:.4rem;
                line-height: .4rem;
                border-bottom:1px solid #E9E9E9;               
+            }
+            .add{
+                position: absolute;
+                right:0;
+            }
+            .add1{
+                position: absolute;
+                right:.7rem
             }
        }
    }

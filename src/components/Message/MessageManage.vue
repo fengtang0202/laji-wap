@@ -27,7 +27,7 @@ import {Param_Get_Resful,Post_formData2,formatDate} from '@/config/services'
                  transitionName: 'slide-left',
                     tabList:[
                         {title:'通知',link:'/MessageManage'},
-                        {title:'私信',link:'/MessageManage/personalLetter'},
+                        // {title:'私信',link:'/MessageManage/personalLetter'},
                         {title:'评论',link:'/MessageManage/commentReply'}
                     ],
                     content:0,
@@ -57,11 +57,11 @@ import {Param_Get_Resful,Post_formData2,formatDate} from '@/config/services'
                     case '/MessageManage':
                        this.showRouter=0
                        break;
-                    case '/MessageManage/personalLetter':
-                        this.showRouter=1
-                        break;
+                    // case '/MessageManage/personalLetter':
+                    //     this.showRouter=1
+                    //     break;
                     case '/MessageManage/commentReply':
-                        this.showRouter=2
+                        this.showRouter=1
                 }
             }
          },

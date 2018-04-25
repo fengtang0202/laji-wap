@@ -2,16 +2,16 @@
 <div>
   <div class='pay_wrap' v-if='show'>
               <div class='pay_title'>
-                <p style='margin-left:.2rem;'>时间</p>
-                <p style='margin-left:.4rem;'>作品名称</p>
-                <p>数量</p>
-                <p>状态</p>
+                <p>时间</p>
+                <p>作品名称</p>
+                <p style='width:20%;'>数量</p>
+                <p style='width:15%'>状态</p>
               </div>
           <div class='pay_list' v-for='item in List '>
-                <p >{{item.giveDateTime|formatDate2}}</p>
-                <p>{{item.bookName|str(5)}}</p>
-                <p>{{item.recommendTicketCount}}</p>
-                <p>成功</p>
+                <p>{{item.giveDateTime|formatDate2}}</p>
+                <p>{{item.bookName|str(8)}}</p>
+                <p class='add1'>{{item.recommendTicketCount}}</p>
+                <p class='add'>成功</p>
           </div>
           <infinite-loading spinner='bubbles' @infinite="onInfinite" ref="infiniteLoading">
           <span slot="no-more">
@@ -84,14 +84,16 @@ export default{
         //    margin-left:.1rem;
          p {
              float:left;
-             width:20%;
+             width:30%;
              text-align: center;
          }
+        
        }
        .pay_list{
            overflow: hidden;
            font-size: .14rem;
            margin-left:.1rem;
+           position: relative;
             p{
                float: left;
                text-align: center;
@@ -100,6 +102,14 @@ export default{
                line-height: .4rem;
                border-bottom:1px solid #E9E9E9;               
             }
+            .add{
+             position: absolute;
+             right:.1rem;
+           }
+           .add1{
+               position: absolute;
+               right:.8rem;
+           }
        }
    }
 </style>

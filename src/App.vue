@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app"  v-cloak>
       <!-- <transition :name="transitionName"> -->
       <router-view class="child-view"></router-view>
       <!-- </transition> -->
@@ -64,5 +64,5 @@ export default {
           transform: translate(-30px, 0);
       }
   }
-
+[v-cloak]{ display:none} 
 </style>

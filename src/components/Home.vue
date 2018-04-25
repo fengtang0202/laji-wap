@@ -122,7 +122,6 @@
             }
             .logo_three{
                 float:right;
-                border-radius: 50%;
                 height:.5rem;
                 width:.5rem;
                 text-align: right;
@@ -133,6 +132,7 @@
                     width:.34rem;
                     height:.33rem;
                     vertical-align: middle;
+                    border-radius: 50%;
                 }
             }
         }

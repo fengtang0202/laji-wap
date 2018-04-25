@@ -18,8 +18,10 @@
                 <div class="hostroy" >
                     <div class="hostroy_p">历史搜索</div>
                     <div class="hostroy_text"  v-for="(item,index) in hotwordList"  :key='index'>
-                       <img   @click='handleHotLabel(item)' src="../../assets/images/copy@2x.png">
-                       <span  @click='handleHotLabel(item)'>{{item}}</span>
+                       <div @click='handleHotLabel(item)'>
+                         <img   src="../../assets/images/copy@2x.png">
+                         <span>{{item}}</span>
+                        </div>
                        <span class='close' @click='hanldeDel(item)'></span>
                     </div>
                 </div>
@@ -60,7 +62,7 @@
                         </span>
                     </infinite-loading>
              </div>
-             <No   v-if="!message"> </No>
+             <No   v-if="!message" message='暂无匹配到相关书籍'> </No>
         </div>
        
    </div>
@@ -81,10 +83,6 @@ import { mapActions, mapState } from 'vuex';
                  message:true,
                  hotLabel:true,
                  hotwordList:[],
-                  source:{
-                    img:require('../../assets/images/2.png'),
-                    text:'暂无相关数据'
-                }
             }
         },
          components: {

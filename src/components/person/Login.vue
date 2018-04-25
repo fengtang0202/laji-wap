@@ -2,7 +2,7 @@
     <div id="Login">
         <app-load></app-load>
         <div class="title">登录</div>
-        <input type="text" class="oInput"  placeholder="请输入手机号" v-model.trim="phone">
+        <input type="text" class="oInput"   placeholder="请输入手机号" v-model.trim="phone">
         <input type="password" class="oInput" placeholder="请输入密码"  v-model.trim="password">
         <div class="re_radio">
             <img src="../../assets/images/login.png" class="left_d" v-if="show" @click="handleCheck()">
@@ -80,9 +80,9 @@
             },
             loginIn(){
                 var self = this;
-                let checkPhone=/^1(3|4|5|6|7|8|9)\d{9}$/;
+                // let checkPhone=/^1(3|4|5|6|7|8|9)\d{9}$/;
                 // let checkPassword = /^.{6,20}$/;
-                    if (checkPhone.test(this.phone)) {
+                    // if (checkPhone.test(this.phone)) {
                         let options={
                             userName:this.phone,
                             userPassword:this.password.length>20?this.password:md5(this.password),
@@ -91,7 +91,6 @@
                         Post_formData2(this,options,'/api/person-login',res=>{
                                 if(res.returnCode==200){
                                       let userInfo=res.data
-                                    // 登录状态改变0 是未登录 1 是登录
                                     this.loginAction(true)
                                     this.getUserInfo(userInfo)
                                     this.$vux.toast.text('登录成功!')
@@ -102,11 +101,11 @@
                                     this.$vux.toast.text(res.msg);
                               }
                           })
-                    }else if(!checkPhone.test(this.phone)){
-                         this.$vux.toast.text('请输入正确的手机号')
-                    }else if(!checkPassword.test(this.password)){
-                        this.$vux.toast.text('请输入6-20位的密码')
-                    }
+                    // }else if(!checkPhone.test(this.phone)){
+                    //      this.$vux.toast.text('请输入正确的手机号')
+                    // }else if(!checkPassword.test(this.password)){
+                    //     this.$vux.toast.text('请输入6-20位的密码')
+                    // }
             }
         },
         created(){
@@ -126,7 +125,7 @@
 </script>
 
 <style lang="less" scoped>
-    #Login{
+   #Login{
         width:100%;
         height:6.67rem;
         background-color: #fff;

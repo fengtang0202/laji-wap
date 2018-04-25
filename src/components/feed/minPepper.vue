@@ -9,7 +9,7 @@
             <p class='pan'>{{number}}</p>
             <p class="op"  @click='handleAdd()'>＋</p>
             <p class="op" @click='number=userInfo.userRecommendTicket' style="margin-left:.15rem;">ALL</p>                 
-            <button class="btn" @click='handleReword()'>投喂</button> 
+              <button class="btn" @click='handleReword()'>投喂</button> 
             </div>
         </div>
     </div>
@@ -60,7 +60,7 @@
             },
             handleClose(){
                 this.backShow = !this.backShow;
-                this.dilogShow = !this.dilogShow;
+                this.dilogShow = !this.dilogShow;                
             },
             handleReword(){
                let options = {
@@ -73,8 +73,9 @@
                       if(res.returnCode===200){
                        this.$vux.toast.show({text:res.msg}) 
                     //    这里是有点问题的
-                       this.money=0
-                       this.userInfo.userRecommendTicket=0
+                       this.money-=this.number
+                    //    this.userInfo.userRecommendTicket-=this.number
+                       JSON.parse(localStorage.getItem('vuex')).userInfo.userRecommendTicket-=this.number                    
                        this.backShow = false;
                        this.dilogShow = false;
                         }else if(res.returnCode==500){
@@ -82,7 +83,8 @@
                           this.backShow = false;
                           this.dilogShow = false;
                         }else if(res.returnCode==400){
-                            this.$vux.toast.show({text:res.msg,type:'warn'})
+                            // this.$vux.toast.show({text:res.msg,type:'warn'})
+                            this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.$route.query.bookId}})
                      }
                  })
              },
