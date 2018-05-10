@@ -22,7 +22,6 @@
              <div class="btn" v-for="(item,index) in cate"  :key='index' :class="{isAdd:homeIndex===index}" @click="handleGo(item.res,index)">
                 <span v-html="item.name"></span>
              </div>
-             1111
          </div>
           <keep-alive>
              <router-view style='width:100%;height:100%;'></router-view>
