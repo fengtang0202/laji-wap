@@ -49,7 +49,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.defaults.withCredentials = true
 axios.interceptors.response.use(
     response => {
-        if (response.data.returnCode === 400){
+        if (response.data.returnCode === 400&&store.state.isLogin){
             store.commit('changeLogin', false)
             store.commit('getUserInfo',null)
             router.push({ path: '/Login', query: { redirect: router.currentRoute.fullPath}})
@@ -57,7 +57,7 @@ axios.interceptors.response.use(
         }else if(response.data.returnCode==500){
             // Vue.$vux.toast.text(response.data.msg); 
             return response;
-        }else{
+        }else{  
             return response
         } 
     }
