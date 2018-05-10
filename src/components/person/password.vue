@@ -2,7 +2,16 @@
    <div id="password">
         <app-load></app-load>
         <div class="title">忘记密码</div>
-        <input type="text" class="oInput" placeholder="请输入手机号" v-model.trim="phone">
+        <div class="phoneInput">
+            <div class='areaCode' @click='handleGo()' >
+                <span>{{areaCode|add}}</span>
+                <img src="../../assets/images/Combine@3x.png"  alt="">
+            </div>
+            <div class='phone_wrap'>
+              <input  type="text"  placeholder="请输入手机号" v-model.trim="phone">
+           </div>
+        </div>
+        <!-- <input type="text" class="oInput" placeholder="请输入手机号" v-model.trim="phone"> -->
         <div class="codeInput">
               <div>
                 <input type="text"  placeholder="请输入验证码" v-model.trim="verificationCode">
@@ -24,20 +33,30 @@
                 verificationCode:'',
                 isOvertime: false,
                 word:'获取验证码',
-                iscode:false
+                iscode:false,
+                areaCode:this.$route.query.value
             }
         },
+         filters: {
+           add(res){
+              return `+${res}`
+           }  
+        },
         methods:{
+             handleGo(){
+                this.$router.push({path:'/areaCode',query:{type:2}})
+            },   
             ...mapActions(['setPhone','setUserCode']),
             getCode(){
                 // let checkPhone=/^1(3|4|5|6|7|8|9)\d{9}$/;
                 // if (checkPhone.test(this.phone)) {
-                    noParam_Get(this,'/api/person-checkNickPhone/'+this.phone,res=>{
+                   let phone = this.areaCode==86?this.phone:this.areaCode+this.phone
+                    noParam_Get(this,'/api/person-checkNickPhone/'+phone,res=>{
                         if(res.returnCode ==200){
                             this.$vux.toast.text('您的手机号未注册');
                         }else{
                             //将手机号码存到vuex
-                            this.setPhone(this.phone)
+                            this.setPhone(phone)
                             this.sendMessage();
                             if(!this.isOvertime){
                                 let options={
@@ -47,7 +66,7 @@
                                 Post_formData2(this,options,'/api/verification/sys-getShortMessage',res=>{
                                     // this.showMessage(res,()=>{
                                         if(res.returnCode==200){
-                                            this.$vux.toast.text('验证码已发送');
+                                            this.$vux.toast.text(res.msg);
                                         }else{
                                             // this.$vux.toast.text(res.msg);
                                         }
@@ -190,6 +209,39 @@
             color:#fff;
             line-height:.44rem;
             font-size:.18rem;
+        }
+        .phoneInput{
+            width:3.04rem;
+            height:.44rem;
+            border-radius:4px;
+            border:1px solid #979797;
+            margin:.2rem auto;
+            .areaCode{
+              width:.7rem;
+              height:.44rem;
+              float: left;
+              text-align: center;
+              line-height: .44rem;
+              img{
+                  width:.15rem;
+                  height:.15rem;
+              }
+            //   input{
+            //       background-color: #fff;
+            //   }
+            }
+            .phone_wrap{
+                width:2.2rem;
+                height:.44rem;
+                float:right;
+                input{
+                    width:2rem;
+                    height:.4rem;
+                    border:none;
+                    outline: none;  
+                }
+            }
+
         }
    }
 </style>

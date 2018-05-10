@@ -3,15 +3,7 @@
        <div class='day'>
            <span class='day_btn' v-for='(item,index) in dayList' :key='item.key' :style='{"color":changeDayColor===index?"#FE5C6C":"#000"}' @click='handleTapDay(index,item.key,item.link)'>{{item.day}}</span>
        </div> 
-     <bookRankList :dataList='rankBookList' :dayList='dayList' RankType='8'></bookRankList>
-      <infinite-loading @infinite="infiniteHandler">
-           <span slot="no-more">
-            目前暂无更多书籍
-          </span>
-          <span slot="no-results">
-            目前暂无更多书籍
-          </span>
-      </infinite-loading>
+     <bookRankList :dataList='rankBookList' :infiniteHandler='infiniteHandler' :dayList='dayList' RankType='8'></bookRankList>
    </div>
 </template>
 <script>

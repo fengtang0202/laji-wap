@@ -2,7 +2,7 @@
    <div class='book_comment_wrap'>
         <headerComponent :list="topList"></headerComponent>
         <div v-if='showContent'>
-        <div class='book_hot_comment'>
+          <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>热门评论({{hotCommentcount}})</p>
             <!-- commendItem -->
         <commendItem :list='hotCommentList'></commendItem>
@@ -14,9 +14,17 @@
         <div class='book_hot_comment'>
               <p style='font-szie:.18rem;'><span style='color:#F77583;font-weight:600;'>|</span>最新评论({{newCommentcount}})</p>
             <!-- commend item -->
-            <commendItem :list='newCommentList'></commendItem>             
+            <commendItem :list='newCommentList'></commendItem>  
+            <infinite-loading @infinite="infiniteHandler">
+                <span slot="no-more">
+                    目前暂无更多评论
+                </span>
+                <span slot="no-results">
+                    目前暂无更多评论
+                </span>
+           </infinite-loading>           
         </div>
-        <!--  -->
+        <!-- -->
         </div>
         <No v-if='showNoContent' message='暂无评论'></No>
         <div class='bottom_x'>
@@ -69,7 +77,8 @@ export default {
           newCommentList:[],
           newCommentcount:0,
           bookName:'',
-          readBookId:this.$route.query.bookId
+          readBookId:this.$route.query.bookId,
+          page:0
         }
     },
     computed: {
@@ -85,6 +94,7 @@ export default {
                       this.hotCommentList=res.data
                       this.hotCommentcount=res.data.length
                       console.log(this.hotCommentList)
+                      this.showContent=true
                   }else if(res.returnCode===800){
                     //   this.showContent=false
                       this.showNoContent=true                     
@@ -115,19 +125,42 @@ export default {
                              options.pseudonym=this.userInfo.pseudonym
                              options.userGrade=this.userInfo.userGrade
                              options.commentDateTime=this.timer
+                             this.newCommentcount+=1
                              this.newCommentList.unshift(options)
-                         }
+                         }else if(res.returnCode==400){
+                             this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})                             
+                        }else{
+                           this.$vux.toast.text(res.msg)  
+                        }
                      })
               } else {
-                  this.$vux.toast.text('字数不够')
+                  this.$vux.toast.text('评价不能为空!')
               }
              }else{
                   this.$vux.toast.show({text:'目前不支持表情!',type:'cancel'})
              }
           },
+          infiniteHandler($state){
+                this.page+=1
+                Post_formData2(this,{id:this.readBookId,type:1,startPage:this.page},'/api/comm-getcomminfo',res=>{
+                          if(res.returnCode==200){
+                            //   this.showContent=true
+                              this.newCommentList = this.newCommentList.concat(res.data.list);
+                               this.newCommentcount=res.data.total
+                                if(res.data.lastPage>this.page){ 
+                                    $state.loaded()
+                                    }else{
+                                    $state.complete()
+                                 }
+                              }else{
+                              $state.complete()                                
+                         }
+                    })
+              },
           getNewComment(){
                Post_formData2(this,{id:this.readBookId,type:1,startPage:1},'/api/comm-getcomminfo',res=>{
                   if(res.returnCode==200){
+                      console.log(res.data)
                       if(res.data.list.length!=0){
                       this.showContent=true
                       this.newCommentList=res.data.list
@@ -152,7 +185,6 @@ export default {
            handleShow(){
                if(this.isLogin){
                    this.show=!this.show
-                   
                }else{
                 this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
                }
@@ -160,7 +192,7 @@ export default {
     },
     mounted() {
         this.getHotComment()
-        this.getNewComment()
+        // this.getNewComment()
         this.getTime()
         // Post_formData2(this,"",'/api/person-checkLoginState',res=>{
         //     console.log(res)

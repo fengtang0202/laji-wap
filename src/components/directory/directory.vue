@@ -1,7 +1,7 @@
 <template>
  <div>
     <div id="directory">
-    <Loading :show="isShow"></Loading>
+    <!-- <Loading :show="isShow"></Loading> -->
         <headerComponent :list='topList'></headerComponent>
        <div class='readVolumeList' style='border-bottom:1px solid #EFEFEF;' :key='index' v-for='(item,index) in volumeAndChapterlist'>
                 <p class='volume_wrap'>

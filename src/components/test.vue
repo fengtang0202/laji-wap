@@ -4,7 +4,7 @@
    </div>
 </template>
 <script>
-import {getRecommendBookList} from '../config/getData'
+import {getRecommendBookList,login} from '../config/getData'
     export default{
         data(){
            return {

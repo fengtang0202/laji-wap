@@ -14,12 +14,12 @@
                 <p class='add'>成功</p>
           </div>
           <infinite-loading spinner='bubbles' @infinite="onInfinite" ref="infiniteLoading">
-          <span slot="no-more">
-            目前暂无更多记录
-          </span>
-          <span slot="no-results">
-            目前暂无更多记录
-          </span>
+            <span slot="no-more">
+                目前暂无更多记录
+            </span>
+            <span slot="no-results">
+                目前暂无更多记录
+            </span>
          </infinite-loading>
   </div>
   <No v-if='!show'></No>
@@ -52,7 +52,6 @@ export default{
              }
              Post_formData2(this,options,'/api/userRecommendTicketRecord',res=>{
                  if(res.returnCode==200){
-                     console.log(res)
                      this.List=this.List.concat(res.data.list)
                      if(res.data.lastPage>this.page){
                          $state.loaded()
@@ -80,7 +79,6 @@ export default{
            width:100%;
            margin-top:.1rem;
            line-height: .3rem;
-           border-bottom:1px solid #E9E9E9;
         //    margin-left:.1rem;
          p {
              float:left;
@@ -94,13 +92,13 @@ export default{
            font-size: .14rem;
            margin-left:.1rem;
            position: relative;
+           border-bottom:1px solid #E9E9E9;           
             p{
                float: left;
                text-align: center;
                min-width:20%;
                height:.4rem;
                line-height: .4rem;
-               border-bottom:1px solid #E9E9E9;               
             }
             .add{
              position: absolute;

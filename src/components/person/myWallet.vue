@@ -1,13 +1,13 @@
 <template>
    <div class='wallet'>
      <div class='wallet_wrap'>
-         <div class='width:100%;height:.44rem;'  @click="$router.go(-1)">
-             <div class='back'>
+         <div class='width:100%;height:.44rem;'  >
+             <div class='back' @click="$router.go(-1)">
                <img src="../../assets/images/backw@3x.png" alt="">
              </div>
-             <div style='height:.44rem;line-height:.44rem;'>
+             <div style='height:.44rem;line-height:.44rem;overflow:hidden;' @click='handleGo("/dealManage")'>
                <span style='margin-left:1rem;font-size:.18rem;'>我的钱包</span>
-               <span style='margin-left:.5rem;' @click='handleGo("/dealManage")'>交易记录</span>
+               <span style='margin-left:.5rem;width:.2rem;' >交易记录</span>
              </div>
          </div>
          <p style='text-align:center;margin-top:.1rem;'>
@@ -44,18 +44,13 @@ import {Post_formData2} from '@/config/services'
                   title_1:'我的钱包',
                   title_2:'首页',
                   link:'/'
-              }
+              },
+              showComponent:true
              }  
          },
          computed : {
               ...mapState(['userInfo'])
         }, 
-        mounted () {
-        this.getUserMoney()        
-        this.moneyList[0].price=this.userInfo.userGoldenTicket
-        this.moneyList[1].price=this.userInfo.userRecommendTicket
-        this.moneyList[2].price=this.userInfo.userReadTicket
-        },
          methods: {
              ...mapActions(['getUserInfo']),
              handleGo(res) {
@@ -65,17 +60,16 @@ import {Post_formData2} from '@/config/services'
                       Post_formData2(this,'','/api/person-info',res=>{
                             if(res.returnCode==200){
                                 this.getUserInfo(res.data) 
-                            }else{
-                                 this.$vux.toast.show({text:'身份过期,重新登录',type:'warn'})
-                                 this.getUserInfo(null)
-                             setTimeout(()=>{
-                                 this.$router.push({path:'/',query:{redirect: '/myWallet'}})
-                             },2000) 
                             }
                       })
-                           
                     }
-            }
+            },
+        mounted () {
+        this.getUserMoney()        
+        this.moneyList[0].price=this.userInfo.userGoldenTicket
+        this.moneyList[1].price=this.userInfo.userRecommendTicket
+        this.moneyList[2].price=this.userInfo.userReadTicket
+         }
         }
 </script>
 <style lang='less' scoped>
@@ -111,6 +105,7 @@ import {Post_formData2} from '@/config/services'
           height:.44rem;
           line-height:.44rem;
           text-align:center;
+          overflow: hidden;
           img{
               width:.11rem;height:.2rem;
           }

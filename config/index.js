@@ -4,10 +4,10 @@ var path = require('path')
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: '',
-    assetsPublicPath: './',
+    index: path.resolve(__dirname, '../mob/index.html'),
+    assetsRoot: path.resolve(__dirname, '../mob'),
+    assetsSubDirectory: 'static',
+    assetsPublicPath: '/mob/',
     productionSourceMap: false,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
@@ -24,7 +24,7 @@ module.exports = {
   dev: {
     env: require('./dev.env'),
     port: 8888,
-    autoOpenBrowser: false,
+    autoOpenBrowser: true,
     devtool: 'eval-source-map',
     assetsSubDirectory: 'static',
     cacheBusting : false,

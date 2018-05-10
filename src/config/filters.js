@@ -26,9 +26,13 @@ function padLeftZero (str) {
                 let data = new Date(time);
                 return formatDate1(data,'yyyy-MM-dd');
   }
-const formatDate2=time=>{
+  const formatDate2=time=>{
     let data=new Date(time)
     return formatDate1(data,'yyyy-MM-dd hh:mm:ss')
+  }
+  const formatDate3=time=>{
+    let data=new Date(time)
+    return formatDate1(data, 'yyyy-MM-dd hh:mm')
   }
 const clickTotal=res=>{
     if (res < 1000) {
@@ -57,4 +61,4 @@ const tempTicketSum = res => {
 const str=(res,size)=>{
   return res.length > size ? res.slice(0, size) + '...' : res
 }  
-export { formatDate, formatDate2, clickTotal, str, type, tempTicketSum}
+export { formatDate, formatDate2, formatDate3,clickTotal, str, type, tempTicketSum}

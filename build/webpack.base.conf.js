@@ -2,6 +2,8 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var TransformModulesPlugin = require('webpack-transform-modules-plugin')
+var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const vuxLoader = require('vux-loader')
 // 获取绝对路径
 function resolve (dir) {
@@ -23,9 +25,9 @@ const webpackConfig  = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
+      '@': resolve('src'),
       // ,
-      // 'static':resolve('static')
+      'static':path.join(__dirname,'static/')
     }
   },
   module: {
@@ -73,5 +75,5 @@ const webpackConfig  = {
 }
 
 module.exports = vuxLoader.merge(webpackConfig, {
-  plugins: ['vux-ui']
+  plugins: ['vux-ui', new HardSourceWebpackPlugin()],
 })

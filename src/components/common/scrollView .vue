@@ -1,11 +1,11 @@
 <template>
-	<div ref='wrapper'>
-		<slot></slot>
+	<div ref='wrapper' class='wrapper'>
+		<slot name='content'></slot>
 	</div>
 </template>
 <script>
 	import BScroll from 'better-scroll';
-
+    
 	export default {
 		props: {
 			/**
@@ -178,3 +178,14 @@
 		}
 	};
 </script>
+<style lang="less" scoped>
+  .wrapper{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 44px);
+      overflow: hidden;
+      -webkit-overflow-scrolling: touch;
+  }  
+</style>
+

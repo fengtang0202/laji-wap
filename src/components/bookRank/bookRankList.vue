@@ -1,7 +1,10 @@
 <template>
    <div> 
+       <!-- <div class='day'>
+           <span class='day_btn' v-for='(item,index) in dayData' :key='item.key' :style='{"color":changeDayColor===index?"#FE5C6C":"#000"}' @click='handleTapDay(index,item.key,item.link)'>{{item.day}}</span>
+       </div>  -->
        <div class='book_item_wrap' v-for='(item,index) in dataList'  :key='index' @click='handleToDetail(item.bookId)'>
-              <img :src="item.bookImage" style='width:.81rem;height:1.08rem' alt="">
+              <img :src="item.bookImage" style='border-radius:5px;width:.81rem;height:1.08rem' alt="">
               <div class='book_detail'>
                   <p style='font-size:.16rem'>{{item.bookName|str(9)}}</p>
                   <p style='color:#999'>
@@ -14,6 +17,14 @@
                   <img v-if='index===2' class='metal' src="../../assets/images/copper.png" alt="">
               </div>
           </div>
+          <infinite-loading @infinite="infiniteHandler">
+           <span slot="no-more">
+            目前暂无更多书籍
+          </span>
+          <span slot="no-results">
+            目前暂无更多书籍
+          </span>
+      </infinite-loading>
     </div>
 </template>
 <script>
@@ -37,11 +48,16 @@
              type:String,
              default:1
          },
-         changeDayColor:0
+         infiniteHandler:{
+             type:Function
+         },
+        //  dayData:{
+        //      type:Array,
+        //      default:[]
+        //  }
       },
       methods: {
           handleTapDay(index,key,link){
-                // this.changeDayColor=index
                 this.dayType=key
                 this.$router.replace(link)                        
          },
@@ -50,7 +66,6 @@
             },
       },
       created(){
-        //   this.changeDayColor=0
       }
   }    
 </script>

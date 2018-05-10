@@ -1,14 +1,15 @@
 <template>
    <div class='deal_wrap'>
        <headerComponent :list='topList'></headerComponent>
-        <tab bar-active-color="#F77583" active-color='#F77583' default-color='#333' :line-width="2">
-            <tab-item @on-item-click='handleGo(item.link)' :selected="tabIndex==index" v-for='(item,index) in itemList' :key='index'>{{item.title}}</tab-item>
-       </tab>
+       <div class='tab'>
+           <div class='tab_item' @click='handleGo(item.link,index)' :class='{add:tabIndex==index}' v-for='(item,index) in itemList' :key='index'>
+               {{item.title}}
+           </div>
+       </div>
        <router-view></router-view>
    </div>
 </template>
 <script>
-import {Tab,TabItem} from 'vux'
     export default {
        data(){
            return {
@@ -27,11 +28,9 @@ import {Tab,TabItem} from 'vux'
                ]
            }
        },
-       components:{
-           Tab,TabItem
-       },
        methods:{
-           handleGo(res){
+           handleGo(res,index){
+               this.tabIndex=index
                this.$router.replace(res)
            },
            getIndex(){
@@ -61,5 +60,22 @@ import {Tab,TabItem} from 'vux'
     }
 </script>
 <style lang="less" scoped>
-   
+    .tab{
+        width:100%;
+        height:.44rem;
+        border-bottom:1px solid #e9e9e9;
+    .tab_item{
+        width:20%;
+        float: left;
+        font-size:.14rem;
+        height:.44rem;
+        line-height: .44rem;
+        text-align: center;
+        
+      }
+      .add{
+            border-bottom:2px solid #F77583;
+            color:#F77583;
+         }
+    }
 </style>

@@ -47,12 +47,4 @@ export function Param_Get_Resful(_this,url,cb){
         cb({status:404})
     })
 }
-export function handleScroll(_this,element) {
-    let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-    let offsetTop = document.querySelector(element).offsetTop
-    if (scrollTop > offsetTop) {
-        _this.searchBarFixed = true
-    } else {
-        _this.searchBarFixed = false
-    }
-}
+

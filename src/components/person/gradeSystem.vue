@@ -2,12 +2,15 @@
   <div class='gradeSystem'>
       <headerComponent :list='topList'></headerComponent>
      <div>
-       <tab :line-width=2 active-color='#F77583' v-model="index">
-        <tab-item class="vux-center" :selected="content === index" v-for="(item, index) in navlist" @click="content===index" :key="index">{{item}}</tab-item>
-      </tab>
-      <swiper v-model="index" :height='height' :show-dots="false">
-        <swiper-item>
-          <div class="">
+       <!-- <tab :line-width=2 active-color='#F77583' v-model="index">
+         <tab-item class="vux-center" :selected="content === index" v-for="(item, index) in navlist" @click="content=index" :key="index">{{item}}</tab-item>
+      </tab> -->
+      <div class='tab'>
+          <div v-for='(item,index) in navlist' :class='{add:content==index}' @click='handleTap(index)'  :key='index'>
+             {{item}}
+          </div>
+      </div>
+          <div class="" v-if='content==0'>
              <ul class='list'>
                  <li>
                      <span>级别</span>
@@ -19,26 +22,21 @@
                  </li>
              </ul>
           </div>
-        </swiper-item>
-        <swiper-item>
-          <div class="">
+          <div class="" v-if='content==1'>
              <ul class='list'>
                  <li v-for='(item,index) in scoreList'  :key='index'>
                      <span>{{item.title}}</span>
                      <span>{{item.values}}</span>
                  </li>
              </ul>
-          </div>
           <p class='tips'>
              <img src="../../assets/images/gradeS@3x.png" alt="">{{message}}
           </p>
-        </swiper-item>
-      </swiper>
+          </div>
     </div>
   </div>
 </template>
 <script>
-import {Tab,TabItem,Swiper,SwiperItem} from 'vux'
     import {Param_Get_Resful} from '@/config/services'
      export default {
          data(){
@@ -48,20 +46,18 @@ import {Tab,TabItem,Swiper,SwiperItem} from 'vux'
                      title_2:'首页',
                      link:'/'
                  },
-                    height:'14.26rem',
                     navlist:['等级制度','积分规则'],
                     content:0,
-                    index: 0,
                     gradeList:[],
                     scoreList:[],
                     message:'',
               }    
          },
-         components: {
-             Tab,TabItem,Swiper,SwiperItem
-         },
          methods: {
-            
+            handleTap(index){
+               this.content=index
+            //    this.show=!this.show
+             }
          },
          mounted () {
              Param_Get_Resful(this,'/api/getUserLevenInfo',res=>{
@@ -79,6 +75,22 @@ import {Tab,TabItem,Swiper,SwiperItem} from 'vux'
      }
 </script>
 <style lang='less'>
+.tab{
+    height:.44rem;
+    width:100%;
+    border:1px solid #e9e9e9;
+    div{
+        width:50%;
+        text-align: center;
+        float: left;
+        height:.44rem;
+        line-height: .44rem;
+    }
+    .add{
+        border-bottom:2px solid #F77583;
+        color:#F77583;
+    }
+}
      .gradeSystem{
          height:100%;
          width:100%;

@@ -1,11 +1,11 @@
 <template>
 <div>
     <div class="text_d" v-for='item in list' :key='item.bookId' @click="handleGo(item.bookId)">
-            <img :src="item.bookImage">
+            <img :src="item.bookImage" style='border-radius:5px;'>
             <div class="con_d">
                <div class="text_one">
                   <span class="one_sp">{{item.bookName|str(10)}}</span>
-                  <span class="two_sp" >{{item.clickTotal|clickTotal}}万点击</span>
+                  <span class="two_sp"  v-if='item.clickTotal'>{{item.clickTotal|clickTotal}}万点击</span>
                </div>
                <div class="text_two">
                   <span>作者: </span>

@@ -7,6 +7,7 @@ const check_nike ='/api/person-checkNickName/'
 const check_phone = '/api/person-checkNickPhone/'
 const find_pwd = '/api/person-pwdRetrieval'
 const refresh_user ='/api/person-refreshUserinfo'
+const get_user_info ='/api/person-info'
 const register_user ='/api/person-regInfo'
 const remember_login ='/api/person-remembermeLogin'
 const update_user_info ='/api/person-updateInfo'
@@ -49,6 +50,7 @@ const filter_book ='/api/stacks-bookFiltering'
 const get_book_list ='/api/system/getBooklist'
 module.exports = {
     login,
+    get_user_info,
     login_out,
     user_free,
     check_login,

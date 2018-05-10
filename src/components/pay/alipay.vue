@@ -1,4 +1,5 @@
 <template> 
+<keep-alive>
   <div class='wechat'>
       <headerComponent :list='topList'></headerComponent>
       <div class='pay_category_wrap'>
@@ -28,6 +29,8 @@
       </popup>
     </div>
   </div>
+</keep-alive>
+  
 </template>
 <script>
     import {mapState} from 'vuex'

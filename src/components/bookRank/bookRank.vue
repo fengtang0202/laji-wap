@@ -88,7 +88,6 @@ import {Post_formData2,handleScroll} from '@/config/services'
                 }              
             },
             handleTapDay(index,key){
-                // this.changeDayColor=index
                 this.dayType=key
                 if(this.dayList.length!==1){
                     this.hanleRankBook()
@@ -105,7 +104,6 @@ import {Post_formData2,handleScroll} from '@/config/services'
             },
         },
         mounted () {
-            // this.hanleRankBook()
             let self=this
             this.$nextTick(()=>{
                 window.addEventListener('scroll',this.handleScroll)

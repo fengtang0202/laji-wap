@@ -51,8 +51,18 @@
                  <p class='content'>{{item.replyCommentsContent}}</p>           
               </div>
              </div> 
+
+              <infinite-loading @infinite="infiniteHandler">
+                <span slot="no-more">
+                    目前暂无更多回复
+                </span>
+                <span slot="no-results">
+                    目前暂无更多回复
+                </span>
+             </infinite-loading>
+
             </div>
-           <No v-if='showNoContent' message='暂无相关回复'></No>
+           <!-- <No v-if='showNoContent' message='暂无相关回复'></No> -->
            <div class='replyInput' @click='handleShow()'>
              <span >回复</span>
           </div>
@@ -86,6 +96,7 @@ import { setTimeout } from 'timers';
                 readBookId:this.$route.query.bookId,
                 commendId:this.$route.query.commendId,
                 readCommentInfo:'',
+                page:0,
                 topList:{
                     title_1:'评论详情',
                     title_2:'首页',
@@ -108,25 +119,31 @@ import { setTimeout } from 'timers';
            ...mapState(['isLogin','userInfo'])
         },
         methods:{
-           getCommentReply(){
-               Post_formData2(this,{commentid:this.commendId,startPage:1},'/api/comm-replyInfo',res=>{
-                 if(res.returnCode===200){
-                     if(res.data.list.length==0){
-                         this.showNoContent=true
-                         return;
-                     }
-                     this.replyList=res.data.list
-                     this.showNoContent=false
-                 }
-              })
-           },
+          infiniteHandler($state){
+                this.page+=1
+                Post_formData2(this,{commentid:this.commendId,startPage:this.page},'/api/comm-replyInfo',res=>{
+                          if(res.returnCode==200){
+                            //   this.showContent=true
+                            if(res.data.list.length>0){
+                              this.replyList = this.replyList.concat(res.data.list);
+                            //    this.newCommentcount=res.data.total
+                                if(res.data.lastPage>this.page){ 
+                                    $state.loaded()
+                                    }else{
+                                    $state.complete()
+                                 }
+                              }else{
+                              $state.complete()                                
+                            }
+                         }
+                    })
+              },
            getCommentInfo(){
                 Post_formData2(this,{id:this.commendId,type:0,startPage:1},'/api/comm-getcomminfo',res=>{
                     this.showContent=false
                     if(res.returnCode===200){
                         this.readCommentInfo=res.data
                         this.showContent=true
-                        console.log(this.readCommentInfo)
                     }
                 })
            },
@@ -153,6 +170,10 @@ import { setTimeout } from 'timers';
                          options.userSex=this.userInfo.userSex
                          this.replyList.unshift(options)
                          this.replyText=''
+                     }else if(res.returnCode==400){
+                         this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId+'&commendId='+this.commendId}})                         
+                     }else{
+                         this.$vux.toast.text(res.msg) 
                      }
                  })
                }else if(this.replyText.length==0){
@@ -190,7 +211,7 @@ import { setTimeout } from 'timers';
            }
         },
         mounted () {
-            this.getCommentReply()
+            // this.getCommentReply()
             this.getCommentInfo()
         }
     }

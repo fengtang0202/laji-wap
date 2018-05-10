@@ -1,10 +1,10 @@
 <template>
-    <div id="bookDetails" ref='content'>
-           <loading :show="isShow"></loading>
+   <div id="bookDetails" v-if='showContent'>
+          <headerComponent  ref='headerCom' :list="topList" ></headerComponent>
+           <!-- <loading :show="isShow"></loading> -->
             <app-feed  :param='rewordParam' ref="child"  @click="handleClosefeed()"></app-feed>
             <app-feedpepper :param='rewordParam'  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper>
             <AppMinpepper :param='rewordParam' ref='minfeedpepper' @click='handleCloseMinFeedPepper()'></AppMinpepper>
-          <headerComponent  :list="topList" ></headerComponent>
           <div class="text">
               <img :src="infoList.bookImage" class="oImg">
               <div class="con">
@@ -56,6 +56,8 @@
           <div class="directory" @click="handleGoDirectory()">
              <span style='font-size:.18rem;color:#333'>目录</span>
              <span style="margin-left:.5rem;color:#999;">共{{chapterCount}}章</span>
+             <span style='margin-left:.3rem;color:#F77583' v-if='!showTime'>{{updateTime|formatDate3}}</span>
+             <span style='margin-left:.5rem;color:#F77583' v-if='showTime'>{{updateTime}}</span>             
              <img src="../../assets/images/d-58@3x.png" >
           </div>
           <div class="comments">
@@ -78,9 +80,10 @@
                     <div class="similar-swiper"  :style='{width:width}'>
                     <div class="swiper-wrapper">                        
                         <div class='swiper-slide' v-for="item in swiperList" @click='handleToBookDetail(item.bookId)' :key="item.bookId">
-                           <img  :src="item.bookImage">
+                           <img  v-lazy="item.bookImage" style='border-radius:5px;'>
                            <span>{{item.bookName|str(5)}}</span>
-                         </div>
+                           <!-- <img src="../../assets/images/qinyue.png"  v-if='item.check' class='qianyue' alt=""> -->
+                        </div>
                     </div>
                     </div>
               </scroller>
@@ -98,7 +101,9 @@
         name: 'bookDetails',
         data () {
             return {
+                showContent:false,
                 isShow:false,
+                showTime:true,
                 isActive:0,
                 width:0,
                 topList:{
@@ -126,7 +131,8 @@
                 Condition:false,
                 isBook:false,
                 btnShow:false,
-                isQ:false
+                isQ:false,
+                updateTime:''
             }
         },
         components: {
@@ -136,10 +142,16 @@
             AppMinpepper,
             Scroller
         },
+         beforeRouteEnter(to,from,next){
+           next()
+         },
+         beforeRouteLeave: (to, from, next) => {
+             next(vm=>{
+                 vm.showContent=false
+             })
+         },
         watch:{
           '$route'(){
-              window.scrollTo(0,0)
-            //   this.$refs.content.scrollIntoView();
               this.readBookId=this.$route.query.bookId
               this.handleInit()
               this.handleComments()
@@ -206,7 +218,7 @@
              handleToAndChapter(_router){
                   if(this.isLogin){
                    this.handleImmediatelyReadChapter().then(res=>{
-                      this.$router.push({path:_router,query:{bookId:this.readBookId,chapterId:res}})
+                      this.$router.replace({path:_router,query:{bookId:this.readBookId,chapterId:res}})
                  },res=>{
                       this.$router.push({path:_router,query:{bookId:this.readBookId,chapterId:res}})                     
                  })
@@ -253,13 +265,34 @@
             handleInit () {
                 this.isShow = true; 
                 Post_formData2(this,{bookid:this.readBookId},'/api/book-bookInfo',res=>{
-                    console.log(res)
                     if (res.returnCode==200) {
+                        window.scrollTo(0,0)
+                        this.showContent=true
                         let size=res.data.similarRecommendation.length+1
                         this.width=(size*96+size*5)/100+'rem'
-                        this.isShow = false;                        
+                        this.isShow = false;
                         this.chapterCount=res.data.chapterCount                   
                         this.infoList = res.data.bookListInfo;
+                        let time=res.data.bookListInfo.lastUpdateTime 
+                        let date3 = new Date().getTime()-time
+                        var days=Math.floor(date3/(24*3600*1000))
+                        var leave1=date3%(24*3600*1000)    
+                        var hours=Math.floor(leave1/(3600*1000))  
+                        var leave2=leave1%(3600*1000)       
+                        var minutes=Math.floor(leave2/(60*1000))  
+                        var leave3=leave2%(60*1000)     
+                        var seconds=Math.round(leave3/1000)  
+                        if(days>=1){
+                            this.updateTime=res.data.bookListInfo.lastUpdateTime
+                            this.showTime=false
+                        }else if(hours>0){
+                            this.updateTime=hours+'小时前'
+                            this.showTime=true
+                        }else{
+                            this.updateTime=minutes+'分钟前'
+                            this.showTime=true                            
+                        }
+
                         let qy=this.infoList.bookAuthorization
                         if(qy==1||qy==2){
                             this.isQ=true
@@ -269,11 +302,19 @@
                         this.classId = res.data.bookListInfo.bookClassificationId;
                         this.labelList = res.data.bookLable;
                         this.swiperList=res.data.similarRecommendation
+                        // let squ=this.res.data.similarRecommendation.bookAuthorization
+                        this.swiperList.forEach(value=>{
+                          if(value.bookAuthorization==1||value.bookAuthorization==2){
+                              value.check=true
+                          }else{
+                              value.check=false
+                          }
+                        })
                         this.rewordParam.authorId=res.data.AuthorInfo.userId
                         this.rewordParam.bookId=this.readBookId
                         this.rewordParam.bookName=res.data.bookListInfo.bookName
                     }else{
-                        this.$vux.toast.text(res.msg);
+                        // this.$vux.toast.text(res.msg);
                     }
                 })
             },
@@ -290,9 +331,8 @@
             addBookRack(){
                  Post_formData2(this,{userName:this.userName,bookId:this.readBookId,bookName:this.bookName},'/api/bookshelf-adduserbookshelf',res=>{
                             if (res.returnCode==200) {
-                                console.log(res) 
                                 this.isBook=!this.isBook 
-                                this.isBook?this.$vux.toast.text('加入成功!'):this.$vux.toast.text('删除成功!')
+                                this.isBook?this.$vux.toast.text('加入成功!'):this.$vux.toast.text('移出成功!')
                                 this.isBook?this.cate[2].name='已在书架':this.cate[2].name='加入书架'                                 
                             } else if (res.returnCode==400) {
                                 this.loginAction(false)
@@ -312,7 +352,7 @@
                     }
                 })
             },
-             refeshUserInfo(){
+            refeshUserInfo(){
                  if(this.isLogin){
                     Post_formData2(this,'','/api/person-info',res=>{
                             if(res.returnCode===200){
@@ -322,18 +362,23 @@
                   }
             },
             handleToBookDetail(bookId){
-                 this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
+                if(this.isLogin){
+                    this.readBookId=bookId
+                    this.handleIsAuto('search')
+                    this.isBookRack()
+                }
+                 this.$router.replace({path:'/bookDetails',query:{bookId:bookId}});
             },
-           isBookRack(){
+            isBookRack(){
               Param_Get_Resful(this,'/api/bookshelf-bookshelfIsSave/'+this.readBookId,res=>{
                 if(res.returnCode==500){
                  this.cate[2].name='已在书架'
                  this.isBook=true
-              } else{
+                }else{
                   this.cate[2].name='加入书架'
                   this.isBook=false
-              }
-           })              
+               }
+             })              
             },
             handleIsAuto (type='update') {
                    let options = {
@@ -342,21 +387,29 @@
                     isSelect:this.btnShow?1:0
                 }
                 Post_formData2(this,options,'/api/userRmemberChose',res=>{
+                    // console.log(res.data)
                     if(res.returnCode==200){ 
-                        console.log(res)
                         res.data.isClose==0?this.btnShow=true:this.btnShow=false
                         res.data.isClose==0?this.cate[1].name='自动订阅':this.cate[1].name='取消订阅'
+                    }else if(res.returnCode==500){
+                        this.btnShow=true
+                        this.cate[1].name='自动订阅'
                     }
+                    // else if(res.returnCode==400&&this.isLogin){
+                    //     this.loginAction(false)
+                    //     this.getUserInfo(null)
+                    //     this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})                        
+                    // }
                  })                
             },
-        },
+          },
         mounted () {
-            this.handleInit();
-            this.handleComments(); 
-          if(this.isLogin){
-            this.isBookRack()
-            this.handleIsAuto('search')
-            Post_formData2(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
+             this.handleInit();
+             this.handleComments(); 
+            if(this.isLogin){
+              this.handleIsAuto('search')
+              this.isBookRack()
+              Post_formData2(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
                let a=[]
                if(res.returnCode==200){
                           let ReadList=res.data.list
@@ -372,6 +425,8 @@
 </script>
 
 <style lang="less" scoped>
+[v-cloak]{ display:none} 
   @import '../../css/paper';
   @import '../../css/bookDetail';  
+  
 </style>

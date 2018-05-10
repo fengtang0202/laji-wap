@@ -5,7 +5,7 @@
             <div class='goldpepper'>投喂小米椒</div>
             <p class='computerd'>您的小米椒余额:{{money}}</p>
             <div class="oDiv">
-            <p class="op"  @click="subtract()" :class="{off:number==1}">—</p>
+            <p class="op"  @click="subtract()" :class="{off:number==1||number==0}">—</p>
             <p class='pan'>{{number}}</p>
             <p class="op"  @click='handleAdd()'>＋</p>
             <p class="op" @click='number=userInfo.userRecommendTicket' style="margin-left:.15rem;">ALL</p>                 
@@ -19,6 +19,7 @@
     import { Group, XNumber,XButton, Box} from 'vux'
     import {mapState} from 'vuex'
     import { Post_formData2} from '@/config/services'
+    import {refshUserInfo} from '../../config/getData'
     export default {
         name: 'feed',
         data () {
@@ -45,18 +46,16 @@
                 console.log('change', val)
             },
             subtract(){
-                let self=this;
-                if(self.number==1){
+                if(this.number==1||this.number==0){
                     return false
                 }
-                self.number--;
+                this.number--;
             },
             handleAdd(){
-                let self=this;
-                if(self.number==99){
-                return false
+                if(this.number==99){
+                  return false
                 }
-                self.number++;
+                this.number++;
             },
             handleClose(){
                 this.backShow = !this.backShow;
@@ -69,23 +68,24 @@
                    bookName:this.param.bookName,
                    authorId:this.param.authorId
                   }
-                      Post_formData2(this,options,'/api/user-RecommendationTicket',res=>{
+                    Post_formData2(this,options,'/api/user-RecommendationTicket',res=>{                        
                       if(res.returnCode===200){
                        this.$vux.toast.show({text:res.msg}) 
                     //    这里是有点问题的
+                       this.userInfo.userRecommendTicket-=this.number                    
                        this.money-=this.number
-                    //    this.userInfo.userRecommendTicket-=this.number
-                       JSON.parse(localStorage.getItem('vuex')).userInfo.userRecommendTicket-=this.number                    
+                       refshUserInfo()
                        this.backShow = false;
                        this.dilogShow = false;
                         }else if(res.returnCode==500){
                           this.$vux.toast.show({text:res.msg,type:'cancel'}) 
                           this.backShow = false;
                           this.dilogShow = false;
-                        }else if(res.returnCode==400){
+                        }
+                        // else if(res.returnCode==400){
                             // this.$vux.toast.show({text:res.msg,type:'warn'})
-                            this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.$route.query.bookId}})
-                     }
+                            // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.$route.query.bookId}})
+                    //  }
                  })
              },
             

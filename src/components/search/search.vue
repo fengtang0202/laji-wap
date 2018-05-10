@@ -1,6 +1,6 @@
 <template>
    <div id="search">
-        <loading :show="isShow"></loading>
+        <!-- <loading :show="isShow"></loading> -->
         <div class="search_top">
            <input type="text" placeholder="搜索作者或者作品" v-model="keyword" >
            <img src="../../assets/images/search@2x.png">
@@ -18,10 +18,10 @@
                 <div class="hostroy" >
                     <div class="hostroy_p">历史搜索</div>
                     <div class="hostroy_text"  v-for="(item,index) in hotwordList"  :key='index'>
-                       <div @click='handleHotLabel(item)'>
+                       <div @click='handleHotLabel(item)' style='width:80%;'>
                          <img   src="../../assets/images/copy@2x.png">
                          <span>{{item}}</span>
-                        </div>
+                      </div>
                        <span class='close' @click='hanldeDel(item)'></span>
                     </div>
                 </div>
@@ -64,7 +64,6 @@
              </div>
              <No   v-if="!message" message='暂无匹配到相关书籍'> </No>
         </div>
-       
    </div>
 </template>
 <script>
@@ -112,8 +111,10 @@ import { mapActions, mapState } from 'vuex';
                  }
                 Post_formData2(this,options,'/api/stacks-search',res=>{
                     if(res.returnCode==200){
-                        this.searchList = this.searchList.concat(res.data.list);
-                        if(res.data.lastPage>this.page){
+                        if(res.data.list.length>1){
+                            this.searchList = this.searchList.concat(res.data.list);
+                        }
+                         if(res.data.lastPage>this.page){
                             $state.loaded()
                         }else{
                             $state.complete()

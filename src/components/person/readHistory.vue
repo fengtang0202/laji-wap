@@ -13,7 +13,7 @@
    <div class='read_history' v-if='showNoData'>
       <div class='commendRead'>
          <div class='commend_book_wrap'  @click="handleBookDetail(item.bookId)" v-for='item in ReadHistoryList'>
-            <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
+            <img :src="item.bookImage" alt="">
             <p>{{item.bookName|str(6)}}</p> 
             <P style='color:#999'>{{item.writerName}}</P>  
             <!-- <p class='is_update' :style="{ 'color': item.bookStatus==0?'#FF6F00':'#47B2D8' }">{{item.isUpdate==0?'已完结':'连载中'}}</p>          -->
@@ -114,6 +114,10 @@ export default {
              border-radius: .05rem;
              top:0;
              left:0;
+             }
+             img{
+                 width:1.04rem;height:1.35rem;
+                 border-radius:5px;
              }
                 .del_btn:checked{
                     background:url('../../assets/images/y-checked.png');

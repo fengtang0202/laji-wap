@@ -26,7 +26,7 @@
     <div class='commendRead'>
          <p>推荐阅读{{`(${commendReadList.length})`}}</p>
          <div class='commend_book_wrap'  @click="handleBookDetail(item.bookId)" v-for='item in commendReadList'>
-            <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
+            <img :src="item.bookImage"  alt="">
             <p style='font-size:.16rem;'>{{item.bookName|str(5)}}</p>   
             <p class='is_update' :style="{ 'color': item.bookStatus==0?'#FF6F00':'#47B2D8' }">{{item.isUpdate==0?'已完结':'连载中'}}</p>         
          </div>    
@@ -89,7 +89,6 @@ import { resolve } from 'url';
                 Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/bookshelf-getuserbookshelf',res=>{
                       if(res.returnCode==200){
                           this.ReadNowList=res.data.list
-                          console.log(this.ReadNowList)
                           this.ReadNowList.forEach(value=>{
                               value.checked=false 
                          })
@@ -195,6 +194,10 @@ import { resolve } from 'url';
             text-align: center;
             float: left;
             margin-right:.14rem;
+            img{
+                width:1.04rem;height:1.35rem;
+                border-radius: 5px;
+            }
             .is_update{
                 text-align: right;
                 font-size: .1rem;

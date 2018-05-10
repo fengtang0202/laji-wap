@@ -6,16 +6,16 @@
             <p>账户余额:{{userInfo.userMoney}}</p> 
          </div>
          <p class='buyMay'>选择充值方式</p>
-         <div class='buy'>
+         <div class='buy' >
              <div class='zfb' @click='handleTap("/alipay")'>
                 <img src="../../assets/images/zfb@2x.png" alt="">
                 <span>支付宝</span>
              </div>
-             <!-- @click='handleTap("/wechatPay")' 目前不支持 -->
-             <div class='wx' @click='handleTap()'>
+             <!--  目前不支持 -->
+             <!-- <div class='wx' @click='handleTap()'>
                  <img src="../../assets/images/wx@2x.png" alt="">
                  <span>微信</span>
-             </div>
+             </div> -->
          </div>
     </div>
 </template>
@@ -44,10 +44,6 @@ import {mapState} from 'vuex'
        methods: {
            handleAlipay(){
                let options={
-                //    userId:this.userInfo.userId,
-                //    userName:this.userInfo.userName,
-                //    total_fee:1,
-                //    apymentType:3	
                 username:this.userInfo.userName,
                 apymentType:3,
                 WIDtotal_amount:1
@@ -92,13 +88,15 @@ import {mapState} from 'vuex'
            color:#999;
        }  
        .buy{
-           margin-left:.1rem;
+        //    margin-left:.1rem;
            div {
-               width:1.58rem;
+            //    width:1.58rem;
+               width:80%;
                height:.62rem;
+               margin: 0 auto;
                border:1px solid #FB5E6F;
                border-radius: .04rem;
-               float:left;
+            //    float:left;
                background-color: #fff;
                line-height: .62rem;
                text-align: center;

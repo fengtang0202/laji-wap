@@ -2,8 +2,15 @@
    <div id="register">
         <app-load></app-load>
         <div class="title">注册</div>
-
-        <input type="text" class="oInput" placeholder="请输入手机号" v-model.trim="phone">
+        <div class="phoneInput">
+            <div class='areaCode' @click='handleGo()' >
+                <span>{{areaCode|add}}</span>
+                <img src="../../assets/images/Combine@3x.png"  alt="">
+            </div>
+            <div class='phone_wrap'>
+              <input  type="text"  placeholder="请输入手机号" v-model.trim="phone">
+           </div>
+        </div>
         <div class="codeInput">
             <div>
              <input type="text"  placeholder="请输入验证码" v-model.trim="verificationCode">
@@ -34,6 +41,7 @@
         name: 'register',
         data () {
             return {
+               areaCode:this.$route.query.value,
                phone:'',
                pwd:'',
                name:'',
@@ -48,19 +56,28 @@
                iscode:false
             }
         },
+        filters: {
+           add(res){
+              return `+${res}`
+           }  
+        },
         methods:{
+            handleGo(){
+                this.$router.push({path:'/areaCode',query:{type:1}})
+            },    
+            // 0 男 1女
             handleWomen(){
                 this.women = !this.women;
                 if(!this.women){
                    this.man = true;
-                   this.sex = 0;
+                   this.sex = 1;
                 }
             },
             handleMan(){
                 this.man =!this.man;
                 if(!this.man){
                    this.women = true;
-                   this.sex = 1;
+                   this.sex = 0;
                 }
             },
             handleRegister(){
@@ -70,7 +87,7 @@
                     if(
                         // checkPhone.test(this.phone)&&
                         checkPassword.test(this.pwd)&&checkName.test(this.name)&&this.sex!==''){
-                            noParam_Get(this,'/api/person-checkNickPhone/'+this.phone,res=>{
+                            noParam_Get(this,'/api/person-checkNickPhone/'+`${this.phone}`,res=>{
                                 if(res.returnCode==200){
                                     this.handleCheckname();
                                 }else{
@@ -80,7 +97,7 @@
                     }
                     // else if(!checkPhone.test(this.phone)){
                     //     this.$vux.toast.text('请输入正确手机号码');
-                    // }
+                    //}
                     else if(!checkPassword.test(this.pwd)){
                         this.$vux.toast.text('请输入6-20位的密码');
                     }else if(!checkName.test(this.name)){
@@ -89,7 +106,7 @@
                         this.$vux.toast.text('请选择性别');
                     }
             },
-            handleCheckname:function(){
+            handleCheckname(){
                     noParam_Get(this,'/api/person-checkNickName/'+this.name,res=>{
                         if(res.returnCode==200){
                             this.handleCheckRegister();
@@ -99,12 +116,13 @@
                     })
             },
             handleCheckRegister(){
+                let phone = this.areaCode==86?this.phone:this.areaCode+'+'+this.phone
                 let options ={
                     code:this.verificationCode,
                     pseudonym:this.name,
                     userPassword:md5(this.pwd),
                     userSex:this.sex,
-                    userPhone:this.phone
+                    userPhone:phone
                 }
                 Post_formData2(this,options,'/api/person-regInfo',res=>{
                         this.$vux.toast.text(res.msg);
@@ -136,31 +154,35 @@
             },
             getCode(){
                 // let checkPhone = /^1(3|4|5|7|8)\d{9}$/;
-                // if(checkPhone.test(this.phone)){
-                     noParam_Get(this,'/api/person-checkNickPhone/'+this.phone,res=>{
+                let phone = this.areaCode==86?this.phone:this.areaCode+this.phone
+                if(this.phone){
+                     noParam_Get(this,'/api/person-checkNickPhone/'+phone,res=>{
                          if(res.returnCode==200){
                                 this.sendMessage();
                                 this.setCode();
                          }else{
-                            // this.$vux.toast.text(res.msg);
+                            this.$vux.toast.text(res.msg);
                          }
                      })
-                // }else{
-                //     this.$vux.toast.text('请输入正确手机号');
-                // }
+                }else{
+                    this.$vux.toast.text('请输入正确手机号');
+                }
             },
             setCode(){
                 if(!this.isOvertime){
+                let phone = this.areaCode==86?this.phone:this.areaCode+this.phone
                     let options={
-                        userMob:this.phone,
-                        type:'RegisterPwd'
+                        userMob:phone,
+                        type:this.areaCode==86?'RegisterPwd':"International"
+                        // type:"RegisterPwd"
                     }
                     Post_formData2(this,options,'/api/verification/sys-getShortMessage',res=>{
                         // this.showMessage(res,()=>{
                             if(res.returnCode==200){
-                                this.$vux.toast.text('验证码已发送');
+                                this.$vux.toast.text(res.msg);
                             }else{
-                                // this.$vux.toast.text(res.msg);
+                                console.log(res)
+                                this.$vux.toast.text(res.msg);
                             }
                         // })
                     })
@@ -196,13 +218,6 @@
             font-size:.18rem;
             padding-left:.14rem;
             outline: none;
-            // .codeInput{
-            //    width:1.8rem;
-            //    height:.42rem;
-            //    float:left;
-            //    border:none;
-            //    outline: none;
-            // }
             p{
                 width:.85rem;
                 height:.44rem;
@@ -211,8 +226,39 @@
                 text-align:center;
                 float:right;
             }
+        }
+        .phoneInput{
+            width:3.04rem;
+            height:.44rem;
+            border-radius:4px;
+            border:1px solid #979797;
+            margin:.2rem auto;
+            .areaCode{
+              width:.7rem;
+              height:.44rem;
+              float: left;
+              text-align: center;
+              line-height: .44rem;
+              img{
+                  width:.15rem;
+                  height:.15rem;
+              }
+            //   input{
+            //       background-color: #fff;
+            //   }
+            }
+            .phone_wrap{
+                width:2.2rem;
+                height:.44rem;
+                float:right;
+                input{
+                    width:2rem;
+                    height:.4rem;
+                    border:none;
+                    outline: none;  
+                }
+            }
 
-           
         }
         .codeInput{
             width:3.04rem;

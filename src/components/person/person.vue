@@ -1,4 +1,5 @@
 <template>
+<keep-alive>
   <div class='person'>
       <div class='header'>
          <div @click="$router.go(-1)">
@@ -19,7 +20,7 @@
      </div>
       <div class="person_info" @click='handleGo()'>
            <div class='avatar_wrap'>
-               <img :src="userInfo.userHeadPortraitURL" alt="" style='width:.52rem;height:.52rem;border-radius:50%;'>
+               <img :src="avatar" alt="" style='width:.52rem;height:.52rem;border-radius:50%;'>
            </div>
            <div class='person_info_detail'>
               <div>
@@ -40,7 +41,7 @@
       </div>
       <div class='nav_list'>
           <div class='nav_item' v-for='(li,index) in navList' :title="li.title" :key='index' @click='handleLink(li.link)'>
-              <img v-lazy='li.img'  alt="">
+              <img :src='li.img'  alt="">
               <span>{{li.title}}</span>
               <img class='go' src="../../assets/images/more@3x.png" alt="">
           </div>
@@ -49,15 +50,16 @@
             <span class="loginOut">退出登录</span>
        </div>
   </div>
+</keep-alive>  
 </template>
 
 <script>
     import {Group,Cell,TransferDomDirective as TransferDom,Confirm} from 'vux'
     import headerComponent from '@/components/common/header'    
-    import { setTimeout } from 'timers';
-    import {mapState} from 'vuex'
+    import {mapState,mapActions} from 'vuex'
     import {Param_Get,Param_Get_Resful,Post_formData2} from '@/config/services'
-    import {mapActions} from 'vuex'
+    import {handleIsPhone} from '../../config/common' 
+    import {refshUserInfo} from '../../config/getData'        
     export default {
         name: "person",
         directives: {
@@ -67,13 +69,13 @@
           Group,Cell,headerComponent,Confirm
         },
         computed:{
-           ...mapState(['userInfo','fans','fllows'])
+           ...mapState(['userInfo','fans','fllows',"isLogin"])
         },
         data(){
             return {
-                // 用户信息需要从vuex里获取或者用localstorage
                 show:false,
                 type:0,
+                avatar:'',
                 navList:[
                     {img:require('../../assets/images/personCenter@2x.png'),title:'我的书架',link:'/bookRack'},
                     {img:require('../../assets/images/wallet@2x@2x.png'),title:'我的钱包',link:'/myWallet'},
@@ -85,13 +87,6 @@
                 ]
             }
         },
-        watch:{
-            'isLogin':function(val){
-                if(!val){
-                    this.$route.push('/Login')
-                }
-            }
-        },
         methods:{
             ...mapActions(['loginAction','setFans','setFllows','getUserInfo']),
         handleAuthorCenter () {
@@ -101,8 +96,6 @@
            this.$router.push(res)
          },
          loginOut(){
-               let self=this
-               console.log(self)
                Post_formData2(this,'','/api/person-ClearUserInfo',res=>{
                    if(res.returnCode==200||res.returnCode==400){
                             this.$vux.toast.text('退出成功!')
@@ -117,15 +110,18 @@
          onCancel(){
              
         },
-         jumpToDownApp(){
-           window.location='mqq:open';
-           setTimeout(()=>{
-            // 跳转app
-               window.location="http://itunes.apple.com/cn/app/qq-2011/id444934666?mt=8"
-           },30)
-         },
-         onConfirm(){
-             this.jumpToDownApp()
+        // beforeRouteEnter(to,from,next){
+        //     next(vm=>{
+        //         Post_formData2(vm,'','/api/person-checkLoginState',res=>{                    
+        //             if(res.returnCode==400){
+        //                 vm.loginAction(false)
+        //                 vm.getUserInfo(null)
+        //             }
+        //         })
+        //     })
+        //  },
+          onConfirm(){
+             handleIsPhone()
           },
           getFansAndFollowCount(type=1){
             Param_Get_Resful(this,`/api/fans-followCount/${this.userInfo.userId}/${type}`,res=>{
@@ -133,28 +129,17 @@
                 })
             },
            handleGo () {
-            // 用户信息还没有确定
-            //    this.$router.push("/personInfo")
-            },
-            refeshUserInfo(){
-               Post_formData2(this,'','/api/person-info',res=>{
-                            if(res.returnCode===200){
-                                this.getUserInfo(res.data) 
-                             }else{
-                                 this.$vux.toast.show({text:'身份过期,重新登录',type:'warn'})
-                                 this.getUserInfo(null)
-                             setTimeout(()=>{
-                                 this.$router.push({path:'/',query:{redirect: '/myWallet'}})
-                             },2000) 
-                      }
-              })
+               this.$router.push("/personInfo")
             }
         },
           mounted(){
-            this.getFansAndFollowCount()
-            this.getFansAndFollowCount(0)
-            this.refeshUserInfo()
-        }
+              if(this.isLogin){
+                  refshUserInfo()
+                  this.avatar=this.userInfo.userHeadPortraitURL
+                  this.getFansAndFollowCount()
+                  this.getFansAndFollowCount(0)
+              }
+          }
     }
 </script>
 

@@ -8,10 +8,10 @@
             <img src="../../assets/images/login.png" class="left_d" v-if="show" @click="handleCheck()">
             <img src="../../assets/images/select_login.png" class="left_d" v-if="!show" @click="handleCheck()">
             <p @click="handleCheck()">自动登录</p>
-            <div class="right_d" @click="handleRouter({path:'/password'})">忘记密码</div>
+            <div class="right_d" @click="handleRouter({path:'/password',query:{value:86}})">忘记密码</div>
         </div>
         <div class="login" @click="loginIn()">登录</div>
-        <div class="register" @click="handleRouter({path:'/register'})">快速注册</div>
+        <div class="register" @click="handleRouter({path:'/register',query:{value:86}})">快速注册</div>
     </div>
 </template>
 
@@ -22,6 +22,7 @@
     import { mapActions,mapState } from 'vuex' 
     import md5  from 'js-md5'      
     import { setTimeout } from 'timers';
+    import {userLogin} from '@/config/getData'
     export default {
         name: 'login',
         components: {
@@ -46,12 +47,10 @@
             }
         },
          computed: {
-            ...mapState(['isLogin','userName','avatar','userId','sex','vipGrade','fans'])
+            ...mapState(['isLogin'])
         },
         methods:{
-            ...mapActions(['loginAction','updateName',
-            'updateAvatar','updateUserId','getSex','getvipGrade','setFans','getUserInfo',"changeUserPhone",'getUserMoney'
-            ]),
+            ...mapActions(['loginAction','getUserInfo']),
             handleRouter(res){
                 this.$router.push(res)
             },
@@ -88,28 +87,18 @@
                             userPassword:this.password.length>20?this.password:md5(this.password),
                             terminal:3
                         }
-                        Post_formData2(this,options,'/api/person-login',res=>{
-                                if(res.returnCode==200){
-                                      let userInfo=res.data
-                                    this.loginAction(true)
-                                    this.getUserInfo(userInfo)
-                                    this.$vux.toast.text('登录成功!')
-                                    setTimeout(()=>{
-                                        this.$router.push(this.$route.query.redirect||'/')
-                                    },1000)
-                                }else if(res.returnCode==500){
-                                    this.$vux.toast.text(res.msg);
-                              }
-                          })
-                    // }else if(!checkPhone.test(this.phone)){
-                    //      this.$vux.toast.text('请输入正确的手机号')
-                    // }else if(!checkPassword.test(this.password)){
-                    //     this.$vux.toast.text('请输入6-20位的密码')
-                    // }
-            }
-        },
-        created(){
-
+                        userLogin(options).then(res=>{
+                            if(res.returnCode==200){
+                               let userInfo=res.data
+                               this.loginAction(true)
+                               this.getUserInfo(userInfo)
+                               this.$vux.toast.text('登录成功!') 
+                               this.$router.push(this.$route.query.redirect||'/')
+                            }else{
+                               this.$vux.toast.text(res.msg)
+                            }
+                        })
+              }
         },
         mounted(){
             if(cookie.get().userPhone){

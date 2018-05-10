@@ -1,6 +1,6 @@
 <template>
     <div class='categoryDetail_wrap'>
-        <loading :show="isShow"></loading>        
+        <!-- <loading :show="isShow"></loading>         -->
          <headerComponent :list="topList"></headerComponent>
          <div class='fixbar'>
             <!-- <div class="search_top">
@@ -61,7 +61,7 @@
         </div>
         </div>
          <div class="book_text" @click='handleToBookDetail(item.bookId)' v-for="(item,index) in filterList" :key='index'>
-            <img :src="item.bookImage">
+            <img :src="item.bookImage" style='border-radius:5px;'>
             <div class="con-text">
                <p class="p_one" v-html="item.bookName"></p>
                <p class="p_two"><span>作者 : </span>

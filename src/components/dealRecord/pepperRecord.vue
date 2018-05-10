@@ -48,7 +48,6 @@ export default{
              }
              Post_formData2(this,options,'/api/userGoldenTicketRecord',res=>{
                  if(res.returnCode==200){
-                     console.log(res)
                      this.List=this.List.concat(res.data.list)
                      if(res.data.lastPage>this.page){
                          $state.loaded()
@@ -86,13 +85,13 @@ export default{
            font-size: .14rem;
            margin-left:.1rem;
            position: relative;
+           border-bottom:1px solid #E9E9E9;                          
             p{
                float: left;
                text-align: center;
                min-width:20%;
                height:.4rem;
                line-height: .4rem;
-               border-bottom:1px solid #E9E9E9;               
             }
             .add{
                 position: absolute;

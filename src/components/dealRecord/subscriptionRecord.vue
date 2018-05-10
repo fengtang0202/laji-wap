@@ -52,7 +52,6 @@ export default{
              }
              Post_formData2(this,options,'/api/userSubscriptionRecord',res=>{
                  if(res.returnCode==200){
-                     console.log(res)
                      this.payRecordList=this.payRecordList.concat(res.data.list)
                      if(res.data.lastPage>this.page){
                          $state.loaded()

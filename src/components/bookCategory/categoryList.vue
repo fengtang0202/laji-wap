@@ -1,6 +1,6 @@
 <template>
   <div class='category_wrap'>
-     <loading :show="isShow"></loading>
+     <!-- <loading :show="isShow"></loading> -->
      <div class="category_item_wrap" @click='handleToDetail(item.id,item.classificationName)' :key='index' v-for="(item,index) in categoryList">
          <img  class='categoryPic' :src="item.classificationIco" alt="">
          <span>{{item.classificationName}}</span>
@@ -26,7 +26,6 @@
                  if(res.returnCode==200){
                      this.isShow=false;
                      this.categoryList=res.data
-                     console.log(res.data)
                  }else{
                     // this.$vux.toast.text(res.msg);
                  }

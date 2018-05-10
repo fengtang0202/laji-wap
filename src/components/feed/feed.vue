@@ -5,7 +5,7 @@
             <div class='goldpepper'>投喂金椒</div>
             <p class='computerd'>您的金椒余额:{{money}}</p>
             <div class="oDiv">
-            <p class="op"  @click="subtract()" :class="{off:number==1}">—</p>
+            <p class="op"  @click="subtract()" :class="{off:number==1||number==0}">—</p>
             <p class='pan'>{{number}}</p>
             <p class="op"  @click='handleAdd()'>＋</p>
             <p class="op" @click='number=money' style="margin-left:.15rem;">ALL</p>                 
@@ -16,7 +16,7 @@
 </template>
 <script>
     import { Group, XNumber,XButton, Box} from 'vux'
-    import {mapState} from 'vuex'
+    import {mapState, mapActions} from 'vuex'
     import { Post_formData2} from '@/config/services'
     export default {
         name: 'feed',
@@ -40,22 +40,21 @@
             ...mapState(['userInfo','readBookId','isLogin'])
         },
         methods: {
+            ...mapActions(['loginAction','getUserInfo']),
             change (val) {
                 // console.log('change', val)
             },
             subtract(){
-                let self=this;
-                if(self.number==1){
+                if(this.number==1||this.number==0){
                     return false
                 }
-                self.number--;
+                this.number--;
             },
             handleAdd(){
-                let self=this;
-                if(self.number==99){
-                return false
+                if(this.number==99){
+                   return false
                 }
-                self.number++;
+                this.number++;
             },
             handleClose(){
                 this.backShow = !this.backShow;
@@ -68,18 +67,21 @@
                    bookName:this.param.bookName,
                    authorId:this.param.authorId
                }
-                      Post_formData2(this,options,'/api/user-RewardGonderTicket',res=>{
+                Post_formData2(this,options,'/api/user-RewardGonderTicket',res=>{
                       if(res.returnCode===200){
-                       this.$vux.toast.show({text:res.msg}) 
-                       this.userInfo.userGoldenTicket-=this.number
-                       this.money-=this.number
-                        this.backShow = false;
-                        this.dilogShow = false;
+                            this.$vux.toast.show({text:res.msg}) 
+                            this.userInfo.userGoldenTicket-=this.number
+                            this.money-=this.number
+                            this.backShow = false;
+                            this.dilogShow = false;
                         }else if(res.returnCode==500){
-                          this.$vux.toast.show({text:res.msg,type:'cancel'}) 
-                        }else if(res.returnCode==400){
-                            this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.$route.query.bookId}})                            
+                            this.$vux.toast.show({text:res.msg,type:'cancel'}) 
                         }
+                        // else if(res.returnCode==400){
+                        //     this.loginAction(false)
+                        //     this.getUserInfo(null)
+                        //     this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.$route.query.bookId}})                            
+                        // }
                      })
              }
         },

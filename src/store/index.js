@@ -3,22 +3,30 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex);
     const state={
-        subName: '首',
-        itemName: '页',
         showConnect:false,
         token:'',
         userInfo:null,
         isLogin:false,
-        readBookId:0,
-        chapterId:0,
-        bookRack:[],
-        readCommentInfo:{},
+        // bookRack:[],
+        // readCommentInfo:{},
         fans:0,
         fllows:0,
         rephone:0,
         code:0,
+        backgroundColor:'#faefda',
+        fontSize: 1.125,
+        fontColor: '#685640'
     }
     const mutations = {
+        setBackgroundColor(state,color){
+            state.backgroundColor=color
+        },
+        setFontSize(state, fontSize){
+            state.fontSize = fontSize
+        },
+        setFontColor(state, fontColor) {
+            state.fontColor = fontColor
+        },
         changeMenuName (state, name) {
             state.subName=name.subName
             state.itemName=name.itemName
@@ -47,17 +55,26 @@ Vue.use(Vuex);
         setFllows(state,fllows){
             state.fllows=fllows
         },
-        setBookRack(state,bookRack){
-            state.bookRack=bookRack
-        },
+        // setBookRack(state,bookRack){
+        //     state.bookRack=bookRack
+        // },
         setChapterId(state,chapterId){
             state.chapterId=chapterId
         },
-        setReadCommentInfo(state,readCommentInfo){
-            state.readCommentInfo=readCommentInfo
-        }
+        // setReadCommentInfo(state,readCommentInfo){
+        //     state.readCommentInfo=readCommentInfo
+        // }
     }
     const actions = {
+        setBackgroundColor({commit},color){
+           commit('setBackgroundColor',color)  
+        },
+        setFontSize({commit},fontSize){
+            commit('setFontSize',fontSize)
+        },
+        setFontColor({ commit }, fontColor) {
+            commit('setFontColor', fontColor)
+        },
         setPhone({commit},rephone){
            commit('setPhone',rephone)
         },
@@ -79,9 +96,9 @@ Vue.use(Vuex);
         setChapterId({commit},chapterId){
             commit('setChapterId',chapterId)
         },
-        setReadCommentInfo({commit},readCommentInfo){
-            commit('setReadCommentInfo',readCommentInfo)
-        },
+        // setReadCommentInfo({commit},readCommentInfo){
+        //     commit('setReadCommentInfo',readCommentInfo)
+        // },
         getUserInfo({commit},userInfo){
             commit('getUserInfo',userInfo)
         }

@@ -1,5 +1,5 @@
 <template>
-    <div id="home">
+    <div id="home" ref='home'>
          <div class="top">
             <img src="../assets/images/ico@2x.png" @click='handleTo({path:"/"})' class="logo_two">
             <downApp></downApp>
@@ -13,9 +13,9 @@
                 </router-link>                 
             </div>
          </div>
-         <div class="bottom">
+         <div class="bottom" @click='handleTo({path:"/search"})'>
              <input type="text" placeholder="搜索作品或作者" class='search' @focus='handleTo({path:"/search"})'/>
-             <img src="../assets/images/search@2x.png" class="logo_four">
+             <img src="../assets/images/search@2x.png"  class="logo_four">
              <!-- <button>搜索</button> -->
          </div>
          <div class="tap">
@@ -23,11 +23,14 @@
                 <span v-html="item.name"></span>
              </div>
          </div>
-           <router-view style='width:100%;height:100%;'></router-view>
+          <keep-alive>
+             <router-view style='width:100%;height:100%;'></router-view>
+          </keep-alive>  
     </div>
 </template>
 <script>
  import {mapState,mapActions} from 'vuex'
+ import {Post_formData2} from '../config/services'
     export default {
         name: 'home',
         data () {
@@ -49,13 +52,24 @@
                this.getIndex()
            }
         },
+        beforeRouteEnter(to,from,next){
+            next(vm=>{
+                // Post_formData2(vm,'','/api/person-checkLoginState',res=>{
+                //     if(res.returnCode==400){
+                //         vm.loginAction(false)
+                //         vm.getUserInfo(null)
+                //     }
+                // })
+                vm.$refs.home.scrollIntoView()
+            })
+        },
         methods:{
+            ...mapActions(['loginAction','getUserInfo']),
             handleGo(res,index){
                 this.$router.push(res);
             },
             getIndex(){
               let i =this.$route.path
-               console.log(i)
                switch(i){
                    case '/':
                      this.homeIndex=0;
@@ -72,7 +86,7 @@
             }
         },
         mounted () {
-            this.getIndex()
+            // this.getIndex()
         }
     }
 </script>
@@ -182,6 +196,7 @@
                color:#333;
                width:.54rem;
                height:.26rem;
+               line-height: .26rem;
                text-align: center;
                border-radius:2px;               
             }
