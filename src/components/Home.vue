@@ -86,7 +86,7 @@
             }
         },
         mounted () {
-            // this.getIndex()
+            this.getIndex()
         }
     }
 </script>

@@ -587,7 +587,6 @@ import AppMinpepper from '@/components/feed/minPepper'
             }, 
         },
         mounted () {
-             
             if(this.isLogin){
                 this.isBookRack()
                 // this.addReadHistory()                
