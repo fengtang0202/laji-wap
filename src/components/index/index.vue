@@ -107,7 +107,7 @@
             handleScrollTop(){
                 this.scroll = document.documentElement.scrollTop || document.body.scrollTop;
                 console.log(this.scroll)
-                if(this.scroll>10){
+                if(this.scroll>5){
                     this.handleNewbook()
                     window.removeEventListener("scroll",this.handleScrollTop)
                 }
