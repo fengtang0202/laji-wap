@@ -183,7 +183,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                    {text:'书籍详情',key:1},
                    {text:'查看书评',key:2},
                    {text:'加入书架',key:3},
-                   {text:'添加书签',key:4},
+                //    {text:'添加书签',key:4},
                    {text:'举报本章',key:5},
                 //    {text:'分享本书',key:6}
                ],
@@ -226,7 +226,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                 // this.$refs.title.scrollIntoView(true)
                 this.getBookText()
                 // this.getNowChapterId()                                                     
-                // this.isLogin&&this.addReadHistory()
+                this.isLogin&&this.addReadHistory()
             }
          },
           beforeRouteLeave(to,from,next){
@@ -510,7 +510,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                     chapterName:this.chapterName
                     }
                Post_formData2(this,options,'/api/person-addBookReadRecord',res=>{
-                    this.$vux.toast.text('添加书签成功!')
+                    // this.$vux.toast.text('添加书签成功!')
                }) 
             },
             buyChapter () {
@@ -589,7 +589,7 @@ import AppMinpepper from '@/components/feed/minPepper'
         mounted () {
             if(this.isLogin){
                 this.isBookRack()
-                // this.addReadHistory()                
+                this.addReadHistory()                
                 this.btnShow&&this.buyChapter()
                 this.handleIsAuto('search')
             }

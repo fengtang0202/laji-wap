@@ -16,7 +16,6 @@
          <div class="bottom" @click='handleTo({path:"/search"})'>
              <input type="text" placeholder="搜索作品或作者" class='search' @focus='handleTo({path:"/search"})'/>
              <img src="../assets/images/search@2x.png"  class="logo_four">
-             <!-- <button>搜索</button> -->
          </div>
          <div class="tap">
              <div class="btn" v-for="(item,index) in cate"  :key='index' :class="{isAdd:homeIndex===index}" @click="handleGo(item.res,index)">

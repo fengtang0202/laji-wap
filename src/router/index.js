@@ -60,9 +60,20 @@ const pepperRecord =r=>require.ensure([],()=>r(require('@/components/dealRecord/
 const rewordRecord =r=>require.ensure([],()=>r(require('@/components/dealRecord/rewordRecord')),'rewordRecord')
 const areaCode = r => require.ensure([], () => r(require('@/components/common/areaCode')), 'areaCode')
 const userAutograph = r => require.ensure([], () => r(require('@/components/person/userAutograph')),'userAutograph')
+const articleActive = r => require.ensure([], () => r(require('@/components/articleActive/articleMain')), 'articleActive')
+const city = r => require.ensure([], () => r(require('@/components/articleActive/city')), 'city')
+const dream = r => require.ensure([], () => r(require('@/components/articleActive/dream')), 'dream')
+const rotten = r => require.ensure([], () => r(require('@/components/articleActive/rotten')), 'rotten')
+const dimension = r => require.ensure([], () => r(require('@/components/articleActive/dimension')), 'dimension')
+
 import test from '@/components/test'
 Vue.use(Router)
 let routers=[
+    { path: '/articleActive', component: articleActive},
+    { path: '/city', component: city},
+    { path: '/dream', component: dream},
+    { path: '/rotten', component: rotten},
+    { path: '/dimension', component: dimension},
     { path: '/areaCode', component: areaCode},
     { path: '/userAutograph', component: userAutograph},
     {path: '/Login', name: 'Login', component: Login,
@@ -98,11 +109,18 @@ let routers=[
         children:[//子路由
             {path:'/',component:index,
              meta: {
-              title: '辣鸡小说'
+              title: '辣鸡小说',
+              meta:{
+                keepAlive: true                
+              }
             }
           },
-            {path: 'categoryList', component:categoryList},
-            {path:'bookFree',component:bookFree}
+            {path: 'categoryList', component:categoryList,meta:{
+              keepAlive: true
+            }},
+            {path:'bookFree',component:bookFree,meta:{
+              keepAlive: true 
+            }}
         ]
     },
     {path: '/directory', name: 'directory', component: directory,

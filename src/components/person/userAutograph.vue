@@ -2,7 +2,7 @@
 <div>
     <headerComponent :list='topList' ></headerComponent>
     <textarea class='text' v-model="userAutograph"></textarea>
-    <button class='btn_submit'>清空</button>
+    <button class='btn_submit' @click='userAutograph=""'>清空</button>
     <button class='btn_submit' @click='handleUpdateInfo()'>保存</button>
 </div>  
 </template>

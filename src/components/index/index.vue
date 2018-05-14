@@ -4,7 +4,7 @@
         <loading :show="isShow"></loading>
         <swiper auto :aspect-ratio='i' dots-position="center">
            <swiper-item v-for='(item,index) in pictureList' :key='index' >
-                <img  v-lazy="item.bookImage" style='width:100%;' @click='handleGo(item.bookId)'>
+                <img  :src="item.bookImage" style='width:100%;' @click='handleGo(item.bookId)'>
            </swiper-item>
        </swiper>
         <div class="edit">
