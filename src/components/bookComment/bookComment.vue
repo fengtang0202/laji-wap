@@ -35,13 +35,13 @@
         </div>
         <div v-transfer-dom>
             <popup v-model="show">
-                <div style='height:1.5rem;font-size:.16rem;background-color:#fff;'>
+                <div style='overflow:hidden;height:1.5rem;font-size:.16rem;background-color:#fff;'>
                     <div  style='border-bottom:1px solid #E9E9E9;overflow:hidden;padding:.08rem .2rem'>
                         <p style='float:left' @click='canlce()'>取消</p>
                         <p style='color:#F77583;float:right' @click='handleMakeComment()'>发表</p>
                     </div>
                     <div class='text_box'>
-                       <textarea  placeholder='请输入你对这本书的评价...' v-focus v-model='replyText' style='width:100%;height:1.2rem;border:0;outline:none;padding:.1rem' ></textarea>
+                       <textarea   placeholder='请输入你对这本书的评价...' v-focus v-model='replyText' style='width:100%;height:1.2rem;border:0;outline:none;padding:.1rem' ></textarea>
                     </div>
                 </div>
             </popup>
@@ -105,8 +105,8 @@ export default {
               let fontCountLength = this.replyText.length
               let reg=/[\ud83c-\ud83e][\udc00-\udfff]|[\u2600-\u27ff]/
              if(!reg.test(this.replyText)){ 
-              if(fontCountLength>0&&fontCountLength<50){
-                  let options={
+              if(fontCountLength>0){
+                  let options = {
                       bookId:this.readBookId,
                       commentContext:this.replyText,
                       userName:this.userName,
@@ -160,7 +160,7 @@ export default {
           getNewComment(){
                Post_formData2(this,{id:this.readBookId,type:1,startPage:1},'/api/comm-getcomminfo',res=>{
                   if(res.returnCode==200){
-                      console.log(res.data)
+                    //   console.log(res.data)
                       if(res.data.list.length!=0){
                       this.showContent=true
                       this.newCommentList=res.data.list

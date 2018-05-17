@@ -33,9 +33,10 @@
   
 </template>
 <script>
-    import {mapState} from 'vuex'
-    import {Post_formData2} from '../../config/services'
-    import {TransferDom,Popup} from 'vux'
+import {mapState} from 'vuex'
+import {Post_formData2} from '../../config/services'
+import {TransferDom,Popup} from 'vux'
+import operationCookie from '../../config/cookie'    
 export default{
      data(){
       return{
@@ -78,7 +79,11 @@ export default{
            }
            Post_formData2(this,options,'/api/payment-alipaywap',res=>{
                if(res.returnCode==200){
-                  this.formHtml=res.data
+                   this.formHtml=res.data
+                //    console.log(this.formHtml)
+                //   this.formHtml=res.data.form
+                //   this.sessionId=res.data.sessionId
+                //   localStorage.setItem('SESSION',this.sessionId)
                   this.show=true
                }
            })

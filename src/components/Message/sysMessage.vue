@@ -5,9 +5,8 @@
                 <div style='float:left;'>{{item.title}}</div>
                 <div style='float:right;'>{{item.dateTimes|formatDate}}</div>
                </div>
-               <p>{{item.messageContent}}</p>
+               <p class='info'>{{item.messageContent}}</p>
            </div>
-           
      </div>
 </template>
 <script>
@@ -21,7 +20,9 @@ import {Post_formData2} from '@/config/services'
          methods:{
           getSysMessage(){
                Post_formData2(this,{startpage:1},'/api/sys-getsystemmsg',res=>{
-                 this.sysMessageList=res.data.list
+                   if(res.returnCode==200){
+                       this.sysMessageList=res.data.list
+                   }
              })
           }
          },
@@ -31,5 +32,8 @@ import {Post_formData2} from '@/config/services'
      }
 </script>
 <style lang='less' scoped>
-      
+      .info{
+          text-indent: 2em;
+          letter-spacing: 1px;
+      }
 </style>

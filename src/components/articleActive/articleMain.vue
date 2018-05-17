@@ -54,7 +54,7 @@
     export default{
         methods: {
             handleGo(res){
-                this.$router.replace(res)
+                this.$router.push(res)
             }
         }
     }

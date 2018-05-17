@@ -14,8 +14,8 @@
             color='#333'
             @on-cancel="onCancel"
             @on-confirm="onConfirm">
-        <p style="text-align:center;color:#333333;font-size:.16rem;">请下载辣鸡小说app进入<br>作者中心!</p>
-      </confirm>
+         <p style="text-align:center;color:#333333;font-size:.16rem;">请下载辣鸡小说app进入<br>作者中心!</p>
+       </confirm>
     </div>
      </div>
       <div class="person_info" @click='handleGo()'>
@@ -24,13 +24,13 @@
            </div>
            <div class='person_info_detail'>
               <div>
-                  <span class='user_name'>{{userInfo.pseudonym}}</span>
-                  <img class='user_sex' src="../../assets/images/sex_women@2x.png" v-if="userInfo.userSex===1" alt="">
-                  <img class='user_sex' src="../../assets/images/sex_men@2x.png" v-if='userInfo.userSex===0' alt="">
+                  <span class='user_name'>{{pseudonym}}</span>
+                  <img class='user_sex' src="../../assets/images/sex_women@2x.png" v-if="userSex===1" alt="">
+                  <img class='user_sex' src="../../assets/images/sex_men@2x.png" v-if='userSex===0' alt="">
               </div>
               <div class='grade_wrap'>
-                 <p class='grade' :style='{width:userInfo.userGrade/20*100+"%"}'>
-                    <span class='grade_icon'>{{'Lv'+userInfo.userGrade}}</span>
+                 <p class='grade' :style='{width:userGrade/20*100+"%"}'>
+                    <span class='grade_icon'>{{'Lv'+userGrade}}</span>
                  </p>
               </div>
               <div class='user_fans'>
@@ -76,6 +76,9 @@
                 show:false,
                 type:0,
                 avatar:'',
+                pseudonym:'',
+                userGrade:0,
+                userSex:0,
                 navList:[
                     {img:require('../../assets/images/personCenter@2x.png'),title:'我的书架',link:'/bookRack'},
                     {img:require('../../assets/images/wallet@2x@2x.png'),title:'我的钱包',link:'/myWallet'},
@@ -136,6 +139,9 @@
               if(this.isLogin){
                   refshUserInfo()
                   this.avatar=this.userInfo.userHeadPortraitURL
+                  this.pseudonym=this.userInfo.pseudonym
+                  this.userSex=this.userInfo.userSex
+                  this.userGrade=this.userInfo.userGrade
                   this.getFansAndFollowCount()
                   this.getFansAndFollowCount(0)
               }

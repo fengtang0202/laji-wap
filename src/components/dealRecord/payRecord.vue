@@ -7,7 +7,7 @@
                 <p>金额</p>
                 <p>状态</p>
               </div>
-          <div class='pay_list' v-for='item in payRecordList'>
+          <div class='pay_list' v-for='item in payRecordList' >
                 <p >{{item.dateTimes|formatDate2}}</p>
                 <p>{{item.rechargeType|payType}}</p>
                 <p>{{item.money}}</p>
@@ -47,7 +47,7 @@ export default{
          payType(res){
               let type='';
               res==110&&(type='支付宝')
-              res==111&&(type='微信支付')
+              res==113&&(type='微信')
               res==112&&(type='苹果支付')
               return res=type
          }
@@ -66,6 +66,7 @@ export default{
              Post_formData2(this,options,'/api/user-RechargeRecord',res=>{
                  if(res.returnCode==200){
                      this.payRecordList=this.payRecordList.concat(res.data.list)
+                     console.log(this.payRecordList)
                      if(res.data.lastPage>this.page){
                          $state.loaded()
                         }else{

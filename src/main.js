@@ -66,6 +66,9 @@ axios.interceptors.response.use(
 );
 Vue.prototype.$http = axios
 FastClick.attach(document.body)
+FastClick.prototype.focus = function (targetElement) {
+        targetElement.focus();
+    };
 // 注册全局过滤器
 import * as filters from '@/config/filters'  
 Object.keys(filters).forEach(key => {  

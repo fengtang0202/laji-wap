@@ -68,7 +68,7 @@
           </div>
           <div v-transfer-dom>
             <popup v-model="show">
-                <div style='height:1.5rem;font-size:.16rem;background-color:#fff;'>
+                <div style='overflow:hidden;height:1.5rem;font-size:.16rem;background-color:#fff;'>
                     <div  style='border-bottom:1px solid #E9E9E9;overflow:hidden;padding:.08rem .2rem'>
                         <p style='float:left' @click='show=false'>取消</p>
                         <p style='color:#F77583;float:right' @click='handleReply()'>发表</p>
@@ -150,7 +150,7 @@ import { setTimeout } from 'timers';
            handleReply(){
             let reg=/[\ud83c-\ud83e][\udc00-\udfff]|[\u2600-\u27ff]/
              if(!reg.test(this.replyText)){ 
-               if(this.replyText.length>0&&this.replyText.length<100){
+               if(this.replyText.length>0){
                  let options = {
                     bookid:this.readBookId,
                     replyCommentsContent:this.replyText,

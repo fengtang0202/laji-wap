@@ -12,10 +12,10 @@
                 <span>支付宝</span>
              </div>
              <!--  目前不支持 -->
-             <!-- <div class='wx' @click='handleTap()'>
+             <div class='wx' @click='handleTap("/wechatPay")'>
                  <img src="../../assets/images/wx@2x.png" alt="">
                  <span>微信</span>
-             </div> -->
+             </div>
          </div>
     </div>
 </template>
@@ -58,11 +58,11 @@ import {mapState} from 'vuex'
            },
            handleTap(res) {
             // res?this.handleAlipay():this.handleWeChatPay()
-            if(res){
+            // if(res){
                 this.$router.push(res)
-            }else{
-                this.$vux.toast.show({text:'目前还不支持微信支付!',type:'cancel'})
-             }
+            // }else{
+            //     this.$vux.toast.show({text:'目前还不支持微信支付!',type:'cancel'})
+            //  }
           }
        }
     }
@@ -88,15 +88,15 @@ import {mapState} from 'vuex'
            color:#999;
        }  
        .buy{
-        //    margin-left:.1rem;
+           margin-left:.1rem;
            div {
-            //    width:1.58rem;
-               width:80%;
+               width:1.58rem;
+            //    width:80%;
                height:.62rem;
                margin: 0 auto;
                border:1px solid #FB5E6F;
                border-radius: .04rem;
-            //    float:left;
+               float:left;
                background-color: #fff;
                line-height: .62rem;
                text-align: center;

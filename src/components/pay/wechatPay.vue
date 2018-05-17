@@ -30,8 +30,8 @@
 <script>
  import {TransferDom,Popup} from 'vux'
  import {mapState } from 'vuex'
-  import {Post_formData2} from '../../config/services'
-export default{
+ import {Post_formData2} from '../../config/services'
+ export default{
      data(){
       return{
        topList:{
@@ -76,10 +76,15 @@ export default{
           }
         Post_formData2(this,options,'/api/wap/YouFuWeiCharPayWap',res=>{
              if(res.returnCode==200){
-                 window.location.href=res.data
+                window.location.href=res.data
+                //  let sessionId=res.data.sessionId
+                //  localStorage.setItem('SESSION',sessionId)
+                //  window.location.href=res.data.gourl
              }
         }) 
       }
+  },
+  mounted () {
   }
 }
 </script>

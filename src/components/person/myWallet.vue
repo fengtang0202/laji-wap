@@ -32,6 +32,7 @@
 <script>
 import {mapState, mapActions} from 'vuex'
 import {Post_formData2} from '@/config/services'
+import operationCookie from '../../config/cookie'    
      export default {
          data () {
              return{
@@ -54,7 +55,7 @@ import {Post_formData2} from '@/config/services'
          methods: {
              ...mapActions(['getUserInfo']),
              handleGo(res) {
-                 this.$router.push(res)
+             this.$router.push(res)
              },
              getUserMoney(){
                       Post_formData2(this,'','/api/person-info',res=>{
@@ -62,15 +63,24 @@ import {Post_formData2} from '@/config/services'
                                 this.getUserInfo(res.data) 
                             }
                       })
-                    }
+                 }
             },
         mounted () {
-        this.getUserMoney()        
-        this.moneyList[0].price=this.userInfo.userGoldenTicket
-        this.moneyList[1].price=this.userInfo.userRecommendTicket
-        this.moneyList[2].price=this.userInfo.userReadTicket
-         }
+             let sessionId =localStorage.getItem('SESSION')
+            if(sessionId){
+                   operationCookie.set({
+                        name: 'SESSION',
+                        value: this.sessionId,
+                        path: '/',
+                        day: 1
+                });
+            }
+            this.getUserMoney()        
+            this.moneyList[0].price=this.userInfo.userGoldenTicket
+            this.moneyList[1].price=this.userInfo.userRecommendTicket
+            this.moneyList[2].price=this.userInfo.userReadTicket
         }
+    }
 </script>
 <style lang='less' scoped>
   .wallet{

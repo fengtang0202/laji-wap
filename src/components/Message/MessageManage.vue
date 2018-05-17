@@ -9,7 +9,9 @@
        </div>
     </div>
     <!-- <transition :name="transitionName">     -->
-       <router-view></router-view>
+        <keep-alive>
+           <router-view></router-view>
+        </keep-alive>
     <!-- </transition> -->
   </div>
 </template>
@@ -47,7 +49,6 @@ import {Param_Get_Resful,Post_formData2,formatDate} from '@/config/services'
          },
          methods: {
             hanldeTabs(index,link){
-                console.log(index)
                 this.$router.replace(link)
                 this.getIndex()
             },
@@ -67,12 +68,12 @@ import {Param_Get_Resful,Post_formData2,formatDate} from '@/config/services'
          },
          mounted () {
              this.getIndex()
-             Post_formData2(this,'','/api/person-messageCount',res=>{
-               console.log(res)
-             })
-             Post_formData2(this,{startpage:1},'api/sys-getsystemmsg',res=>{
-                 this.sysMessageList=res.data.list
-             })
+            //  Post_formData2(this,'','/api/person-messageCount',res=>{
+            //    console.log(res)
+            //  })
+            //  Post_formData2(this,{startpage:1},'/api/sys-getsystemmsg',res=>{
+            //      this.sysMessageList=res.data.list
+            //  })
          }
      }
 </script>

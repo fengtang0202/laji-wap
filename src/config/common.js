@@ -7,7 +7,7 @@ export function handleIsPhone(){
         window.location.href = 'https://www.lajixs.com/apk/app.apk'
     }
     if (isiOS) {
-        this.$vux.toast.text('ios端即将上线,敬请期待!')
+        window.location.href = "https://itunes.apple.com/cn/app/id1232171775?mt=8"
     }
 }
 //滚动监听

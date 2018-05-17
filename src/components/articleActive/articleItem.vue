@@ -1,5 +1,8 @@
 <template>
    <div class='main'>
+         <div class='back' @click="$router.go(-1)">
+           <img src="../../assets/images/a_back.png" alt="">
+        </div>
             <p class='title'>{{headTitle}}</p>
         <div v-for='item in articleList'>
             <p class='title' style='margin-bottom:.13rem'>{{item.title}}</p>
@@ -35,6 +38,20 @@
    .main{
        background:-webkit-gradient(linear, 0  0, 0 bottom, from(#5DBCF2), to(#fff)); 
        padding:.3rem .1rem;  
+       position: relative;
+       .back{
+           width:.32rem;
+           height:.32rem;
+           text-align: center;
+           position: absolute;
+           top:.3rem;
+           line-height: .32rem;
+           img{
+               width:.13rem;
+               height:.21rem;
+               vertical-align: middle;
+           }
+       }
         .info{
                   color:#333;
                   font-size:.14rem;

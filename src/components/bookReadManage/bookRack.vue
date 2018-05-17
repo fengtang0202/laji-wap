@@ -13,16 +13,15 @@
     </div>
     <div class='readNow'>
          <p>正在阅读{{`(${ReadNowList.length})`}}</p>
-         <div class='book_detail_wrap' v-for='item in ReadNowList' @click="handleBookDetail(item.bookId)">
+         <div class='book_detail_wrap'  v-for='(item,index) in ReadNowList' :key='index' @click="handleBookDetail(item.bookId)">
             <img :src="item.bookImage" style='width:1.04rem;height:1.35rem' alt="">
             <span style='font-size:.16rem;'>{{item.bookName|str(5)}}</span>
-            <img class='icon_update'  src="../../assets/images/updateR.png"  v-if='item.isUpdate' alt="">
+            <img class='icon_update'  src="../../assets/images/updateR.png"  v-if='item.a' alt="">
             <input type="checkbox" v-model="item.checked" v-if='delShow' class='del_btn'>
          </div>
          <div class='add_book' @click="handleGo()">
              <img  src="../../assets/images/addBook@3x.png" alt="">
          </div>          
-         
     </div>
     <div class='commendRead'>
          <p>推荐阅读{{`(${commendReadList.length})`}}</p>
@@ -39,6 +38,8 @@
 import { Post_formData2,Post_formData,Param_Get_Resful} from '@/config/services'
 import {fetch} from '../../config/ajax'
 import {mapActions,mapState} from 'vuex'
+import { resolve } from 'url';
+import { rejects } from 'assert';
     export default {
         data(){
             return{
@@ -90,23 +91,22 @@ import {mapActions,mapState} from 'vuex'
             }
           },
            getReadNow(){
-                Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/bookshelf-getuserbookshelf',res=>{
-                      if(res.returnCode==200){
-                          res.data.list.forEach(value=>{
-                              value.checked=false 
-                           Param_Get_Resful(this,'/api/books-volumeChapterList/'+value.bookId,res=>{
+              fetch('/api/bookshelf-getuserbookshelf','post',{userid:this.userInfo.userId,startpage:1}).then(data=>{
+                    if(data.returnCode==200){
+                         for(let i=0;i<data.data.list.length;i++){
+                             data.data.list[i].checked=false
+                            Param_Get_Resful(this,'/api/books-volumeChapterList/'+data.data.list[i].bookId,res=>{
                                     if(res.returnCode===200){
                                        let lastList=res.data.chapterInfo.pop().resultList.pop()
-                                        if(!lastList||value.nowChapterid==lastList.id){
-                                            value.isUpdate=false
+                                        if(!lastList||data.data.list[i].nowChapterid==lastList.id){
+                                           this.$set(this.ReadNowList[i],'a',false)
                                         }else{
-                                            value.isUpdate=true
-                                        }
-                                    }
-                               })
-                         })
-                          this.ReadNowList=res.data.list
-                          console.log(this.ReadNowList)
+                                           this.$set(this.ReadNowList[i],'a',true)                                           
+                                   }
+                                }
+                            })
+                         }
+                         this.ReadNowList=data.data.list
                       }else if(res.returnCode==500){
                           this.ReadNowList=[]
                      }
@@ -119,8 +119,10 @@ import {mapActions,mapState} from 'vuex'
                 this.$router.push({path:'/'})
             }
         },
+        mounted(){
+        },
          created(){
-            this.getReadNow()
+             this.getReadNow()
             this.getCommendBook()
          }
     }
