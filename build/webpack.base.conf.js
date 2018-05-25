@@ -23,7 +23,7 @@ const webpackConfig  = {
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
-    alias: {
+    alias: { 
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       // ,

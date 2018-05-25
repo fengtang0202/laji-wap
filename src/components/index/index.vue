@@ -107,7 +107,7 @@
             handleScrollTop(){
                 this.scroll = document.documentElement.scrollTop || document.body.scrollTop;
                 console.log(this.scroll)
-                if(this.scroll>5){
+                if(this.scroll>0){
                     this.handleNewbook()
                     window.removeEventListener("scroll",this.handleScrollTop)
                 }
@@ -147,8 +147,8 @@
             }
         },
         mounted(){
-            window.addEventListener('scroll',this.handleScrollTop)
             this.handleGetbook();
+            window.addEventListener('scroll',this.handleScrollTop)
         },
         destroyed () {
             window.removeEventListener('scroll',this.handleScrollTop)

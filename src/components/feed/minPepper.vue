@@ -39,7 +39,10 @@
             Box,
         },
         computed : {
-            ...mapState(['userInfo','isLogin'])
+            ...mapState(['userInfo','isLogin','minPepper'])
+        },
+        watch: {
+            
         },
         methods: {
             change (val) {
@@ -70,11 +73,9 @@
                   }
                     Post_formData2(this,options,'/api/user-RecommendationTicket',res=>{                        
                       if(res.returnCode===200){
-                       this.$vux.toast.show({text:res.msg}) 
-                    //    这里是有点问题的
-                       this.userInfo.userRecommendTicket-=this.number                    
+                       this.$vux.toast.show({text:res.msg})         
                        this.money-=this.number
-                       refshUserInfo()
+                       this.setminPepper(this.money)
                        this.backShow = false;
                        this.dilogShow = false;
                         }else if(res.returnCode==500){
@@ -92,7 +93,7 @@
         },
          created(){
              if(this.isLogin){
-                 this.money=this.userInfo.userRecommendTicket 
+                 this.money=this.minPepper 
                 }
         }
     }

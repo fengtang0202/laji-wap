@@ -3,7 +3,7 @@
   <headerComponent :list='topList'></headerComponent>
 <div class='page'>
    <div v-for='i in cityData' >
-       <div class='title' ref='i.name'  style='width:100%;background:#EFEFEF;height:.36rem;line-height:.36rem;padding-left:.14rem'>
+       <div class='title' :id='i.name' ref='i.name'  style='width:100%;background:#EFEFEF;height:.36rem;line-height:.36rem;padding-left:.14rem'>
          {{i.name}}
        </div>
        <ul class='country'>
@@ -13,6 +13,9 @@
          </li>
        </ul>
    </div>
+       <ul class='md'>
+           <li v-for='(i,index) in nav' :key='index'><a :href="'#'+i">{{i}}</a></li>
+      </ul>
 </div>
 </div>
    </template>
@@ -25,6 +28,7 @@ export default{
               title_2:'首页',
               link:'/'
         },
+        nav:['热门','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
         type:this.$route.query.type,        
         cityData:[
           {
@@ -145,7 +149,7 @@ export default{
         {
             "name": "奥兰群岛",
             "countryPinyin": "ao lan qun dao",
-            "value": "(null)",
+            "value": "358",
             "countryCode": "AX"
         },
         {
@@ -660,7 +664,7 @@ export default{
         {
             "name": "赫德岛和麦克唐纳群岛",
             "countryPinyin": "he de dao he mai ke tang na qun dao",
-            "value": "(null)",
+            "value": "00",
             "countryCode": "HM"
         },
         {
@@ -1685,6 +1689,7 @@ export default{
    .page{
        overflow-y:auto;
        -webkit-overflow-scrolling:touch;
+       position: relative;
        .country{
            overflow: hidden;
         //    padding-left:.14rem;
@@ -1704,6 +1709,20 @@ export default{
                  margin-right:.34rem;
              }
 
+           }
+       }
+       .md{
+           position: fixed;
+           top:20%;
+           right:0rem;
+           li{
+               list-style: none;
+               line-height:.14rem;
+               text-align: center;
+               a{
+                   color:#F77583;
+                   font-size: .12rem;
+               }
            }
        }
    }

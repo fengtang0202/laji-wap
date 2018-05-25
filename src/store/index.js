@@ -9,6 +9,9 @@ Vue.use(Vuex);
         isLogin:false,
         // bookRack:[],
         // readCommentInfo:{},
+        feed:0,
+        feedPepper:0,
+        minPepper:0,
         fans:0,
         fllows:0,
         rephone:0,
@@ -18,6 +21,15 @@ Vue.use(Vuex);
         fontColor: '#685640'
     }
     const mutations = {
+        setfeed(state,feed){
+            state.feed=feed
+        },
+        setfeedPepper(state, feedPepper){
+            state.feedPepper=feedPepper
+        },
+        setminPepper(state,minPepper){
+            state.minPepper=minPepper
+        },
         setBackgroundColor(state,color){
             state.backgroundColor=color
         },
@@ -66,6 +78,15 @@ Vue.use(Vuex);
         // }
     }
     const actions = {
+        setfeed({commit},feed){
+            commit('setfeed',feed)
+        },
+        setfeedPepper({commit},feedPepper){
+          commit('setfeedPepper',feedPepper)
+        },
+        setminPepper({commit},minPepper){
+          commit('setminPepper',minPepper)
+        }, 
         setBackgroundColor({commit},color){
            commit('setBackgroundColor',color)  
         },

@@ -76,10 +76,11 @@
           }
         Post_formData2(this,options,'/api/wap/YouFuWeiCharPayWap',res=>{
              if(res.returnCode==200){
-                window.location.href=res.data
-                //  let sessionId=res.data.sessionId
-                //  localStorage.setItem('SESSION',sessionId)
+                //  window.location.href=res.data
+                 this.sessionId=res.data.sessionId
+                 localStorage.setItem('SESSION',this.sessionId)
                 //  window.location.href=res.data.gourl
+                this.show=true 
              }
         }) 
       }

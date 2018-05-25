@@ -50,7 +50,7 @@
             ...mapState(['isLogin'])
         },
         methods:{
-            ...mapActions(['loginAction','getUserInfo']),
+            ...mapActions(['loginAction','getUserInfo','setfeed','setfeedPepper','setminPepper']),
             handleRouter(res){
                 this.$router.push(res)
             },
@@ -92,6 +92,9 @@
                                let userInfo=res.data
                                this.loginAction(true)
                                this.getUserInfo(userInfo)
+                               this.setfeed(userInfo.userGoldenTicket)
+                               this.setfeedPepper(userInfo.userMoney)
+                               this.setminPepper(userInfo.userRecommendTicket)
                                this.$vux.toast.text('登录成功!') 
                                this.$router.push(this.$route.query.redirect||'/')
                             }else{

@@ -44,13 +44,13 @@ import { Post_formData2} from '@/config/services'
         },
         props:['param'],
         computed : {
-           ...mapState(['userInfo','isLogin'])
+           ...mapState(['userInfo','isLogin','feedPepper'])
         },
         components: {
 
         },
         methods: {
-            ...mapActions(['loginAction','getUserInfo']),
+            ...mapActions(['loginAction','getUserInfo','setfeedPepper']),
            handleCheck(res,index){
                 this.iscode = index;
                 this.keyNum = res;
@@ -68,8 +68,8 @@ import { Post_formData2} from '@/config/services'
                Post_formData2(this,options,'/api/user-SpicyiRewardTicket',res=>{
                    if(res.returnCode===200){
                        this.$vux.toast.show({text:res.msg})
-                       this.userInfo.userMoney-=this.keyNum
                        this.money-=this.keyNum
+                       this.setfeedPepper(this.money)
                        this.backpepperShow = false
                        this.dilogpepperShow = false
                      }else if(res.returnCode===500){
@@ -94,8 +94,8 @@ import { Post_formData2} from '@/config/services'
         },
          mounted(){
               if(this.isLogin){
-                  this.money=this.userInfo.userMoney
-              }
+                  this.money=this.feedPepper
+                 }
            }
     }
 </script>

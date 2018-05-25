@@ -59,7 +59,6 @@ import {Post_formData2,handleScroll} from '@/config/services'
         methods:{
             handleInitItemIndex(){
                 let path=this.$route.path
-                console.log(path)
                    switch(path){
                     case '/bookRank':
                      this.changeItemColor=0

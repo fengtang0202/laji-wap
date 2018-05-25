@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="text_d" v-for='item in list' :key='item.bookId' @click="handleGo(item.bookId)">
+    <div class="text_d" v-for='item in list'  @click="handleGo(item.bookId)">
             <img :src="item.bookImage" style='border-radius:5px;'>
             <div class="con_d">
                <div class="text_one">

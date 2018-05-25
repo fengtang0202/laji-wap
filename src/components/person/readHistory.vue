@@ -15,7 +15,7 @@
          <div class='commend_book_wrap'  @click="handleBookDetail(item.bookId)" v-for='item in ReadHistoryList'>
             <img :src="item.bookImage" alt="">
             <p>{{item.bookName|str(6)}}</p> 
-            <P style='color:#999'>{{item.writerName}}</P>  
+            <P style='color:#999'>{{item.writerName|str(6)}}</P>  
             <!-- <p class='is_update' :style="{ 'color': item.bookStatus==0?'#FF6F00':'#47B2D8' }">{{item.isUpdate==0?'已完结':'连载中'}}</p>          -->
             <input type="checkbox" v-model="item.checked" v-if='delShow' class='del_btn'>            
          </div>    
@@ -82,7 +82,7 @@ export default {
                     }else{
                         this.showNoData=false;
                    }
-                })
+            })
         }    
     },
     mounted () {

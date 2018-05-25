@@ -80,7 +80,7 @@
                     <div class="similar-swiper"  :style='{width:width}'>
                     <div class="swiper-wrapper">                        
                         <div class='swiper-slide' v-for="item in swiperList" @click='handleToBookDetail(item.bookId)' :key="item.bookId">
-                           <img  v-lazy="item.bookImage" style='border-radius:5px;'>
+                           <img  :src="item.bookImage" style='border-radius:5px;'>
                            <span>{{item.bookName|str(5)}}</span>
                            <!-- <img src="../../assets/images/qinyue.png"  v-if='item.check' class='qianyue' alt=""> -->
                         </div>

@@ -149,6 +149,8 @@ import AppMinpepper from '@/components/feed/minPepper'
                ConfirmShow:false,
                chapterIdNum:0,
                bookName:'',
+               bookImg:'',
+               bookIntroduction:'',
                messageTitle:'',
                touchstartX:0,
                chapterName:'',
@@ -345,6 +347,8 @@ import AppMinpepper from '@/components/feed/minPepper'
                     this.bookText=res.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;').replace(/[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}/g,' ')
                     this.preNextShow=true
                     this.bookName=res.data.bookInfo.bookName
+                    this.bookImg=res.data.bookInfo.bookImage
+                    this.bookIntroduction=res.data.bookInfo.bookIntroduction
                     this.isvip=res.data.chapterInfo.chapterIsvip
                     this.chapterName=res.data.chapterInfo.chapterTitle
                     this.rewordParam.authorId=res.data.chapterInfo.bookWriterId
@@ -394,8 +398,6 @@ import AppMinpepper from '@/components/feed/minPepper'
                     // this.getNowChapterId()                 
                     // this.setChapterId(this.chapterList[this.chapterIdNum].id)
                     this.chapterId=this.chapterList[this.chapterIdNum].id
-                    console.log(this.chapterId)
-                    console.log(this.chapterIdNum)
                     if (this.isLogin) {
                         this.btnShow&&this.buyChapter()                              
                     }
@@ -415,8 +417,6 @@ import AppMinpepper from '@/components/feed/minPepper'
                     // this.getNowChapterId()                                     
                     // this.setChapterId(this.chapterList[this.chapterIdNum].id) 
                     this.chapterId=this.chapterList[this.chapterIdNum].id 
-                    console.log(this.chapterId)
-                    console.log(this.chapterIdNum)
                     if(this.isLogin){
                         this.btnShow&&this.buyChapter()    
                     }
@@ -456,6 +456,8 @@ import AppMinpepper from '@/components/feed/minPepper'
                    this.show=false
                    soshm.popIn({
                    title: self.bookName,
+                   digest:this.bookIntroduction,
+                   pic:this.bookImg,
                      sites: ['weixin', 'weixintimeline', 'weibo', 'qq','qzone']
                    });
                  }

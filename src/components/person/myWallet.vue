@@ -52,10 +52,18 @@ import operationCookie from '../../config/cookie'
          computed : {
               ...mapState(['userInfo'])
         }, 
+        beforeRouteLeave(to,from,next){
+            next(()=>{
+                localStorage.removeItem('SESSION')
+            })
+        },
+        // beforeRouteEnter(to, from, next){
+          
+        // },
          methods: {
              ...mapActions(['getUserInfo']),
              handleGo(res) {
-             this.$router.push(res)
+               this.$router.push(res)
              },
              getUserMoney(){
                       Post_formData2(this,'','/api/person-info',res=>{
@@ -66,11 +74,11 @@ import operationCookie from '../../config/cookie'
                  }
             },
         mounted () {
-             let sessionId =localStorage.getItem('SESSION')
+            let sessionId =localStorage.getItem('SESSION')
             if(sessionId){
                    operationCookie.set({
                         name: 'SESSION',
-                        value: this.sessionId,
+                        value: sessionId,
                         path: '/',
                         day: 1
                 });
@@ -79,6 +87,7 @@ import operationCookie from '../../config/cookie'
             this.moneyList[0].price=this.userInfo.userGoldenTicket
             this.moneyList[1].price=this.userInfo.userRecommendTicket
             this.moneyList[2].price=this.userInfo.userReadTicket
+
         }
     }
 </script>

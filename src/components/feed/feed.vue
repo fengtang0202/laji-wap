@@ -37,10 +37,10 @@
             Box,
         },
         computed : {
-            ...mapState(['userInfo','readBookId','isLogin'])
+            ...mapState(['userInfo','readBookId','isLogin','feed'])
         },
         methods: {
-            ...mapActions(['loginAction','getUserInfo']),
+            ...mapActions(['loginAction','getUserInfo','setfeed']),
             change (val) {
                 // console.log('change', val)
             },
@@ -70,8 +70,8 @@
                 Post_formData2(this,options,'/api/user-RewardGonderTicket',res=>{
                       if(res.returnCode===200){
                             this.$vux.toast.show({text:res.msg}) 
-                            this.userInfo.userGoldenTicket-=this.number
                             this.money-=this.number
+                            this.setfeed(this.money)
                             this.backShow = false;
                             this.dilogShow = false;
                         }else if(res.returnCode==500){
@@ -87,7 +87,7 @@
         },
         mounted(){
             if(this.isLogin){
-                this.money=this.userInfo.userGoldenTicket
+                this.money=this.feed
             }
         }
     }

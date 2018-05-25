@@ -38,11 +38,11 @@ module.exports = {
             pathRewrite: {
                 '^/api': ''
             }
-          //     ,
-          //    secure: false,
-          //    headers: {
-          //      Referer: 'https://www.lajixs.com/api'
-          //  }
+              ,
+             secure: false,
+             headers: {
+               Referer: 'https://www.lajixs.com/api'
+           }
         }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
