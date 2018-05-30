@@ -144,6 +144,8 @@ import { setTimeout } from 'timers';
                     if(res.returnCode===200){
                         this.readCommentInfo=res.data
                         this.showContent=true
+                    }else if(res.returnCode==800){
+                        this.readCommentInfo=null
                     }
                 })
            },
@@ -211,7 +213,6 @@ import { setTimeout } from 'timers';
            }
         },
         mounted () {
-            // this.getCommentReply()
             this.getCommentInfo()
         }
     }

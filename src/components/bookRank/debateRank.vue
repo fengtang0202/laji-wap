@@ -49,7 +49,6 @@ import {Post_formData2} from '@/config/services'
                              let lists=null
                           if(res.returnCode==200){
                                   lists=res.data[self.dayType].list
-                                  console.log(res)
                                   self.rankBookList = self.rankBookList.concat(lists);
                                 if(res.data[self.dayType].lastPage>self.page){ 
                                         $state.loaded()

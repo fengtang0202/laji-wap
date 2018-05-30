@@ -1,26 +1,27 @@
 <template>
   <div id="app"  v-cloak>
       <!-- <transition :name="transitionName"> -->
-      <router-view class="child-view"></router-view>
+           <keep-alive>
+             <router-view v-if="$route.meta.keepAlive"></router-view>
+           </keep-alive>
+           <router-view v-if="!$route.meta.keepAlive"></router-view>
       <!-- </transition> -->
+        <!-- <router-view></router-view> -->
   </div>
 </template>
 
 <script>
 import {Param_Get_Resful } from '@/config/services'
 
-var wx = require('weixin-js-sdk'); 
+// var wx = require('weixin-js-sdk'); 
 export default {
   name: 'app',
     data() {
         return {
-            transitionName: 'slide-left'
+            transitionName: 'slide-left',
         }
     },
     mounted () {
-    //    this.$nextTick(()=>{
-    //        document.querySelector('#app').scrollIntoView()
-    //    })
     },
     //监听路由的路径，可以通过不同的路径去选择不同的切换效果
     watch: {
@@ -31,6 +32,8 @@ export default {
                 this.transitionName = 'slide-left';
             }
         }
+    },
+    methods: {
     }
 }
 </script>

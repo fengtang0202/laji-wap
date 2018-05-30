@@ -23,6 +23,7 @@
                  </div> 
               </div>
                  <img src="../../assets/images/qinyue.png"  v-if='isQ' class='qianyue' alt="">
+                 <img src="../../assets/images/zw.png" class='zw' v-if='infoList.collectionDocuments==1'>
           </div>
           <div class="check_d">              
               <div class="reader" v-for="(item,index) in cate"  :key='index' :class="{addCate:isActive===index}" @click="handleRead(index)"><span v-html="item.name"></span></div>
@@ -66,6 +67,7 @@
               <commendItem :list='commentList'></commendItem>
               <!--  -->
               <div class="more" @click="handleGo({path:'/bookComment',query:{bookId:readBookId}})">
+                    <No v-if='showNoContent' message='暂无评论'></No>
                   <p>
                       <span>更多书评</span>  
                       <img  src="../../assets/images/more@3x.png" alt="">                
@@ -132,7 +134,8 @@
                 isBook:false,
                 btnShow:false,
                 isQ:false,
-                updateTime:''
+                updateTime:'',
+                showNoContent:false
             }
         },
         components: {
@@ -348,18 +351,9 @@
                     if(res.returnCode==200){
                          this.commentList = res.data;
                     }else{
-                        // this.$vux.toast.text('暂无评论!')
+                        this.commentList=null
                     }
                 })
-            },
-            refeshUserInfo(){
-                 if(this.isLogin){
-                    Post_formData2(this,'','/api/person-info',res=>{
-                            if(res.returnCode===200){
-                                this.getUserInfo(res.data) 
-                             }
-                      })
-                  }
             },
             handleToBookDetail(bookId){
                 if(this.isLogin){
@@ -387,7 +381,6 @@
                     isSelect:this.btnShow?1:0
                 }
                 Post_formData2(this,options,'/api/userRmemberChose',res=>{
-                    // console.log(res.data)
                     if(res.returnCode==200){ 
                         res.data.isClose==0?this.btnShow=true:this.btnShow=false
                         res.data.isClose==0?this.cate[1].name='自动订阅':this.cate[1].name='取消订阅'
@@ -395,11 +388,6 @@
                         this.btnShow=true
                         this.cate[1].name='自动订阅'
                     }
-                    // else if(res.returnCode==400&&this.isLogin){
-                    //     this.loginAction(false)
-                    //     this.getUserInfo(null)
-                    //     this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})                        
-                    // }
                  })                
             },
           },
@@ -428,5 +416,4 @@
 [v-cloak]{ display:none} 
   @import '../../css/paper';
   @import '../../css/bookDetail';  
-  
 </style>

@@ -24,8 +24,9 @@
         },
         methods:{
            handleSubmit(){
-               let checkpwd = /^.{6,20}$/;
-               if(checkpwd.test(this.pwd)){
+            //    let checkpwd = /^.{6,20}$/;
+                 let checkpwd=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/
+                 if(checkpwd.test(this.pwd)){
                    if(this.pwd == this.repwd){
                         let options ={
                             newPwd:md5(this.repwd),
@@ -44,7 +45,7 @@
                       this.$vux.toast.text('两次输入的密码不相同'); 
                    }
                }else{
-                   this.$vux.toast.text('请输入6-20位的密码');
+                   this.$vux.toast.text('密码必须有大小写字母和数字且6-18位');
                }
            } 
         }

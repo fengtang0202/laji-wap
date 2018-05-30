@@ -119,12 +119,10 @@ import { rejects } from 'assert';
                 this.$router.push({path:'/'})
             }
         },
-        mounted(){
-        },
-         created(){
-             this.getReadNow()
-            this.getCommendBook()
-         }
+        activated () {
+            this.getReadNow()
+            this.getCommendBook() 
+        }
     }
 </script>
 <style lang='less' scoped>

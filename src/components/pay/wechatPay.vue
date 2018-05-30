@@ -79,8 +79,8 @@
                 //  window.location.href=res.data
                  this.sessionId=res.data.sessionId
                  localStorage.setItem('SESSION',this.sessionId)
-                //  window.location.href=res.data.gourl
-                this.show=true 
+                 window.location.href=res.data.gourl
+                 this.show=true 
              }
         }) 
       }

@@ -102,25 +102,36 @@ let routers=[
         requireAuth: true,
       }
     },  
-    {path: '/editorRecommend',component: editorRecommend},
+    {path: '/editorRecommend',component: editorRecommend,
+       meta:{
+         title:'小编推荐',
+         keepAlive:true
+       }
+  },
     {path: '/bookDetails', name: 'bookDetails', component: bookDetails},
-    {path:'/categoryDetail',component:categoryDetail},
+    {path:'/categoryDetail',component:categoryDetail,
+      meta:{
+        title:'书籍分类详情'
+      }
+    },
     {path: '/',component: Home,
         children:[//子路由
             {path:'/',component:index,
              meta: {
-              title: '辣鸡小说',
-              meta:{
-                keepAlive: true                
-              }
+                title: '辣鸡小说',
+                keepAlive:true
             }
           },
             {path: 'categoryList', component:categoryList,meta:{
-              keepAlive: true
+                title:'书籍分类',
+                keepAlive: true              
             }},
-            {path:'bookFree',component:bookFree,meta:{
-              keepAlive: true 
-            }}
+            {
+              path:'bookFree',component:bookFree,meta:{
+                title:'书籍限免',
+                keepAlive:true
+            }
+          }
         ]
     },
     {path: '/directory', name: 'directory', component: directory,
@@ -157,14 +168,16 @@ let routers=[
     },
     {path:'/bookRack',component:bookRack, meta: {
         requireAuth: true,
-        title:'用户书架'
+        title:'用户书架',
+        keepAlive:true
       }
     },
     {path:'/bookRank',component:bookRank,
     children:[
       {path:'/',component:golden,
       meta:{
-        title:'书籍排行榜'
+        title:'书籍排行榜',
+        keepAlive:true
       }
     },
       { path:'minPaperRank',component:minPaperRank},
@@ -178,17 +191,18 @@ let routers=[
   },
     {path:'/readHistory',component:readHistory, meta: {
         requireAuth: true,
-        title:'阅读记录'
+        title:'阅读记录',
+        keepAlive:true
       }
     },  
     {path:'/bookRead',component:bookRead,
      meta:{
-        
      }
   } ,
     {path:'/bookComment',component:bookComment,
     meta:{
-      title:'书籍评论'
+      title:'书籍评论',
+      keepAlive:true
     }
   },
     {path:'/bookCommentDetail',component:bookCommentDetail,
@@ -257,11 +271,25 @@ let routers=[
             requireAuth:true           
          }
     },
-    {path:'/test',component:test}
+    // {path:'/test',component:test}
 ]
 const router = new Router({
-    routes: routers,
+   scrollBehavior(to, from, savedPosition) {
+     setTimeout(()=>{
+       if (savedPosition) {
+           return savedPosition
+       } else {
+           return {
+               x: 0,
+               y: 0
+           }
+       }
+     },500)
+    },
+     routes: routers,
      base:'/mob',
-     mode:'history'
+     mode:'history',
+    
+
 })
 export default router

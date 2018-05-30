@@ -1,5 +1,5 @@
 <template>
-   <div class='book_comment_wrap'>
+   <div class='book_comment_wrap' v-if='is'>
         <headerComponent :list="topList"></headerComponent>
         <div v-if='showContent'>
           <div class='book_hot_comment'>
@@ -52,7 +52,6 @@
 import {Post_formData2,Post_formData,Param_Get_Resful} from '@/config/services'
 import {mapState,mapActions} from 'vuex'
 import {Popup,TransferDom} from 'vux'
-
 export default {
     components:{
       Popup
@@ -62,6 +61,7 @@ export default {
     },
     data () {
         return{
+            is:true,
           topList:{
               title_1:'评论',
               title_2:'首页',
@@ -78,7 +78,7 @@ export default {
           newCommentcount:0,
           bookName:'',
           readBookId:this.$route.query.bookId,
-          page:0
+          page:1
         }
     },
     computed: {
@@ -89,15 +89,16 @@ export default {
                this.show=false;
             },
           getHotComment () {
+              this.readBookId=this.$route.query.bookId              
               Post_formData2(this,{bookid:this.readBookId},'/api/comm-HotCommentInfo',res=>{
                   if(res.returnCode==200){
                       this.hotCommentList=res.data
                       this.hotCommentcount=res.data.length
-                      console.log(this.hotCommentList)
                       this.showContent=true
                   }else if(res.returnCode===800){
-                    //   this.showContent=false
-                      this.showNoContent=true                     
+                      this.hotCommentList=null
+                      this.showNoContent=true 
+                      this.showContent=false
                   }
               }) 
           },
@@ -142,12 +143,16 @@ export default {
           },
           infiniteHandler($state){
                 this.page+=1
+                console.log("load:"+this.page)
+                this.readBookId=this.$route.query.bookId  
                 Post_formData2(this,{id:this.readBookId,type:1,startPage:this.page},'/api/comm-getcomminfo',res=>{
                           if(res.returnCode==200){
                             //   this.showContent=true
-                              this.newCommentList = this.newCommentList.concat(res.data.list);
-                               this.newCommentcount=res.data.total
+                               this.newCommentList = this.newCommentList.concat(res.data.list);
+                               this.newCommentcount=res.data.total 
+                               console.log("lastPage:"+res.data.lastPage)                             
                                 if(res.data.lastPage>this.page){ 
+                                    console.log("loadcomplete:"+this.page)
                                     $state.loaded()
                                     }else{
                                     $state.complete()
@@ -158,18 +163,21 @@ export default {
                     })
               },
           getNewComment(){
+               this.readBookId=this.$route.query.bookId
                Post_formData2(this,{id:this.readBookId,type:1,startPage:1},'/api/comm-getcomminfo',res=>{
                   if(res.returnCode==200){
-                    //   console.log(res.data)
                       if(res.data.list.length!=0){
                       this.showContent=true
                       this.newCommentList=res.data.list
-                      this.newCommentcount=res.data.list.length
+                      this.newCommentcount=res.data.total
                       this.bookName=res.data.list[0].bookName
+                      this.showNoContent=false
                       }else{
+                         this.newCommentList=null
                          this.showNoContent=true                              
                       }
-                  }else{
+                  }else {
+                         this.newCommentList=null
                          this.showNoContent=true    
                   }
               }) 
@@ -180,7 +188,7 @@ export default {
                })
           },
           handlereplyDetail(id){
-              console.log(id)
+            //   console.log(id)
           },
            handleShow(){
                if(this.isLogin){
@@ -188,16 +196,25 @@ export default {
                }else{
                 this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
                }
-           }
+        },
+         reload () {
+            this.is = false
+            this.$nextTick(() => (this.is = true))
+     } 
     },
-    mounted() {
-        this.getHotComment()
-        // this.getNewComment()
+    beforeRouteEnter(to, from, next){  
+             from.path=="/bookDetails"&&window.scrollTo(0,0)
+             next()
+   },
+    created(){
         this.getTime()
-        // Post_formData2(this,"",'/api/person-checkLoginState',res=>{
-        //     console.log(res)
-        // })
-    }
+    },
+     activated(){
+         this.page=1    
+         this.reload()
+         this.getHotComment()
+         this.getNewComment()
+     }
 }
 </script>
 <style lang='less' scoped>

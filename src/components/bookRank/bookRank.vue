@@ -7,7 +7,9 @@
           </ul>
        </div>
        <div class='book_list_wrap'>
-           <router-view></router-view>
+           <keep-alive>
+              <router-view></router-view>
+           </keep-alive>
        </div>
    </div>
 </template>
@@ -103,15 +105,15 @@ import {Post_formData2,handleScroll} from '@/config/services'
             },
         },
         mounted () {
-            let self=this
-            this.$nextTick(()=>{
-                window.addEventListener('scroll',this.handleScroll)
-            })
+            // let self=this
+            // this.$nextTick(()=>{
+            //     window.addEventListener('scroll',this.handleScroll)
+            // })
             this.handleInitItemIndex()
         },
-        destroyed () {
-            window.removeEventListener('scroll',this.handleScroll)
-        }
+        // destroyed () {
+        //     window.removeEventListener('scroll',this.handleScroll)
+        // }
     }
 </script>
 <style lang='less' scoped>

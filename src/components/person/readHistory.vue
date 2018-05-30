@@ -85,7 +85,7 @@ export default {
             })
         }    
     },
-    mounted () {
+    activated () {
         this.handleReadBookList()
     }
 }

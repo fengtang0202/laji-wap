@@ -33,7 +33,6 @@ import {Post_formData2} from '@/config/services'
                  self.page+=1
                 Post_formData2(self,{type:2,page:self.page},'/api/ranking-book',res=>{
                           if(res.returnCode==200){
-                              console.log(res.data.week)
                                   self.rankBookList = self.rankBookList.concat(res.data[self.dayType].list);
                                 if(res.data[self.dayType].lastPage>self.page){ 
                                         $state.loaded()
@@ -70,7 +69,6 @@ import {Post_formData2} from '@/config/services'
                 Post_formData2(this,{type:2,page:1},'/api/ranking-book',res=>{
                  if(res.returnCode==200){
                    this.rankBookList = res.data[this.dayType].list
-                //    console.log(this.rankBookList)
                 }
              })
            }

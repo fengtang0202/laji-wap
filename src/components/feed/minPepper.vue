@@ -17,7 +17,7 @@
 
 <script>
     import { Group, XNumber,XButton, Box} from 'vux'
-    import {mapState} from 'vuex'
+    import {mapState,mapActions} from 'vuex'
     import { Post_formData2} from '@/config/services'
     import {refshUserInfo} from '../../config/getData'
     export default {
@@ -45,6 +45,7 @@
             
         },
         methods: {
+            ...mapActions(['setminPepper']),
             change (val) {
                 console.log('change', val)
             },
