@@ -44,10 +44,6 @@ import { rejects } from 'assert';
         data(){
             return{
                 word:'编辑',
-                source:{
-                img:require('../../assets/images/1.png'),
-                text:'没有阅读记录'
-               },
                 commendReadList:[],
                 ReadNowList:[],
                 delShow:false,

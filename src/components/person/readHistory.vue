@@ -34,10 +34,6 @@ export default {
             showNoData:true,
              word:'编辑',
              delShow:false,
-             source:{
-                img:require('../../assets/images/1.png'),
-                text:'没有阅读记录'
-            },
             delId:[]
         }
     },

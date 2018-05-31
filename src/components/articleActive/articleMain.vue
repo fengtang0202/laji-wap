@@ -6,8 +6,9 @@
      </div> -->
      <div class='bg'>
           <ul class='nav'>
-              <li v-for='(li,index) in navList' :key='index' @click='handleTap(index)' :class="{isAdd:homeIndex===index}">
-                 <a :href="'#'+li.a">{{li.title}}</a>
+              <li v-for='(li,index) in navList' :key='index' @click='jump(index)' :class="{isAdd:homeIndex===index}">
+                 <!-- <a :href="'#'+li.a">{{li.title}}</a> -->
+                 <span>{{li.title}}</span>
               </li>
           </ul>
      </div>
@@ -55,7 +56,7 @@
 3、获得有声小说、漫画、出版、影视的优先推荐权。
                  </p>
               </div>
-              <div id='e'>
+              <div id='e' class='top'>
                  <img src="../../assets/images/cslc.png" style='width:2.57rem;height:.4rem' alt="">
                  <p>
                    作品需要先签约辣鸡小说，然后由责编来进行评选，符合征文要求即可享受征文奖励。
@@ -80,11 +81,45 @@
          },
          
          methods:{
+            jump (index) {
+                this.homeIndex=index
+                let jump = document.querySelectorAll('.top')
+                let total = jump[index].offsetTop-35
+                let distance = document.documentElement.scrollTop || document.body.scrollTop
+                // 平滑滚动，时长500ms，每10ms一跳，共50跳
+                let step = total / 50
+                if (total > distance) {
+                   smoothDown()
+                } else {
+                    let newTotal = distance - total
+                    step = newTotal / 50
+                    smoothUp()
+                }
+                function smoothDown () {
+                if (distance < total) {
+                    distance += step
+        　　　　　　　document.body.scrollTop = distance
+                    document.documentElement.scrollTop = distance
+                    setTimeout(smoothDown, 10)
+                } else {
+                    document.body.scrollTop = total
+                    document.documentElement.scrollTop = total
+                  }
+               }
+                function smoothUp () {
+                if (distance > total) {
+                    distance -= step
+        　　　　　　　document.body.scrollTop = distance
+                     document.documentElement.scrollTop = distance
+                     setTimeout(smoothUp, 10)
+                } else {
+                    document.body.scrollTop = total
+                    document.documentElement.scrollTop = total
+                        }
+                    } 
+                },
               handleGo(res){
                 this.$router.push(res)
-            },
-            handleTap(res){
-                this.homeIndex=res
             },
             getIndex(){
               let i =this.$route.fullPath
@@ -147,7 +182,7 @@
                    height:.32rem;
                    text-align: center;
                    border-radius: .05rem;
-                   a{
+                   span{
                        font-size:.14rem;
                        color:#fff;
                        font-family: "DFPHaiBaoW12-GB";    

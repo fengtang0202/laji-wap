@@ -22,7 +22,7 @@
           </span>
          </infinite-loading>
   </div>
-  <No :source='source'  v-if='!show'></No>
+  <No v-if='!show' message='没有相关数据'></No>  
 </div>
 </template>
 <script>
@@ -33,11 +33,7 @@ export default{
         return {
             payRecordList:[],
             show:true,
-            page:0,
-            source:{
-                img:require('../../assets/images/1.png'),
-                text:'没有相关数据'
-            }
+            page:0
         }  
      },
      computed:{

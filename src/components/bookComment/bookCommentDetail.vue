@@ -103,10 +103,6 @@ import { setTimeout } from 'timers';
                     link:'/'
                 },
                 show:false,
-                source:{
-                img:require('../../assets/images/1.png'),
-                text:'没有相关回复'
-              }
             }
         },
         directives: {
