@@ -137,7 +137,6 @@ export default {
       } , 
      postImg () {  
             let uploadImg=this.convertBase64UrlToBlob(this.headerImage)
-            // alert(uploadImg.size/1024/1024)
             if(uploadImg.size/1024>1024*2){
               this.$vux.toast.text('截取的图太大了,上传头像失败!')
               return;
@@ -146,7 +145,9 @@ export default {
             fd.append("file", uploadImg,"image.png");
             fd.append('puserid',this.userInfo.userId)
             this.show=true
-            this.$http.post('/api/admin/updateUserAvatarimgUpload',fd).then(res=>{
+            this.$http.post('/api/sys-UserAvatarimgUpload',fd, 
+            {"Content-Type": "multipart/form-data"}
+        ).then(res=>{
                  if(res.data.returnCode==200){
                     this.show=false
                     refshUserInfo()

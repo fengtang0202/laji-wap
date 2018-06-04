@@ -4,7 +4,7 @@
             <app-feed  :param='rewordParam' ref="child"  @click="handleClosefeed()"></app-feed>
             <app-feedpepper :param='rewordParam'  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper>
             <AppMinpepper :param='rewordParam' ref='minFeedpepper' @click='hanldeCloseMinFeedPepper()'></AppMinpepper>
-       <div class='bookRead'>
+       <div class='bookRead' style='height:100vh'>
        <div class='clickDiv' @click='up()'>
 
       </div>
@@ -238,15 +238,8 @@ import AppMinpepper from '@/components/feed/minPepper'
              next()
          },
           beforeRouteEnter: (to, from, next) => {
-            next(vm=>{
-            //     if(vm.isLogin){
-            //         Post_formData2(vm,'','/api/person-checkLoginState',res=>{                    
-            //             if(res.returnCode==400){
-            //                 vm.loginAction(false)
-            //                 vm.getUserInfo(null)
-            //             }
-            //         })
-            //    }
+              next(vm=>{
+                to.meta.title=vm.$route.query.bookName
                 document.body.style.backgroundColor = vm.backgroundColor                
             })      
          },
@@ -295,7 +288,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                   index==3&&this.handleShareWX()
                   index==5&&this.handleShareQQ()
              },
-              handleShareWX(){
+            handleShareWX(){
                     this.$wechat.onMenuShareTimeline({
                         title: 'hello VUX',
                          link:window.location.href,
@@ -305,22 +298,22 @@ import AppMinpepper from '@/components/feed/minPepper'
                     //    },
                     })
              },
-             handleShareQQ(){
+            handleShareQQ(){
                  this.$wechat.onMenuShareQQ({
                      title:'11111'
                  })  
              },
-             handleShareWP(){
+            handleShareWP(){
                 this.$wechat.onMenuShareAppMessage({
                     title:'1'
                 })
              },
-              changebgColor(item){
+            changebgColor(item){
                 this.setBackgroundColor(item.bgcolor)
                 document.body.style.backgroundColor =item.bgcolor 
                 this.setFontColor(item.fontColor)
              },
-             getBookText(){
+            getBookText(){
                  Post_formData2(this,{chapterId:this.chapterId},'/api/book-read',res=>{
                      if (res.returnCode==400){
                          this.dialogshow=true
@@ -357,7 +350,7 @@ import AppMinpepper from '@/components/feed/minPepper'
               })    
              },
             //  上拉加载数据
-             onConfirm(res){
+            onConfirm(res){
                  //确定以后的操作
                 res==1&&this.addBookRack()
              },
@@ -365,7 +358,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                 //取消以后的操作
             //    console.log(1)
             },
-             getNowChapterId(){
+            getNowChapterId(){
                    Param_Get_Resful(this,`/api/books-volumeChapterList/${this.readBookId}`,res=>{
                     let arr=res.data.chapterInfo
                     arr.forEach(value=>{
@@ -390,7 +383,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                          }
                  })
              },
-             getNextChapterText () {
+            getNextChapterText () {
                    this.confirmKey=0
                    let n=this.chapterList.length
                    this.chapterIdNum++ 
@@ -410,7 +403,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                     this.ConfirmShow=true
                   }
              },
-                getPreChapterText () {
+            getPreChapterText () {
                    this.confirmKey=0                
                  if (this.chapterIdNum>0) {
                     this.chapterIdNum--  

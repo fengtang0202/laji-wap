@@ -135,7 +135,7 @@
                 btnShow:false,
                 isQ:false,
                 updateTime:'',
-                showNoContent:false
+                showNoContent:false,
             }
         },
         components: {
@@ -221,13 +221,13 @@
              handleToAndChapter(_router){
                   if(this.isLogin){
                    this.handleImmediatelyReadChapter().then(res=>{
-                      this.$router.replace({path:_router,query:{bookId:this.readBookId,chapterId:res}})
+                      this.$router.replace({path:_router,query:{bookId:this.readBookId,chapterId:res,bookName:this.rewordParam.bookName}})
                  },res=>{
-                      this.$router.push({path:_router,query:{bookId:this.readBookId,chapterId:res}})                     
+                      this.$router.push({path:_router,query:{bookId:this.readBookId,chapterId:res,bookName:this.rewordParam.bookName}})                     
                  })
                 }else{
                    this.handleInitChapterId().then(res=>{
-                    this.$router.push({path:_router,query:{bookId:this.readBookId,chapterId:res}})                    
+                    this.$router.push({path:_router,query:{bookId:this.readBookId,chapterId:res,bookName:this.rewordParam.bookName}})                    
                 })
               }   
             },

@@ -108,7 +108,12 @@ let routers=[
          keepAlive:true
        }
   },
-    {path: '/bookDetails', name: 'bookDetails', component: bookDetails},
+    {
+      path: '/bookDetails', name: 'bookDetails', component: bookDetails,
+      meta:{
+         title:'书籍详情'
+      }
+  },
     {path:'/categoryDetail',component:categoryDetail,
       meta:{
         title:'书籍分类详情'
@@ -197,6 +202,7 @@ let routers=[
     },  
     {path:'/bookRead',component:bookRead,
      meta:{
+       title:'书籍阅读'
      }
   } ,
     {path:'/bookComment',component:bookComment,
