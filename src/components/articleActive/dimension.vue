@@ -1,5 +1,5 @@
 <template>
- <articleItem  headTitle='幻想次元篇' :articleList='articleList'></articleItem>         
+ <articleItem  width='20%'  headTitle='幻想次元篇' :articleList='articleList'></articleItem>         
 </template>
 <script>
     export default{

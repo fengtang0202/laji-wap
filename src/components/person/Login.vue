@@ -2,7 +2,7 @@
     <div id="Login">
         <app-load></app-load>
         <div class="title">登录</div>
-        <input type="text" class="oInput"   placeholder="请输入手机号" v-model.trim="phone">
+        <input type="text" class="oInput"   placeholder="请输入手机号或用户名" v-model.trim="phone">
         <input type="password" class="oInput" placeholder="请输入密码"  v-model.trim="password">
         <div class="re_radio">
             <img src="../../assets/images/login.png" class="left_d" v-if="show" @click="handleCheck()">

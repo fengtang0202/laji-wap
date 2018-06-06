@@ -22,7 +22,7 @@
                     <span class="title"  :key='index' v-for="(item,index) in labelList" v-html="item.bookLableName" :style="{color:item.bookColor}"></span>
                  </div> 
               </div>
-                 <img src="../../assets/images/qinyue.png"  v-if='isQ' class='qianyue' alt="">
+                 <img src="../../assets/images/qinyue.png"  v-if='isQ&&!infoList.collectionDocuments==1' class='qianyue' alt="">
                  <img src="../../assets/images/zw.png" class='zw' v-if='infoList.collectionDocuments==1'>
           </div>
           <div class="check_d">              
