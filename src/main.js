@@ -57,7 +57,6 @@ axios.interceptors.response.use(
             router.push({ path: '/Login', query: { redirect: router.currentRoute.fullPath}})
             return response;
         }else if(response.data.returnCode==500){
-            // Vue.$vux.toast.text(response.data.msg); 
             return response;
         }else{  
             return response
@@ -103,6 +102,14 @@ router.beforeEach((to, from, next) => {
                     s.parentNode.insertBefore(hm, s);
                  })();
              }, 0);
+         let href = window.location.href
+         let i=href.indexOf('#')
+         let str=''  
+         i === -1 ? str : str = href.substring(i+1, href.length)
+         i === -1 || sessionStorage.setItem("pi",str)
+        axios.get(`/api/wapPVUVStatistics?ax001=9527&pi=${str}`).then(res=>{
+        // console.log(res.data)
+       }) 
     if (to.meta.title) {
         document.title = to.meta.title
     }

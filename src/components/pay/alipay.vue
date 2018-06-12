@@ -72,15 +72,15 @@ export default{
       handelTap(index,price){
            this.isAddTo=index
            this.price=price
-           let options={
+           let options = {
                 username:this.userInfo.userName,
                 apymentType:3,
-                WIDtotal_amount:price
+                WIDtotal_amount:price,
+                channelId:this.userInfo.userCode,
+                rechargeChannelId:sessionStorage.getItem('pi')||'LG20180608000',
            }
            Post_formData2(this,options,'/api/payment-alipaywap',res=>{
                if(res.returnCode==200){
-                //    this.formHtml=res.data
-                //    console.log(this.formHtml)
                   this.formHtml=res.data.form
                   this.sessionId=res.data.sessionId
                   localStorage.setItem('SESSION',this.sessionId)

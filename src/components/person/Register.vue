@@ -118,12 +118,19 @@
             },
             handleCheckRegister(){
                 let phone = this.areaCode==86?this.phone:this.areaCode+'+'+this.phone
-                let options ={
+                let checkpwd=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/  
+                if(!checkpwd.test(this.pwd)){
+                     this.$vux.toast.text('密码必须有大小写字母和数字且6-18位');                     
+                     return;
+                }              
+                let options = {
                     code:this.verificationCode,
                     pseudonym:this.name,
                     userPassword:md5(this.pwd),
                     userSex:this.sex,
-                    userPhone:phone
+                    userPhone:phone,
+                    userCode : sessionStorage.getItem('pi')||'LG20180608000',
+                    terminal:1 
                 }
                 Post_formData2(this,options,'/api/person-regInfo',res=>{
                         this.$vux.toast.text(res.msg);

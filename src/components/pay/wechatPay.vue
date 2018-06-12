@@ -72,11 +72,12 @@
           let options={
               userId:this.userInfo.userId,
               nickName:this.userInfo.pseudonym,
-              howmuch:this.price
+              howmuch:this.price,
+              channelId:this.userInfo.userCode,
+              rechargeChannelId:sessionStorage.getItem('pi')||'LG20180608000',
           }
         Post_formData2(this,options,'/api/wap/YouFuWeiCharPayWap',res=>{
              if(res.returnCode==200){
-                //  window.location.href=res.data
                  this.sessionId=res.data.sessionId
                  localStorage.setItem('SESSION',this.sessionId)
                  window.location.href=res.data.gourl
