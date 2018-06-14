@@ -1,5 +1,4 @@
 <template>
-<keep-alive>
   <div class='person'>
       <div class='header'>
          <div @click="$router.go(-1)">
@@ -50,7 +49,6 @@
             <span class="loginOut">退出登录</span>
        </div>
   </div>
-</keep-alive>  
 </template>
 
 <script>

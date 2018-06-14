@@ -3,8 +3,11 @@ export function handleIsPhone(){
     var u = navigator.userAgent;
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
     var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    // https: //www.lajixs.com/apk/app.apk
     if (isAndroid) {
-        window.location.href = 'https://www.lajixs.com/apk/app.apk'
+       let pi=sessionStorage.getItem('pi')
+       let href = pi ? `https://www.lajixs.com/api/appDownLoad?channelid=${pi}` : 'https://www.lajixs.com/apk/app.apk'
+       window.location.href = href
     }
     if (isiOS) {
         window.location.href = "https://itunes.apple.com/cn/app/id1232171775?mt=8"

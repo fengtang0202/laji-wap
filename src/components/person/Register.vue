@@ -138,7 +138,7 @@
                                 this.$router.push({path:'/Login'});
                             }else{
                                 this.$vux.toast.text(res.msg);
-                            }
+                        }
                 })
             },
             sendMessage(){

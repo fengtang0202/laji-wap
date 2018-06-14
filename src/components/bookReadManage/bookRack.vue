@@ -1,4 +1,5 @@
 <template>
+<keep-alive>
 <div>
  <div class='book_rcak_wrap'>
     <div class='header'>
@@ -33,6 +34,7 @@
     </div>
  </div>
  </div>
+</keep-alive>
 </template>
 <script>
 import { Post_formData2,Post_formData,Param_Get_Resful} from '@/config/services'
@@ -103,7 +105,7 @@ import { rejects } from 'assert';
                             })
                          }
                          this.ReadNowList=data.data.list
-                      }else if(res.returnCode==500){
+                      }else if(data.returnCode==500){
                           this.ReadNowList=[]
                      }
                 })
@@ -116,9 +118,9 @@ import { rejects } from 'assert';
             }
         },
         activated () {
-            this.getReadNow()
-            this.getCommendBook() 
-        }
+           this.getReadNow()
+           this.getCommendBook()  
+        } 
     }
 </script>
 <style lang='less' scoped>
