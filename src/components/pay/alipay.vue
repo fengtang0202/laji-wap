@@ -33,10 +33,11 @@
   
 </template>
 <script>
-import {mapState} from 'vuex'
+import {mapState,mapActions} from 'vuex'
 import {Post_formData2} from '../../config/services'
 import {TransferDom,Popup} from 'vux'
-import operationCookie from '../../config/cookie'    
+import operationCookie from '../../config/cookie' 
+import {refshUserInfo} from '../../config/getData'        
 export default{
      data(){
       return{
@@ -85,6 +86,7 @@ export default{
                   this.sessionId=res.data.sessionId
                   localStorage.setItem('SESSION',this.sessionId)
                   this.show=true
+                  refshUserInfo()
                }
            })
       },

@@ -43,13 +43,13 @@
             return {
                areaCode:this.$route.query.value,
                phone:'',
-               pwd:'',
-               name:'',
+               pwd:null,
+               name:null,
                women:true,
                man:true,
                checkName:false,
                checkPhone:false,
-               sex:'',
+               sex:null,
                word:'获取验证码',
                isOvertime: false,
                verificationCode:'',
@@ -80,49 +80,56 @@
                    this.sex = 0;
                 }
             },
-            handleRegister(){
-                // let checkPhone = /^1(3|4|5|6|7|8|9)\d{9}$/;
-                // let checkPassword = /^.{6,20}$/;
-                let checkPassword=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/
-                let checkName = /^.{1,20}$/;
-                    if(
-                        // checkPhone.test(this.phone)&&
-                        checkPassword.test(this.pwd)&&checkName.test(this.name)&&this.sex!==''){
-                            noParam_Get(this,'/api/person-checkNickPhone/'+`${this.phone}`,res=>{
-                                if(res.returnCode==200){
-                                    this.handleCheckname();
-                                }else{
-                                    this.$vux.toast.text(res.msg);
-                                }
-                          })
-                    }
-                    // else if(!checkPhone.test(this.phone)){
-                    //     this.$vux.toast.text('请输入正确手机号码');
-                    //}
-                    else if(!checkPassword.test(this.pwd)){
-                        this.$vux.toast.text('密码必须有大小写字母和数字且6-18位');
-                    }else if(!checkName.test(this.name)){
-                        this.$vux.toast.text('请输入小于20位的昵称');
-                    }else if(this.sex ===''){
-                        this.$vux.toast.text('请选择性别');
-                    }
-            },
-            handleCheckname(){
-                    noParam_Get(this,'/api/person-checkNickName/'+this.name,res=>{
-                        if(res.returnCode==200){
-                            this.handleCheckRegister();
-                        }else{
-                            this.$vux.toast.text(res.msg);
-                        }
-                    })
-            },
-            handleCheckRegister(){
+            // handleRegister(){
+            //     // let checkPhone = /^1(3|4|5|6|7|8|9)\d{9}$/;
+            //     // let checkPassword = /^.{6,20}$/;
+            //     let checkPassword=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/
+            //     let checkName = /^.{1,20}$/;
+            //         if(checkPassword.test(this.pwd)&&checkName.test(this.name)){
+            //             if (this.sex){
+            //                 console.log(this.sex)
+            //                 noParam_Get(this,'/api/person-checkNickPhone/'+`${this.phone}`,res=>{
+            //                     if(res.returnCode==200){
+            //                         this.handleCheckname();
+            //                     }else{
+            //                         this.$vux.toast.text(res.msg);
+            //                     }
+            //               })
+            //             }else{
+            //                  this.$vux.toast.text('请选择你的性别');
+            //             }
+            //         }else if(!checkPassword.test(this.pwd)){
+            //             this.$vux.toast.text('密码必须有大小写字母和数字且6-18位');
+            //         }else if(!checkName.test(this.name)){
+            //             this.$vux.toast.text('请输入小于20位的昵称');
+            //         }else if(!this.sex){
+            //             this.$vux.toast.text('请选择性别');
+            //         }
+            // },
+            // handleCheckname(){
+            //         noParam_Get(this,'/api/person-checkNickName/'+this.name,res=>{
+            //             if(res.returnCode==200){
+            //                 this.handleCheckRegister();
+            //             }else{
+            //                 this.$vux.toast.text(res.msg);
+            //             }
+            //         })
+            // },
+            handleCheckRegister () {
                 let phone = this.areaCode==86?this.phone:this.areaCode+'+'+this.phone
                 let checkpwd=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/  
                 if(!checkpwd.test(this.pwd)){
                      this.$vux.toast.text('密码必须有大小写字母和数字且6-18位');                     
                      return;
-                }              
+                }   
+                if(!this.name) {
+                    this.$vux.toast.text('请输入昵称');                     
+                    return;
+                } 
+                if(this.sex==null){
+                    this.$vux.toast.text('请选择性别');                     
+                     return;
+                } 
                 let options = {
                     code:this.verificationCode,
                     pseudonym:this.name,
@@ -189,7 +196,6 @@
                             if(res.returnCode==200){
                                 this.$vux.toast.text(res.msg);
                             }else{
-                                console.log(res)
                                 this.$vux.toast.text(res.msg);
                             }
                         // })

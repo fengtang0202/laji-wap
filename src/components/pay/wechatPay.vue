@@ -31,6 +31,7 @@
  import {TransferDom,Popup} from 'vux'
  import {mapState } from 'vuex'
  import {Post_formData2} from '../../config/services'
+ import {refshUserInfo} from '../../config/getData'        
  export default{
      data(){
       return{
@@ -82,6 +83,7 @@
                  localStorage.setItem('SESSION',this.sessionId)
                  window.location.href=res.data.gourl
                  this.show=true 
+                 refshUserInfo()
              }
         }) 
       }

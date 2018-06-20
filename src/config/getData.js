@@ -22,6 +22,9 @@ export function refshUserInfo(){
         }else if(res.returnCode==200){
             store.state.isLogin = true            
             store.state.userInfo = res.data
+            store.state.feed = res.data.userGoldenTicket
+            store.state.feedPepper = res.data.userMoney
+            store.state.minPepper = res.data.userRecommendTicket
         }
     })
 }
