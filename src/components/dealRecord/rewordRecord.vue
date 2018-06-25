@@ -8,7 +8,7 @@
               </div>
           <div class='pay_list' v-for='item in payRecordList'>
                 <p >{{item.giveDateTime|formatDate2}}</p>
-                <p>{{item.bookName|str(11)}}</p>
+                <p>{{item.bookName|str(10)}}</p>
                 <p class='add'>{{item.spicyiTicketCount}}</p>
           </div>
            <infinite-loading spinner='bubbles' @infinite="onInfinite" ref="infiniteLoading">

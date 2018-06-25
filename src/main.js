@@ -54,6 +54,7 @@ axios.interceptors.response.use(
         if (response.data.returnCode === 400&&store.state.isLogin){
             store.commit('changeLogin', false)
             store.commit('getUserInfo',null)
+            localStorage.removeItem('SESSION')
             router.push({ path: '/Login', query: { redirect: router.currentRoute.fullPath}})
             return response;
         }else if(response.data.returnCode==500){
@@ -73,6 +74,9 @@ import * as filters from '@/config/filters'
 Object.keys(filters).forEach(key => {  
     Vue.filter(key, filters[key])  
 })  
+String.prototype.Trim = function () {
+    return this.replace(/\s+/g, "");
+}
 import directives from "./config/directives"
 Vue.use(directives);
 NProgress.inc(0.2)

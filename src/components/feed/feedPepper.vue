@@ -5,7 +5,7 @@
                 <div class="paypepper">打赏辣椒</div>
                 <div class='con'>
                     <div class="lajiao">
-                        <p class='op' >您的辣椒余额:{{money}}</p>
+                        <p class='op' >您的辣椒余额:{{feedPepper}}</p>
                         <div class="btn" @click='handleGo()'>充值</div>
                     </div>
                     <div class="check">
@@ -92,7 +92,7 @@ import { Post_formData2} from '@/config/services'
                this.dilogpepperShow = !this.dilogpepperShow;
            }
         },
-         mounted(){
+        mounted(){
               if(this.isLogin){
                   this.money=this.feedPepper
                  }

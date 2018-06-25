@@ -1,7 +1,7 @@
 <template>
   <div class='person'>
       <div class='header'>
-         <div @click="$router.go(-1)">
+         <div @click="handleBackGo()">
              <img src="../../assets/images/back@2x.png" style='width:.4rem;heigh:.4rem;vertical-align: middle;' alt="">
          </div>    
          <div class='title_1'>个人中心</div>
@@ -100,6 +100,7 @@
                Post_formData2(this,'','/api/person-ClearUserInfo',res=>{
                    if(res.returnCode==200||res.returnCode==400){
                             this.$vux.toast.text('退出成功!')
+                            localStorage.removeItem('SESSION')
                                 setTimeout(()=>{
                                  this.loginAction(false)
                                  this.getUserInfo(null)       
@@ -111,28 +112,24 @@
          onCancel(){
              
         },
-        // beforeRouteEnter(to,from,next){
-        //     next(vm=>{
-        //         Post_formData2(vm,'','/api/person-checkLoginState',res=>{                    
-        //             if(res.returnCode==400){
-        //                 vm.loginAction(false)
-        //                 vm.getUserInfo(null)
-        //             }
-        //         })
-        //     })
-        //  },
+        //由于微信支付 有一个中间页 直接跳到首页
+        //$router.go(-1)
+        handleBackGo(){
+            this.$router.push('/')
+        },
           onConfirm(){
              handleIsPhone()
           },
-          getFansAndFollowCount(type=1){
+         getFansAndFollowCount(type=1){
             Param_Get_Resful(this,`/api/fans-followCount/${this.userInfo.userId}/${type}`,res=>{
                  type==1?this.setFans(res.data):this.setFllows(res.data)  
                 })
             },
            handleGo () {
                this.$router.push("/personInfo")
-            }
-        },
+            },
+
+         },
           mounted(){
               if(this.isLogin){
                   refshUserInfo()

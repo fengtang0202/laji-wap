@@ -9,7 +9,7 @@
               </div>
           <div class='pay_list' v-for='item in List '>
                 <p>{{item.giveDateTime|formatDate2}}</p>
-                <p>{{item.bookName|str(8)}}</p>
+                <p>{{item.bookName|str(6)}}</p>
                 <p class='add1'>{{item.recommendTicketCount}}</p>
                 <p class='add'>成功</p>
           </div>
@@ -89,7 +89,7 @@ export default{
        .pay_list{
            overflow: hidden;
            font-size: .14rem;
-           margin-left:.1rem;
+           padding-left:.1rem;
            position: relative;
            border-bottom:1px solid #E9E9E9;           
             p{

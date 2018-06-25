@@ -161,7 +161,6 @@ import { mapActions, mapState } from 'vuex';
             hanldeDel(item){
                for(let index in this.hotwordList){
                    if(item==this.hotwordList[index]){
-                       console.log(index)
                        this.hotwordList.splice(index,1)
                        localStorage.setItem(this.userInfo.userId,JSON.stringify(Array.from(new Set(this.hotwordList))))
                    }
@@ -174,7 +173,7 @@ import { mapActions, mapState } from 'vuex';
                     this.hotLabel = true;
                 }
                 let options = {
-                    keyWord:this.keyword,
+                    keyWord:this.keyword.Trim(),
                     startPage:1,
                     isHotWorld:1
                 }

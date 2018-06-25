@@ -66,7 +66,7 @@ const dream = r => require.ensure([], () => r(require('@/components/articleActiv
 const rotten = r => require.ensure([], () => r(require('@/components/articleActive/rotten')), 'rotten')
 const dimension = r => require.ensure([], () => r(require('@/components/articleActive/dimension')), 'dimension')
 
-import test from '@/components/test'
+// import test from '@/components/test'
 Vue.use(Router)
 let routers=[
     { path: '/articleActive', component: articleActive},
@@ -157,7 +157,7 @@ let routers=[
     {path:'/person',name:'person',component:person, 
     meta: {
         requireAuth: true,
-        title:'用户中心'
+        title:'个人中心'
       }
     },
     {path:'/personInfo',name:'personInfo',component:personInfo,
@@ -173,7 +173,7 @@ let routers=[
     },
     {path:'/bookRack',component:bookRack, meta: {
         requireAuth: true,
-        title:'用户书架',
+        title:'我的书架',
         keepAlive:true
       }
     },
@@ -249,7 +249,7 @@ let routers=[
         path:'/MessageManage',component:MessageManage,
           children:[//子路由
             { path: '/', component:  sysMessage,meta:{
-               title:'消息中心'
+               title:'我的消息'
             }
           },
             { path: 'personalLetter', component:personalLetter},

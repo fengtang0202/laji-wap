@@ -7,7 +7,7 @@
                 <p>金额</p>
                 <p>状态</p>
               </div>
-          <div class='pay_list' v-for='item in payRecordList' >
+          <div class='pay_list' v-for='item in payRecordList'>
                 <p >{{item.dateTimes|formatDate2}}</p>
                 <p>{{item.rechargeType|payType}}</p>
                 <p>{{item.money}}</p>
@@ -62,7 +62,6 @@ export default{
              Post_formData2(this,options,'/api/user-RechargeRecord',res=>{
                  if(res.returnCode==200){
                      this.payRecordList=this.payRecordList.concat(res.data.list)
-                     console.log(this.payRecordList)
                      if(res.data.lastPage>this.page){
                          $state.loaded()
                         }else{
@@ -99,14 +98,14 @@ export default{
        .pay_list{
            overflow: hidden;
            font-size: .14rem;
-           margin-left:.1rem;
+           padding-left:.1rem;
+           border-bottom:1px solid #E9E9E9;               
             p{
                float: left;
                text-align: center;
-               min-width:20%;
+               min-width:18%;
                height:.4rem;
                line-height: .4rem;
-               border-bottom:1px solid #E9E9E9;               
             }
        }
    }

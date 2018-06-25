@@ -11,7 +11,7 @@
              </div>
          </div>
          <p style='text-align:center;margin-top:.1rem;'>
-             <span style='font-size:.3rem;'>{{userInfo.userMoney}}</span>
+             <span style='font-size:.3rem;'>{{feedPepper}}</span>
              <span style='font-size:.12rem'>辣椒</span>
              <img src="../../assets/images/d-28@3x.png"  alt="">
          </p>
@@ -33,6 +33,7 @@
 import {mapState, mapActions} from 'vuex'
 import {Post_formData2} from '@/config/services'
 import operationCookie from '../../config/cookie'  
+import {refshUserInfo} from '../../config/getData'        
      export default {
          data () {
              return{
@@ -46,20 +47,24 @@ import operationCookie from '../../config/cookie'
                   title_2:'首页',
                   link:'/'
               },
-              showComponent:true
+              showComponent:true,
+              isRender:false
              }  
          },
          computed : {
-              ...mapState(['userInfo'])
+              ...mapState(['userInfo','feedPepper'])
         }, 
         beforeRouteLeave(to,from,next){
-            next(()=>{
-                localStorage.removeItem('SESSION')
+            localStorage.removeItem('SESSION')
+            next()
+        },
+        beforeRouteEnter(to, from, next){
+          
+            next((vm)=>{
+                // vm.getUserMoney()
+                refshUserInfo()
             })
         },
-        // beforeRouteEnter(to, from, next){
-          
-        // },
          methods: {
              ...mapActions(['getUserInfo','setfeed','setfeedPepper','setminPepper']),
              handleGo(res) {
@@ -67,11 +72,12 @@ import operationCookie from '../../config/cookie'
              },
              getUserMoney(){
                       Post_formData2(this,'','/api/person-info',res=>{
-                            if(res.returnCode==200){
+                            if (res.returnCode==200) {
                                 this.getUserInfo(res.data) 
                                 this.setfeed(res.data.userGoldenTicket)
                                 this.setfeedPepper(res.data.userMoney)
                                 this.setminPepper(res.data.userRecommendTicket)
+
                             }
                       })
                  }
@@ -86,11 +92,11 @@ import operationCookie from '../../config/cookie'
                         day: 1
                 });
             }
-            this.getUserMoney()        
+            // this.getUserMoney()
+            
             this.moneyList[0].price=this.userInfo.userGoldenTicket
             this.moneyList[1].price=this.userInfo.userRecommendTicket
             this.moneyList[2].price=this.userInfo.userReadTicket
-            
         }
     }
 </script>

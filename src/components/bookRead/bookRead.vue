@@ -4,9 +4,8 @@
             <app-feed  :param='rewordParam' ref="child"  @click="handleClosefeed()"></app-feed>
             <app-feedpepper :param='rewordParam'  ref="childfeedpepper" @click="handleClosefeedpepper()"></app-feedpepper>
             <AppMinpepper :param='rewordParam' ref='minFeedpepper' @click='hanldeCloseMinFeedPepper()'></AppMinpepper>
-       <div class='bookRead' style='height:100vh'>
+       <div class='bookRead'>
        <div class='clickDiv' @click='up()'>
-
       </div>
     <div class='feed' :class='{show2:feedShow}'>
             <div class='nav' @touchend='show=!show'>
@@ -94,13 +93,13 @@
                             </p> -->
                         </div>
                         <!-- 登录 -->
-                        <div v-if='isLogin'>
+                    <div v-if='isLogin'>
                             <img style='width:1rem;height:1.63rem' src="../../assets/images/ns@2x.png" alt="">
                             <p style='color:#333;font-size:.16rem;'>
                                 <span>价格:{{price}}</span>
                             </p>
                             <p style='font-size:.14rem'>
-                                <span>余额{{userInfo.userMoney}}辣椒</span>
+                                <span>余额{{feedPepper}}辣椒</span>
                                 <span style='margin-left:.1rem;'>{{userInfo.userReadTicket}}辣椒劵</span>
                                 </p>
                             <p>
@@ -131,6 +130,9 @@ import soshm from 'soshm'
 import AppFeed from '@/components/feed/feed.vue'
 import AppFeedpepper from '@/components/feed/feedPepper.vue' 
 import AppMinpepper from '@/components/feed/minPepper'
+import {refshUserInfo} from '../../config/getData'        
+import { setTimeout } from 'timers';
+
 //   import BScroll from 'better-scroll'
 //   import Directory from '../directory/directory'
      export default{
@@ -217,7 +219,7 @@ import AppMinpepper from '@/components/feed/minPepper'
              Confirm,XDialog,AppFeed,AppFeedpepper,AppMinpepper,Popup
         },
          computed: {
-             ...mapState(['userInfo','isLogin','backgroundColor','fontSize','fontColor']),              
+             ...mapState(['userInfo','isLogin','backgroundColor','fontSize','fontColor','feedPepper']),              
          },
          directives: {
              TransferDom
@@ -227,12 +229,16 @@ import AppMinpepper from '@/components/feed/minPepper'
                 this.chapterId=this.$route.query.chapterId
                 // this.$refs.title.scrollIntoView(true)
                 this.getBookText()
+
                 // this.getNowChapterId()                                                     
                 this.isLogin&&this.addReadHistory()
             }
          },
           beforeRouteLeave(to,from,next){
             //  if(to.path=='/directory'){
+                 if(this.isLogin&&to.path=='/Login'){
+                  this.$router.go(-2)
+                }
                  document.body.style.backgroundColor ='#fff' 
             //  }
              next()
@@ -240,11 +246,11 @@ import AppMinpepper from '@/components/feed/minPepper'
           beforeRouteEnter: (to, from, next) => {
               next(vm=>{
                 to.meta.title=vm.$route.query.bookName
-                document.body.style.backgroundColor = vm.backgroundColor                
+                document.body.style.backgroundColor = vm.backgroundColor
             })      
          },
          methods:{
-             ...mapActions(['getUserInfo','setBackgroundColor','setFontSize','setFontColor']),
+             ...mapActions(['getUserInfo','setBackgroundColor','setFontSize','setFontColor','setfeedPepper']),
              handleFontSize(res){
                   res===1&&this.handleFontSizeAdd()
                   res===0&&this.handleFontSizeSubtract()
@@ -320,10 +326,7 @@ import AppMinpepper from '@/components/feed/minPepper'
                      }
                      if (res.returnCode==200){
                          this.dialogshow=false
-                   }
-                    if (res.returnCode==500){
-                         this.dialogshow=true
-                    }
+                     }
                     if (res.returnCode===800){
                         this.$vux.toast.show('作者偷懒中....')
                         return;
@@ -347,7 +350,13 @@ import AppMinpepper from '@/components/feed/minPepper'
                     this.rewordParam.authorId=res.data.chapterInfo.bookWriterId
                     this.rewordParam.bookName=res.data.bookInfo.bookName
                 // document.documentElement.style.height=window.innerHeight+'px'
-              })    
+                 if (res.returnCode==500) {
+                        if (this.isLogin) {
+                           this.btnShow&&this.buyChapter()                              
+                       }
+                          this.dialogshow=!this.btnShow
+                  }
+              })   
              },
             //  上拉加载数据
             onConfirm(res){
@@ -391,9 +400,9 @@ import AppMinpepper from '@/components/feed/minPepper'
                     // this.getNowChapterId()                 
                     // this.setChapterId(this.chapterList[this.chapterIdNum].id)
                     this.chapterId=this.chapterList[this.chapterIdNum].id
-                    if (this.isLogin) {
-                        this.btnShow&&this.buyChapter()                              
-                    }
+                    // if (this.isLogin) {
+                    //     this.btnShow&&this.buyChapter()                              
+                    // }
                         // !this.btnShow&&this.getBookText()
                      this.$router.replace({path:'/bookRead',query:{isvip:this.isvip,price:this.price,bookId:this.readBookId,chapterId:this.chapterId}})                       
                      this.$refs.content.scrollIntoView();
@@ -410,9 +419,9 @@ import AppMinpepper from '@/components/feed/minPepper'
                     // this.getNowChapterId()                                     
                     // this.setChapterId(this.chapterList[this.chapterIdNum].id) 
                     this.chapterId=this.chapterList[this.chapterIdNum].id 
-                    if(this.isLogin){
-                        this.btnShow&&this.buyChapter()    
-                    }
+                    // if(this.isLogin){
+                    //     this.btnShow&&this.buyChapter()    
+                    // }
                     this.$router.replace({path:'/bookRead',query:{isvip:this.isvip,price:this.price,bookId:this.readBookId,chapterId:this.chapterId}})                       
                     this.$refs.content.scrollIntoView();
                     // window.scrollTo(0,0)
@@ -488,10 +497,14 @@ import AppMinpepper from '@/components/feed/minPepper'
                  }
             },
             change (status) { 
-                  this.handleIsAuto()
-                  setTimeout(()=>{
-                      this.$Message.info(status?'订阅成功':'订阅取消');
-                  },1000)
+                if(this.isLogin){
+                    this.handleIsAuto()
+                    setTimeout(()=>{
+                        this.$Message.info(status?'订阅成功':'订阅取消');
+                    },200)
+                }else{
+                  this.$router.push({path:'/Login',query:{redirect:this.$route.fullPath}})                                             
+                }
             },
             handleGo () {
                   this.$router.push('/payMoney')
@@ -516,13 +529,15 @@ import AppMinpepper from '@/components/feed/minPepper'
                         bookName:this.bookName,
                         bookChapterId:this.chapterId,
                         bookChapterName:this.chapterName	
-                    }
+                }
                 Post_formData2(this,options,'/api/book-subscription',res=>{
                     if (res.returnCode===200) {
                          this.btn=true
                          this.bookText=res.data.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/g,'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
                          this.isLogin&&(this.dialogshow=false)
-                         this.refreshuserInfo()
+                         let feedPepper=this.feedPepper-this.price
+                         this.setfeedPepper(feedPepper)
+                        //  this.refreshuserInfo()
                         //  this.btnShow&&this.$vux.toast.show('购买成功!')
                     }else if(res.returnCode===300){
                         this.$vux.toast.show({text:res.msg})
@@ -567,26 +582,24 @@ import AppMinpepper from '@/components/feed/minPepper'
            })  
             }, 
             menu() {
-                    this.scroll = document.documentElement.scrollTop || document.body.scrollTop;
-                    this.clientHeight=document.documentElement.clientHeight||document.body.clientHeight;
-                    this.scrollHeight=document.body.scrollHeight||document.documentElement.scrollHeight            
-                if( this.scroll+ this.clientHeight>this.scrollHeight-100){
-                    　　　　this.lastNav=true;
+                this.scroll = document.documentElement.scrollTop || document.body.scrollTop;
+                this.clientHeight=document.documentElement.clientHeight||document.body.clientHeight;
+                this.scrollHeight=document.body.scrollHeight||document.documentElement.scrollHeight            
+                if ( this.scroll+ this.clientHeight>this.scrollHeight-100) {
+                    　　this.lastNav=true;
                         this.feedShow=true;
-                        //    alert(this.lastNav)
                     }else{
                         this.lastNav=false;
                         this.feedShow=false;
-                        //    alert(this.lastNav)                    
-                    }
+                }
             }, 
         },
         mounted () {
             if(this.isLogin){
-                this.isBookRack()
-                this.addReadHistory()                
-                this.btnShow&&this.buyChapter()
                 this.handleIsAuto('search')
+                this.isBookRack()
+                this.addReadHistory() 
+                // this.btnShow&&this.buyChapter()
             }
             //  this.height=document.documentElement.clientHeight||document.body.clientHeight
             this.$nextTick(()=>{
@@ -599,6 +612,7 @@ import AppMinpepper from '@/components/feed/minPepper'
         //给body加  padding-bottom
          created(){
             this.getBookText()
+
             this.getNowChapterId()
          }
      }

@@ -3,7 +3,7 @@
          <headerComponent :list='topList'></headerComponent>
          <div class='buy_detail'>
             <p class='bookName'>账户:{{userInfo.userPhone}}</p>
-            <p>账户余额:{{userInfo.userMoney}}</p> 
+            <p>账户余额:{{feedPepper}}</p> 
          </div>
          <p class='buyMay'>选择充值方式</p>
          <div class='buy' >
@@ -22,13 +22,14 @@
 <script>
 import headerComponent from '@/components/common/header'
 import { Post_formData2,noParam_Get} from '@/config/services'
+import {refshUserInfo} from '../../config/getData'        
 import {mapState} from 'vuex'
     export default {
         components:{
           headerComponent
         },
         computed: { 
-          ...mapState(['userInfo'])  
+          ...mapState(['userInfo','feedPepper','isLogin'])  
         },
         data () {
           return{
@@ -50,20 +51,19 @@ import {mapState} from 'vuex'
                }
              Post_formData2(this,options,'/api/payment-alipaywap',res=>{
                  this.html=res.data
-                console.log(res.data)
             })
          },
            handleWeChatPay () {
              console.log('微信')
            },
            handleTap(res) {
-            // res?this.handleAlipay():this.handleWeChatPay()
-            // if(res){
                 this.$router.push(res)
-            // }else{
-            //     this.$vux.toast.show({text:'目前还不支持微信支付!',type:'cancel'})
-            //  }
           }
+       },
+       mounted () {
+           if(this.isLogin){
+               refshUserInfo()
+           } 
        }
     }
 </script>

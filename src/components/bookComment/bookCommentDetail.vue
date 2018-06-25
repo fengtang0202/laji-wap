@@ -114,6 +114,12 @@ import { setTimeout } from 'timers';
         computed : {
            ...mapState(['isLogin','userInfo'])
         },
+         beforeRouteLeave(to, from, next){
+             if(this.isLogin&&to.path=='/Login'){
+                  this.$router.go(-2)
+             }
+            next()
+         },
         methods:{
           infiniteHandler($state){
                 this.page+=1
@@ -196,8 +202,8 @@ import { setTimeout } from 'timers';
                         }
                    }
               })
-            }else{
-                this.$vux.toast.text('登录后点赞哦')
+               }else{
+                this.$router.push({path:'/Login',query:{redirect:this.$route.fullPath}})
              }
            },
            handleShow(){

@@ -7,7 +7,7 @@
          <div class='title_1'>阅读记录</div>
          <div>
             <span class='title_2' @click='hanldeShow()'>{{word}}</span>
-            <span class='title_2' @click="handleDelBook()" v-if='delShow'>删除</span>
+            <span class='title_2' @click='showNoData?show=true:show=false' v-if='delShow'>删除</span>
          </div>
     </div>
    <div class='read_history' v-if='showNoData'>
@@ -22,29 +22,51 @@
       </div>
    </div>
    <No v-if='!showNoData' message='还有没有阅读记录'></No>
+   <div v-transfer-dom>
+          <confirm v-model="show"
+            color='#333'
+            @on-cancel="onCancel"
+            @on-confirm="onConfirm">
+         <p style="text-align:center;color:#333333;font-size:.16rem;">阅读记录就是你的书签哦,确定要删除么?</p>
+       </confirm>
+    </div>
 </div>
 </template>
 <script>
 import {Post_formData,Post_formData2} from '@/config/services'
 import {mapState,mapActions} from 'vuex'
+import {TransferDomDirective as TransferDom,Confirm} from 'vux'
 export default {
     data(){
         return {
             ReadHistoryList:[],
             showNoData:true,
-             word:'编辑',
-             delShow:false,
-            delId:[]
+            word:'编辑',
+            delShow:false,
+            delId:[],
+            show:false
         }
     },
     computed: {
         ...mapState(['userInfo'])
     },
+    components:{
+     Confirm
+    },
+     directives: {
+         TransferDom
+    },
     methods:{
+        onCancel(){
+       
+        },
+        onConfirm(){
+           this.handleDelBook()
+        },
         handleBookDetail(bookId){
             !this.delShow&&this.$router.push({path:'/bookDetails',query:{bookId:bookId}});
          },
-          handleDelBook(){
+        handleDelBook(){
             this.ReadHistoryList.forEach(value=>{
             if(value.checked==true){
                 this.delId.push(value.id)

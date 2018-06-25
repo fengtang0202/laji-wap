@@ -132,7 +132,7 @@
                 } 
                 let options = {
                     code:this.verificationCode,
-                    pseudonym:this.name,
+                    pseudonym:this.name.Trim(),
                     userPassword:md5(this.pwd),
                     userSex:this.sex,
                     userPhone:phone,

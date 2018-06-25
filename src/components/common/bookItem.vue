@@ -9,7 +9,7 @@
                </div>
                <div class="text_two">
                   <span>作者: </span>
-                  <span>{{item.writerName|str(8)}}</span>
+                  <span>{{item.writerName|str(7)}}</span>
                   <p></p>
                   <span  v-html="item.classificationName"></span>
                   <p></p>

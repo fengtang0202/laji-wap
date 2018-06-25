@@ -19,7 +19,7 @@
         <div class="popup">
            <p style='color:#FB5E6F;font-size:.28rem;text-align:center;margin:.13rem 0;'>¥{{price}}</p>
            <div style='overflow:hidden;border-bottom:1px solid #EFEFEF;'>
-              <p style='color:#666666;font-size:.16rem;float:left;margin-left:.14rem'>可用余额:{{userInfo.userMoney}}</p>
+              <p style='color:#666666;font-size:.16rem;float:left;margin-left:.14rem'>可用余额:{{feedPepper}}</p>
               <p style='color:#4A90E2;font-size:.12rem;float:right;margin-right:.14rem;'>每充值20元送1个金椒</p>
            </div>
             <p style='text-align:center;margin-top:.1rem;'>
@@ -67,7 +67,7 @@ export default{
     TransferDom
   },
   computed: {
-      ...mapState(['userInfo'])
+      ...mapState(['userInfo','feedPepper','isLogin'])
   },
   methods: {
       handelTap(index,price){
@@ -86,14 +86,19 @@ export default{
                   this.sessionId=res.data.sessionId
                   localStorage.setItem('SESSION',this.sessionId)
                   this.show=true
-                  refshUserInfo()
+                //   refshUserInfo()
                }
            })
       },
       pay () {
           document.forms[0].submit()
-      }
-  }
+      },
+    },
+     mounted(){
+         if(this.isLogin){
+             refshUserInfo()
+         }
+   }
 }
 </script>
 <style scoped lang='less'>

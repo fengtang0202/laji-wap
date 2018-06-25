@@ -99,6 +99,8 @@
     import { Loading,Scroller} from 'vux'
     import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
     import {mapState,mapActions} from 'vuex'
+    import {refshUserInfo} from '../../config/getData'        
+
     export default {
         name: 'bookDetails',
         data () {
@@ -146,13 +148,17 @@
             Scroller
         },
          beforeRouteEnter(to,from,next){
-           next()
+                next()
          },
-         beforeRouteLeave: (to, from, next) => {
+         beforeRouteLeave(to, from, next){
+             if(this.isLogin&&to.path=='/Login'){
+                //  this.$router.push('/')
+                this.$router.go(-2)
+             }
              next(vm=>{
                  vm.showContent=false
              })
-         },
+        },
         watch:{
           '$route'(){
               this.readBookId=this.$route.query.bookId
@@ -316,6 +322,7 @@
                         this.rewordParam.authorId=res.data.AuthorInfo.userId
                         this.rewordParam.bookId=this.readBookId
                         this.rewordParam.bookName=res.data.bookListInfo.bookName
+                        
                     }else{
                         // this.$vux.toast.text(res.msg);
                     }
@@ -391,10 +398,11 @@
                  })                
             },
           },
-        mounted () {
+         mounted () {
              this.handleInit();
              this.handleComments(); 
             if(this.isLogin){
+               refshUserInfo()
               this.handleIsAuto('search')
               this.isBookRack()
               Post_formData2(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{

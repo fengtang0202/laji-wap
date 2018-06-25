@@ -83,7 +83,7 @@ export default{
        .pay_list{
            overflow: hidden;
            font-size: .14rem;
-           margin-left:.1rem;
+           padding-left:.1rem;
            border-bottom:1px solid #E9E9E9;   
            position: relative;                       
             p{

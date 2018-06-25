@@ -206,6 +206,13 @@ export default {
              from.path=="/bookDetails"&&window.scrollTo(0,0)
              next()
    },
+     beforeRouteLeave(to, from, next){
+             if(this.isLogin&&to.path=='/Login'){
+                //  this.$router.push({path:'/bookDetails',query:{bookId:this.readBookId}})
+                this.$router.go(-2)
+             }
+            next()
+     },
     created(){
         this.getTime()
     },
