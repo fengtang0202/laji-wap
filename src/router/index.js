@@ -285,8 +285,7 @@ let routers=[
        meta:{
             requireAuth:true           
          }
-    },
-    // {path:'/test',component:test}
+    }
 ]
 const router = new Router({
    scrollBehavior(to, from, savedPosition) {
