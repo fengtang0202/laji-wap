@@ -41,6 +41,7 @@
                 volumeList:[],//所有卷
                 isShow:false,
                 chapterId:this.$route.query.chapterId,
+                bookName:this.$route.query.bookName,
                 // showContent:-1,
                 dialogshow:false,
                 readBookId:this.$route.query.bookId,
@@ -49,7 +50,7 @@
                     title_2:'首页',
                     link:'/'
                 },
-                volumeAndChapterlist:null,
+                volumeAndChapterlist:[],
                 price:0
             }
         },
@@ -64,9 +65,9 @@
                  window.history.go(-1);
             },
             handleToBookRead (i) {
-                  this.$router.push({path:'/bookRead',query:{isvip:i.chapterIsvip,price:i.price,bookId:this.readBookId,chapterId:i.id}});  
+                  this.$router.push({path:'/bookRead',query:{isvip:i.chapterIsvip,price:i.price,bookId:this.readBookId,chapterId:i.id,bookName:this.bookName}});  
             },
-            handleGetVolumeChapter(){
+            handleGetVolumeChapter () {
                 this.isShow=true
                  Param_Get_Resful(this,'/api/books-volumeChapterList/'+this.readBookId,res=>{
                      if(res.returnCode===200){
@@ -92,9 +93,7 @@
         mounted(){
            
         },
-        
         created () {
-            // this.handleInit()
             this.handleGetVolumeChapter()
         }
     }

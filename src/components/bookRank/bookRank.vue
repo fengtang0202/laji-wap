@@ -7,9 +7,7 @@
           </ul>
        </div>
        <div class='book_list_wrap'>
-           <keep-alive>
               <router-view></router-view>
-           </keep-alive>
        </div>
    </div>
 </template>

@@ -31,7 +31,9 @@
  import {TransferDom,Popup} from 'vux'
  import {mapState } from 'vuex'
  import {Post_formData2} from '../../config/services'
- import {refshUserInfo} from '../../config/getData'        
+ import {refshUserInfo} from '../../config/getData'  
+ import axios from 'axios'      
+import { clearInterval } from 'timers';
  export default{
      data(){
       return{
@@ -43,6 +45,7 @@
        price:6,
        isAddTo:0,
        show:false,
+       config:'',
     //    backLink:'',
        payCategoryList:[
            {price:6,gift:''},
@@ -70,27 +73,100 @@
            this.price=price
       },
       pay(){
-          let options={
+           var agent = navigator.userAgent.toLowerCase();
+           let options={
               userId:this.userInfo.userId,
               nickName:this.userInfo.pseudonym,
-              howmuch:this.price,
+              userPayMoney:this.price,
               channelId:this.userInfo.userCode,
               rechargeChannelId:sessionStorage.getItem('pi')||'LG20180608000',
           }
-        Post_formData2(this,options,'/api/wap/YouFuWeiCharPayWap',res=>{
-             if(res.returnCode==200){
-                 this.sessionId=res.data.sessionId
-                 localStorage.setItem('SESSION',this.sessionId)
-                 window.location.href=res.data.gourl
-                 this.show=true 
-                //  refshUserInfo()
-             }
-        }) 
-      }
+          if (agent.match(/MicroMessenger/i) != "micromessenger") {
+          Post_formData2(this,options,'/api/WeChatPay/h5WebPayment',res=>{
+              let config=res.data
+              let pay_url=res.data.mweb_url+"&redirect_url="+encodeURIComponent("https://www.lajixs.com/mob/person")
+              window.location.replace(pay_url)
+            //   console.log(pay_url)
+            //   this.$wechat.ready(()=>{
+            //     this.$wechat.chooseWXPay({
+            //     appId:config.appId,
+            //     timestamp: config.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+            //     nonceStr: config.nonceStr, // 支付签名随机串，不长于 32 位
+            //     package: config.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+            //     signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+            //     paySign:config.sign, // 支付签名
+            //     success: function (res) {
+            //     // 支付成功后的回调函数
+            //         console.log(res)
+            //     }
+            //     })
+            //   })
+          })
+         }else{
+          window.location.replace('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0d80269db309ad18&redirect_uri='+encodeURIComponent("https://www.lajixs.com/mob/wechatPay")+"&response_type=code&scope=snsapi_base&state=wxChat"+this.price+'#wechat_redirect')
+         }
+      },
+      onBridgeReady(){
+           WeixinJSBridge.invoke(
+               'getBrandWCPayRequest', {
+                    "appId":this.config.appid,     //公众号名称，由商户传入   
+                    "timeStamp":this.config.timeStamp,      //时间戳，自1970年以来的秒数              
+                    "nonceStr":this.config.nonceStr, //随机串  
+                    "package":"prepay_id="+this.config.prepayid, 
+                    "signType":"MD5",       //微信签名方式：
+                    "paySign":this.config.sign, //微信签名      
+               },
+              function(res){
+                // alert(res.err_msg);   
+                if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                    this.$vux.toast.text("充值成功!")
+                    window.location.href ="https://www.lajixs.com/mob/myWallet";
+                }     
+                if(res.err_msg == "get_brand_wcpay_request:fail" ) {
+
+                }   
+                if(res.err_msg == "get_brand_wcpay_request:cancel" ) {
+
+                        }   
+                    }
+                 )
+         }
   },
  mounted () {
      if(this.isLogin){
          refshUserInfo()
+         if(window.location.href.indexOf("state=wxChat")>0){
+            var wxcode = '';
+            // var pay = 0;
+            window.location.href.split("?")[1].split("&").forEach((elem)=>{
+                 if(elem.split("=")[0]=="code"){
+                    wxcode = elem.split("=")[1];
+                }
+                if(elem.split("=")[0]=="state"){
+                    this.price = elem.split("=")[1].substring(6);
+                }
+            })
+            axios.get(`/api/WeChatPay/getWeChatOpenid?code=${wxcode}`).then(res=>{
+                // if(res.returnCode===200){
+               let appid= res.data.data.openid
+               axios.get(`/api/WeChatPay/wxPublicNumberPay?userId=${this.userInfo.userId}&openid=${appid}&nickName=${this.userInfo.pseudonym}&channelId=${this.userInfo.userCode}&rechargeChannelId=${sessionStorage.getItem('pi')||'LG20180608000'}&userPayMoney=${this.price}`).then(res=>{
+                  this.config=res.data.data
+                  this.onBridgeReady();
+                  let a=0
+                  let timer=setInterval(()=>{
+                       a+=1
+                       axios.get('/api/WeChatPay/getPayResultInfo?out_trade_no='+this.config.out_trade_no).then(res=>{
+                            if(res.data.returnCode===200&&res.data.data.isOK==1){
+                                window.location.href="https://www.lajixs.com/mob/myWallet"         
+                            }
+                       })
+                       if(a==5){
+                        clearInterval(timer)
+                     }
+                  },2000)
+               })
+            })
+         }
      }
  }
 }

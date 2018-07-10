@@ -18,7 +18,7 @@ Vue.use(Vuex);
         code:0,
         backgroundColor:'#faefda',
         fontSize: 1.125,
-        fontColor: '#685640'
+        fontColor: '#685640',
     }
     const mutations = {
         setfeed(state,feed){

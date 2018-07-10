@@ -96,7 +96,7 @@ export default {
                       this.hotCommentcount=res.data.length
                       this.showContent=true
                   }else if(res.returnCode===800){
-                      this.hotCommentList=null
+                      this.hotCommentList=[]
                       this.showNoContent=true 
                       this.showContent=false
                   }
@@ -110,7 +110,7 @@ export default {
                   let options = {
                       bookId:this.readBookId,
                       commentContext:this.replyText,
-                      userName:this.userName,
+                      userName:this.userInfo.pseudonym,
                       bookName:this.bookName	
                   }
                     Post_formData2(this,options,'/api/add-getcomminfo',res=>{
@@ -118,6 +118,7 @@ export default {
                              this.$vux.toast.text('发表成功!')
                              this.show=false
                              this.showContent=true
+                             this.showNoContent=false
                              options.isthumbs=0
                              options.thumbsCount=0
                              options.replyCount=0
@@ -128,6 +129,8 @@ export default {
                              options.commentDateTime=this.timer
                              this.newCommentcount+=1
                              this.newCommentList.unshift(options)
+                            //  this.$router.go(0)
+                            this.replyText=''
                          }else if(res.returnCode==400){
                              this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})                             
                         }else{
@@ -143,16 +146,15 @@ export default {
           },
           infiniteHandler($state){
                 this.page+=1
-                console.log("load:"+this.page)
                 this.readBookId=this.$route.query.bookId  
                 Post_formData2(this,{id:this.readBookId,type:1,startPage:this.page},'/api/comm-getcomminfo',res=>{
-                          if(res.returnCode==200){
+                          if(res.returnCode==200&&res.data.list.length!=0){
                             //   this.showContent=true
                                this.newCommentList = this.newCommentList.concat(res.data.list);
                                this.newCommentcount=res.data.total 
-                               console.log("lastPage:"+res.data.lastPage)                             
+                            //    console.log("lastPage:"+res.data.lastPage)                             
                                 if(res.data.lastPage>this.page){ 
-                                    console.log("loadcomplete:"+this.page)
+                                    // console.log("loadcomplete:"+this.page)
                                     $state.loaded()
                                     }else{
                                     $state.complete()
@@ -166,18 +168,18 @@ export default {
                this.readBookId=this.$route.query.bookId
                Post_formData2(this,{id:this.readBookId,type:1,startPage:1},'/api/comm-getcomminfo',res=>{
                   if(res.returnCode==200){
-                      if(res.data.list.length!=0){
+                    if(res.data.list.length!=0){
                       this.showContent=true
                       this.newCommentList=res.data.list
                       this.newCommentcount=res.data.total
                       this.bookName=res.data.list[0].bookName
                       this.showNoContent=false
                       }else{
-                         this.newCommentList=null
+                         this.newCommentList=[]
                          this.showNoContent=true                              
                       }
                   }else {
-                         this.newCommentList=null
+                         this.newCommentList=[]
                          this.showNoContent=true    
                   }
               }) 

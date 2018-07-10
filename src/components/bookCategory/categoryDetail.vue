@@ -32,7 +32,7 @@
             </v-touch>
         <v-touch @swipeup='up'>         
          <div class='orderList_wrap'  :style="{'height':direction1?'3.5rem':'0'}">
-             <div class="select" style="height:1.4rem;">          
+             <div class="select" style="height:1.2rem;">          
                 <ul>
                     <li style="font-size:.18rem;color:#333;width:.73rem;">作品类别</li>
                     <li style='margin-bottom:.1rem'  v-for="(item,index) in classList" :key='index' :class="{ red:changeRed == index}" @click="getData(item.id,index,item)"><span v-html="item.classificationName"></span></li>             
@@ -63,7 +63,7 @@
          <div class="book_text" @click='handleToBookDetail(item.bookId)' v-for="(item,index) in filterList" :key='index'>
             <img :src="item.bookImage" style='border-radius:5px;'>
             <div class="con-text">
-               <p class="p_one" v-html="item.bookName"></p>
+               <p class="p_one">{{item.bookName|str(11)}}</p>
                <p class="p_two"><span>作者 : </span>
                <span   style="margin:0 .05rem;">{{item.writerName|str(7)}}</span>
                <span v-html="item.classificationName"></span>
@@ -158,6 +158,7 @@ import {mapActions} from 'vuex'
         methods:{
             infiniteHandler($state){
                 this.page+=1
+                console.log(this.page)
                 let options = {
                     startPage:this.page,
                 }
@@ -196,25 +197,6 @@ import {mapActions} from 'vuex'
                     }
                 })
             },
-            // handleSearch(){
-            //     let options = {
-            //         keyWord:this.keyword,
-            //         startPage:1,
-            //         isHotWorld:1,
-            //         bookClassificationid:this.worksClass
-            //     }
-            //       Post_formData2(this,options,'/api/stacks-search',res=>{
-            //         if(res.returnCode==200){
-            //             console.log(res.data)
-            //               if(res.data.list.length>0){
-            //                   this.message = true;
-            //                   this.filterList = res.data.list;
-            //               }else{
-            //                   this.message = false;
-            //               }                  
-            //         }
-            //     })
-            // }, 
              up(){
               this.direction1=false;
             },
@@ -231,26 +213,31 @@ import {mapActions} from 'vuex'
                 this.worksClass = res;
                 this.changeRed = index;
                 this.topList.title_1=data.classificationName
+                this.page=1
                 this.handleFilter();
             },
             getWords(res,index){
                 this.worksNum = res;
                 this.numRed = index;
+                this.page=1
                 this.handleFilter();
             },
             getTime(res,index){
                 this.worksTime =res;
                 this.timeRed = index;
+                this.page=1
                 this.handleFilter();
             },
              getStutas(res,index){
                 this.worksStatus = res;
                 this.statusRed = index;
+                this.page=1
                 this.handleFilter();
             },
             getCategory(res,index){
                 this.worksCategory = res;
                 this.categoryRed = index;
+                this.page=1
                 this.handleFilter();
             },
              handleClass(){
@@ -351,7 +338,10 @@ import {mapActions} from 'vuex'
             this.statusRed = this.worksStatus
             this.numRed = this.worksNum
             this.timeRed = this.worksTime
-        }
+        },
+        // activated () {
+            
+        // }
     }
 </script>
 <style lang='less' scoped>

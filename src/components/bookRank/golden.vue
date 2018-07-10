@@ -26,6 +26,16 @@ import {Post_formData2} from '@/config/services'
                 this.handleInitDay()
            }
         },
+        // beforeRouteLeave (to, from, next) {
+        //     if(to.name=='bookDetails'&&!from.meta.keepAlive){
+        //         from.meta.keepAlive=true
+        //     }else{
+        //         from.meta.keepAlive=false
+        //         to.meta.keepAlive=false
+        //         this.$destroy()
+        //     }
+        //     next()
+        // },
         methods:{
              handleInitDay(){
                  let dayType=this.$route.query.dayType

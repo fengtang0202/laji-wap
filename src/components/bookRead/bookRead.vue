@@ -6,7 +6,7 @@
             <AppMinpepper :param='rewordParam' ref='minFeedpepper' @click='hanldeCloseMinFeedPepper()'></AppMinpepper>
        <div class='bookRead'>
        <div class='clickDiv' @click='up()'>
-      </div>
+       </div>
     <div class='feed' :class='{show2:feedShow}'>
             <div class='nav' @touchend='show=!show'>
               <img src="../../assets/images/dropdown@3x.png"   alt="">
@@ -58,10 +58,10 @@
     </div>
       <div class='book_content' @click='up()' ref='content' :style='{"height":height,"fontSize":fontSize+"em","backgroundColor":backgroundColor,"color":fontColor}' :class='{changeColor:show}'>
          <h3 ref='title'>{{chapterName}}</h3>
-          <p v-html='bookText' style='padding-bottom:.4rem;' onselectstart="return false"></p>  
+          <p v-html='bookText'  style='padding-bottom:.4rem;min-height:100vh' onselectstart="return false"></p>  
       </div>
           <div class='last_nav'  :style='{transform: lastNav?"translate(0,0)":"translate(0,.54rem)",opacity:lastNav?1:0}'>
-              <ul>
+              <ul style='overflow:hidden;'>
                   <li v-for='item in bottomNavList' :key='item.key' @click='handleTap(item.key)'>
                       <div  class='nav_d'>
                          <img v-lazy='item.img' alt="">
@@ -229,7 +229,6 @@ import { setTimeout } from 'timers';
                 this.chapterId=this.$route.query.chapterId
                 // this.$refs.title.scrollIntoView(true)
                 this.getBookText()
-
                 // this.getNowChapterId()                                                     
                 this.isLogin&&this.addReadHistory()
             }
@@ -355,8 +354,8 @@ import { setTimeout } from 'timers';
                            this.btnShow&&this.buyChapter()                              
                        }
                           this.dialogshow=!this.btnShow
-                  }
-              })   
+                  }   
+              })
              },
             //  上拉加载数据
             onConfirm(res){
@@ -594,6 +593,7 @@ import { setTimeout } from 'timers';
                 }
             }, 
         },
+
         mounted () {
             if(this.isLogin){
                 this.handleIsAuto('search')
@@ -611,8 +611,8 @@ import { setTimeout } from 'timers';
          },
         //给body加  padding-bottom
          created(){
+            window.scrollTo(0,0)
             this.getBookText()
-
             this.getNowChapterId()
          }
      }

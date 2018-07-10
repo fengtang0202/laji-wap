@@ -65,10 +65,19 @@ const city = r => require.ensure([], () => r(require('@/components/articleActive
 const dream = r => require.ensure([], () => r(require('@/components/articleActive/dream')), 'dream')
 const rotten = r => require.ensure([], () => r(require('@/components/articleActive/rotten')), 'rotten')
 const dimension = r => require.ensure([], () => r(require('@/components/articleActive/dimension')), 'dimension')
+const bilibili = r => require.ensure([], () => r(require('@/components/seo/bilibili')), 'bilibili')
+const bilibili1 = r => require.ensure([], () => r(require('@/components/seo/bilibili1')), 'bilibili1')
+const bilibili2 = r => require.ensure([], () => r(require('@/components/seo/bilibili2')), 'bilibili2')
+const bilibili3 = r => require.ensure([], () => r(require('@/components/seo/bilibili3')), 'bilibili3')
+const bilibili4 = r => require.ensure([], () => r(require('@/components/seo/bilibili4')), 'bilibili4')
 
-// import test from '@/components/test'
 Vue.use(Router)
 let routers=[
+    {path:'/bilibili',component:bilibili},
+    {path: '/bilibili1',component: bilibili1},
+    {path: '/bilibili2',component: bilibili2},
+    {path: '/bilibili3',component: bilibili3},
+    {path: '/bilibili4',component: bilibili4},
     { path: '/articleActive', component: articleActive},
     { path: '/city', component: city},
     { path: '/dream', component: dream},
@@ -116,7 +125,8 @@ let routers=[
   },
     {path:'/categoryDetail',component:categoryDetail,
       meta:{
-        title:'书籍分类详情'
+        title:'书籍分类详情',
+        // keepAlive: true
       }
     },
     {path: '/',component: Home,
@@ -182,7 +192,6 @@ let routers=[
       {path:'/',component:golden,
       meta:{
         title:'书籍排行榜',
-        keepAlive:true
       }
     },
       { path:'minPaperRank',component:minPaperRank},
@@ -290,7 +299,7 @@ const router = new Router({
                y: 0
            }
        }
-     },500)
+     },0)
     },
      routes: routers,
      base:'/mob',

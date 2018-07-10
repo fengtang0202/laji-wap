@@ -45,6 +45,7 @@ export default{
               res==110&&(type='支付宝')
               res==113&&(type='微信')
               res==112&&(type='苹果支付')
+              res==111&&(type='微信')
               return res=type
          }
      },

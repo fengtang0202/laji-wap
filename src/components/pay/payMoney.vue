@@ -7,12 +7,12 @@
          </div>
          <p class='buyMay'>选择充值方式</p>
          <div class='buy' >
-             <div class='zfb' @click='handleTap("/alipay")'>
+             <div class='zfb' @click='handleTap("/alipay")' v-if='isShowAlipay'>
                 <img src="../../assets/images/zfb@2x.png" alt="">
                 <span>支付宝</span>
              </div>
              <!--  目前不支持 -->
-             <div class='wx' @click='handleTap("/wechatPay")'>
+             <div class='wx' @click='handleTap("/wechatPay")' :style="{width:isShowAlipay?'1.58rem':'80%'}">
                  <img src="../../assets/images/wx@2x.png" alt="">
                  <span>微信</span>
              </div>
@@ -39,7 +39,8 @@ import {mapState} from 'vuex'
                   link:'/',
                   html:''
               },
-              alipayData:''
+              alipayData:'',
+              isShowAlipay:true
           }
        },   
        methods: {
@@ -53,14 +54,26 @@ import {mapState} from 'vuex'
                  this.html=res.data
             })
          },
-           handleWeChatPay () {
-             console.log('微信')
-           },
            handleTap(res) {
+           //
+            //    var agent = navigator.userAgent.toLowerCase();
+            //    if(res==='/wechatPay'){
+            //         if (agent.match(/MicroMessenger/i) == "micromessenger") {
+            //         this.$vux.toast.text('微信支付维护中,请打开浏览器使用支付宝支付')
+            //        }else{
+            //         this.$vux.toast.text('微信支付维护中,请使用支付宝支付')                     
+            //        }
+            //         return;
+            //    }
+            //    以上是微信支付出问题的
                 this.$router.push(res)
-          }
+           }
        },
        mounted () {
+          var agent = navigator.userAgent.toLowerCase();
+          if (agent.match(/MicroMessenger/i) == "micromessenger") {
+                    this.isShowAlipay=false  
+            }
            if(this.isLogin){
                refshUserInfo()
            } 

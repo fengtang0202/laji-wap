@@ -12,6 +12,25 @@ export function handleIsPhone(){
     if (isiOS) {
         window.location.href = "https://itunes.apple.com/cn/app/id1232171775?mt=8"
     }
+    if (u.indexOf("MicroMessenger") > -1 && isAndroid) {
+       window.location.href='http://sj.qq.com/myapp/detail.htm?apkName=com.ljfiction.book'
+    }
+}
+//落地页用的下载
+export function handleIsPhone1(android = 'https://www.lajixs.com/apk/app.apk', ios ='"https://itunes.apple.com/cn/app/id1232171775?mt=8"') {
+    var u = navigator.userAgent 
+    var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+    var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    // https: //www.lajixs.com/apk/app.apk
+    if (isAndroid) {
+        window.location.href = android
+    }
+    if (isiOS) {
+        window.location.href = "https://itunes.apple.com/cn/app/id1232171775?mt=8"
+    }
+    if (u.indexOf("MicroMessenger") > -1 && isAndroid) {
+        window.location.href = 'http://sj.qq.com/myapp/detail.htm?apkName=com.ljfiction.book'
+    }
 }
 //滚动监听
 export function handleScroll(_this, element) {

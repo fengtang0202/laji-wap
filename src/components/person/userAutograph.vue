@@ -1,7 +1,7 @@
 <template>
 <div>
     <headerComponent :list='topList' ></headerComponent>
-    <textarea class='text' v-model="userAutograph"></textarea>
+    <textarea class='text' placeholder="修改签名,限20字哦" v-model="userAutograph"></textarea>
     <button class='btn_submit' @click='userAutograph=""'>清空</button>
     <button class='btn_submit' @click='handleUpdateInfo()'>保存</button>
 </div>  
@@ -26,14 +26,24 @@ import {updateInfo, refshUserInfo} from '../../config/getData'
         },
         methods: {
            handleUpdateInfo(){
-               updateInfo({userAutograph:this.userAutograph}).then(res=>{
+              let fontCountLength = this.userAutograph.Trim().length
+              let reg=/[\ud83c-\ud83e][\udc00-\udfff]|[\u2600-\u27ff]/
+            if(!reg.test(this.userAutograph)){ 
+              if(fontCountLength<=20){
+                updateInfo({userAutograph:this.userAutograph}).then(res=>{
                    if(res.returnCode==200){
                        refshUserInfo()
                        this.$vux.toast.text('修改成功!')
                        this.$router.go(-1)
                    }
                })
+              }else{
+                 this.$vux.toast.text('个性签名字数请限制在20字内')
+              }
+             }else{
+              this.$vux.toast.text('不能包含特殊符号')
            }
+         }
         },
         created () {
             this.userAutograph=this.userInfo.userAutograph

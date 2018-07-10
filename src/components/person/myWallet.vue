@@ -2,7 +2,7 @@
    <div class='wallet'>
      <div class='wallet_wrap'>
          <div class='width:100%;height:.44rem;'  >
-             <div class='back' @click="$router.go(-1)">
+             <div class='back' @click="handleGo('/person')">
                <img src="../../assets/images/backw@3x.png" alt="">
              </div>
              <div style='height:.44rem;line-height:.44rem;overflow:hidden;' @click='handleGo("/dealManage")'>
@@ -93,7 +93,6 @@ import {refshUserInfo} from '../../config/getData'
                 });
             }
             // this.getUserMoney()
-            
             this.moneyList[0].price=this.userInfo.userGoldenTicket
             this.moneyList[1].price=this.userInfo.userRecommendTicket
             this.moneyList[2].price=this.userInfo.userReadTicket

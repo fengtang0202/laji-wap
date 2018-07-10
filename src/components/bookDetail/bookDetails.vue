@@ -8,7 +8,7 @@
           <div class="text">
               <img :src="infoList.bookImage" class="oImg">
               <div class="con">
-                 <p class="p_one"><span v-html="infoList.bookName"></span></p>
+                 <p class="p_one"><span>{{infoList.bookName|str(14)}}</span></p>
                  <p class="p_two"><span>作者:</span><span class="l_d" v-html="infoList.writerName"></span></p>
                  <p class="p_two"><span>字数:</span><span  class="l_d" v-html="infoList.bookWorldCount">wwww</span></p>
                  <div class="p_two">
@@ -100,7 +100,7 @@
     import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
     import {mapState,mapActions} from 'vuex'
     import {refshUserInfo} from '../../config/getData'        
-
+    import wxShare from '../../config/weShare'
     export default {
         name: 'bookDetails',
         data () {
@@ -322,7 +322,7 @@
                         this.rewordParam.authorId=res.data.AuthorInfo.userId
                         this.rewordParam.bookId=this.readBookId
                         this.rewordParam.bookName=res.data.bookListInfo.bookName
-                        
+                        wxShare(res.data.bookListInfo.bookName,res.data.bookListInfo.bookIntroduction,window.location.href,res.data.bookListInfo.bookImage) 
                     }else{
                         // this.$vux.toast.text(res.msg);
                     }

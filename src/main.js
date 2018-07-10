@@ -81,17 +81,18 @@ import directives from "./config/directives"
 Vue.use(directives);
 NProgress.inc(0.2)
 NProgress.configure({ easing: 'ease-in-out', speed: 600, showSpinner: false })
-// axios.get(`/api/weChartShareSign?URL=${encodeURIComponent(window.location.href.split('#')[0])}`).then(data=>{
-//     let config=data.data.data
-//     Vue.wechat.config({
-//         debug: false, 
-//         appId: config.appId,
-//         timestamp:config.timestamp,
-//         nonceStr: config.nonceStr,
-//         signature: config.signature,
-//         jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', 'chooseImage']
-//     })
-// })
+axios.get(`/api/weChartShareSign?URL=${encodeURIComponent(window.location.href.split('#')[0])}`).then(data=>{
+    let config=data.data.data
+    Vue.wechat.config({
+        debug: false, 
+        appId: config.appId,
+        timestamp:config.timestamp,
+        nonceStr: config.nonceStr,
+        signature: config.signature,
+        jsApiList: ['onMenuShareTimeline', 'chooseWXPay', 'translateVoice', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', 'chooseImage'
+        ]
+    })
+})
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
            setTimeout(() => {
@@ -106,11 +107,14 @@ router.beforeEach((to, from, next) => {
                     s.parentNode.insertBefore(hm, s);
                  })();
              }, 0);
-         let href = window.location.href
-         let i=href.indexOf('#')
-         let str=''  
-         i === -1 ? str : str = href.substring(i+1, href.length)
-         i === -1 || sessionStorage.setItem("pi",str)
+        //  let href = window.location.href
+        //  let i=href.indexOf('#')
+        //  i === -1 ? str : str = href.substring(i+1, href.length)
+        //  i === -1 || sessionStorage.setItem("pi",str) 
+        let str=''  
+        if(sessionStorage.getItem('pi')){
+            str = sessionStorage.getItem('pi')
+        }
         axios.get(`/api/wapPVUVStatistics?ax001=9527&pi=${str}`).then(res=>{
         // console.log(res.data)
        }) 
