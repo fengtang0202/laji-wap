@@ -3,7 +3,7 @@
 </template>
 <script>
     import bcommon from './bcommon.vue'
-    export default{
+    export default {
         components: {
             bcommon
         },
