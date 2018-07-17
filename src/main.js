@@ -106,14 +106,20 @@ router.beforeEach((to, from, next) => {
                     var s = document.getElementsByTagName("script")[0];
                     s.parentNode.insertBefore(hm, s);
                  })();
-             }, 0);
-        //  let href = window.location.href
-        //  let i=href.indexOf('#')
-        //  i === -1 ? str : str = href.substring(i+1, href.length)
-        //  i === -1 || sessionStorage.setItem("pi",str) 
+             }, 0); 
+        //1 Pc=>Wap  if pi 为true 我就不存sessionStorage 如果没有我就存 
+        //2 由于 我的锚链接 会误截取 # 后的然后存在本地 所以得限制截取的文字       
         let str=''  
-        if(sessionStorage.getItem('pi')){
+        if (sessionStorage.getItem('pi')) {
             str = sessionStorage.getItem('pi')
+        } else {
+            let href = window.location.href
+            let i = href.indexOf('#')
+            let chanled =href.substring(i + 1, href.length)
+            if (chanled.length>5){
+                i === -1 ? str : str = chanled
+                i === -1 || sessionStorage.setItem("pi", str)
+            }
         }
         axios.get(`/api/wapPVUVStatistics?ax001=9527&pi=${str}`).then(res=>{
         // console.log(res.data)

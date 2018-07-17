@@ -18,7 +18,15 @@
             <P style='color:#999'>{{item.writerName|str(6)}}</P>  
             <!-- <p class='is_update' :style="{ 'color': item.bookStatus==0?'#FF6F00':'#47B2D8' }">{{item.isUpdate==0?'已完结':'连载中'}}</p>          -->
             <input type="checkbox" v-model="item.checked" v-if='delShow' class='del_btn'>            
-         </div>    
+         </div>
+          <infinite-loading @infinite="infiniteHandler">
+                        <span slot="no-more">
+                            目前暂无更多阅读记录
+                        </span>
+                        <span slot="no-results">
+                            目前暂无更多阅读记录
+                        </span>
+            </infinite-loading>      
       </div>
    </div>
    <No v-if='!showNoData' message='还有没有阅读记录'></No>
@@ -44,7 +52,8 @@ export default {
             word:'编辑',
             delShow:false,
             delId:[],
-            show:false
+            show:false,
+            page:0
         }
     },
     computed: {
@@ -90,6 +99,24 @@ export default {
                  this.delShow=!this.delShow
                  this.delShow?this.word='完成':this.word='编辑'
         },
+        infiniteHandler($state){
+                this.page+=1
+                Post_formData2(this,{userid:this.userInfo.userId,startpage:this.page},'/api/person-UserBookReadRecord',res=>{
+                          if(res.returnCode==200&&res.data.list.length!=0){
+                               this.ReadHistoryList = this.ReadHistoryList.concat(res.data.list);
+                               this.ReadHistoryList.forEach(value=>{
+                                    value.checked=false 
+                                })
+                                if(res.data.lastPage>this.page){ 
+                                    $state.loaded()
+                                  }else{
+                                    $state.complete()
+                                }
+                              }else{
+                              $state.complete()                                
+                         }
+                    })
+            },
         handleReadBookList(){
                 Post_formData(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{
                     if(res.returnCode==200){
@@ -102,9 +129,6 @@ export default {
                    }
             })
         }    
-    },
-    activated () {
-        this.handleReadBookList()
     }
 }
 </script>

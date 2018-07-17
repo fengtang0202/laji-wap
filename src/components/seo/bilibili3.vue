@@ -1,5 +1,5 @@
 <template>
-    <bcommon :bgImg=bgImg :bgbtn=bgbtn android='https://www.lajixs.com/apk/app_LG20180703005.apk'></bcommon>
+    <bcommon :bgImg=bgImg :bgbtn=bgbtn android='https://www.lajixs.com/api/appDownLoad?channelid=LG20180703005'></bcommon>
 </template>
 <script>
     import bcommon from './bcommon.vue'

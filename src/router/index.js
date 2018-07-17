@@ -70,14 +70,42 @@ const bilibili1 = r => require.ensure([], () => r(require('@/components/seo/bili
 const bilibili2 = r => require.ensure([], () => r(require('@/components/seo/bilibili2')), 'bilibili2')
 const bilibili3 = r => require.ensure([], () => r(require('@/components/seo/bilibili3')), 'bilibili3')
 const bilibili4 = r => require.ensure([], () => r(require('@/components/seo/bilibili4')), 'bilibili4')
-
+const bilibili5 = r => require.ensure([], () => r(require('@/components/seo/bilibili5')), 'bilibili5')
+const bilibili6 = r => require.ensure([], () => r(require('@/components/seo/bilibili6')), 'bilibili6')
+const bilibili7 = r => require.ensure([], () => r(require('@/components/seo/bilibili7')), 'bilibili7')
+const bilibili8 = r => require.ensure([], () => r(require('@/components/seo/bilibili8')), 'bilibili8')
+const bilibili9 = r => require.ensure([], () => r(require('@/components/seo/bilibili9')), 'bilibili9')
+const bilibilibook = r => require.ensure([], () => r(require('@/components/seo/bilibilibook')), 'bilibilibook')
+const bilibilibook1 = r => require.ensure([], () => r(require('@/components/seo/bilibilibook1')), 'bilibilibook1')
 Vue.use(Router)
 let routers=[
+    {path: '/bilibilibook1',component: bilibilibook1 },
+    {path: '/bilibilibook', component: bilibilibook},
     {path:'/bilibili',component:bilibili},
     {path: '/bilibili1',component: bilibili1},
     {path: '/bilibili2',component: bilibili2},
     {path: '/bilibili3',component: bilibili3},
     {path: '/bilibili4',component: bilibili4},
+    {
+        path: '/bilibili5',
+        component: bilibili5
+    },
+    {
+        path: '/bilibili6',
+        component: bilibili6
+    },
+    {
+        path: '/bilibili7',
+        component: bilibili7
+    },
+    {
+        path: '/bilibili8',
+        component: bilibili8
+    },
+    {
+        path: '/bilibili9',
+        component: bilibili9
+    },
     { path: '/articleActive', component: articleActive},
     { path: '/city', component: city},
     { path: '/dream', component: dream},
@@ -206,7 +234,7 @@ let routers=[
     {path:'/readHistory',component:readHistory, meta: {
         requireAuth: true,
         title:'阅读记录',
-        keepAlive:true
+        keepAlive:false
       }
     },  
     {path:'/bookRead',component:bookRead,

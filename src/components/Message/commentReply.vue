@@ -24,6 +24,14 @@
            </ul>
         </swipeout-item>
     </swipeout>
+             <infinite-loading @infinite="infiniteHandler">
+                        <span slot="no-more">
+                            目前暂无更多评论
+                        </span>
+                        <span slot="no-results">
+                            目前暂无更多评论
+                        </span>
+            </infinite-loading>  
    </div>
 </template>
 <script>
@@ -32,13 +40,29 @@
   export default {
       data(){
           return {
-            messageList:[]
+            messageList:[],
+            page:0
           }
       },
       computed : {
           ...mapState(['userInfo'])
       },
       methods :{
+           infiniteHandler($state){
+                this.page+=1
+                Post_formData2(this,{userid:this.userInfo.userId,startPage:this.page},'/api/comm-coverReplyInfo',res=>{
+                          if(res.returnCode==200&&res.data.list.length!=0){
+                               this.messageList = this.messageList.concat(res.data.list);
+                                if(res.data.lastPage>this.page){ 
+                                    $state.loaded()
+                                  }else{
+                                    $state.complete()
+                                }
+                              }else{
+                              $state.complete()                                
+                         }
+                    })
+            },
           getComment(){
             Post_formData2(this,{userid:this.userInfo.userId,startPage:1},'/api/comm-coverReplyInfo',res=>{
                  if(res.returnCode==200){
@@ -63,7 +87,7 @@
           }             
       },
       mounted () {
-           this.getComment()  
+        //    this.getComment()  
       }
   }
 </script>

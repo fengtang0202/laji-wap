@@ -117,7 +117,6 @@ import { clearInterval } from 'timers';
                     "paySign":this.config.sign, //微信签名      
                },
               function(res){
-                // alert(res.err_msg);   
                 if(res.err_msg == "get_brand_wcpay_request:ok" ) {
                     this.$vux.toast.text("充值成功!")
                     window.location.href ="https://www.lajixs.com/mob/myWallet";
@@ -130,20 +129,43 @@ import { clearInterval } from 'timers';
                         }   
                     }
                  )
-         }
+         },
+       handleIndex(i){
+            switch(i){
+                   case '6':
+                     this.isAddTo=0;
+                     break;
+                   case '12':
+                     this.isAddTo=1
+                     break;
+                   case '30' :
+                     this.isAddTo=2
+                     break;
+                    case '50' :
+                    this.isAddTo=3
+                    break;
+                     case '98' :
+                    this.isAddTo=4
+                    break;
+                    case '198' :
+                    this.isAddTo=5
+                    break;
+            } 
+       }
   },
  mounted () {
      if(this.isLogin){
          refshUserInfo()
          if(window.location.href.indexOf("state=wxChat")>0){
             var wxcode = '';
-            // var pay = 0;
             window.location.href.split("?")[1].split("&").forEach((elem)=>{
                  if(elem.split("=")[0]=="code"){
                     wxcode = elem.split("=")[1];
                 }
                 if(elem.split("=")[0]=="state"){
-                    this.price = elem.split("=")[1].substring(6);
+                    this.price = elem.split("=")[1].substring(6)
+                    //由于微信支付的回调地址所以我们要调用这里的handleIndex
+                    this.handleIndex(this.price)
                 }
             })
             axios.get(`/api/WeChatPay/getWeChatOpenid?code=${wxcode}`).then(res=>{
