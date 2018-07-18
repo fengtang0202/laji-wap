@@ -51,7 +51,7 @@
        <div class='downbtn'>
           <button @click="handleIsPhone1('https://www.lajixs.com/api/appDownLoad?channelid=LG20180703011')">继续阅读全文,下载辣鸡小说></button>
        </div> 
-    </div>
+     </div>
 </template>
 <script>
 import {handleIsPhone1} from '../../config/common'

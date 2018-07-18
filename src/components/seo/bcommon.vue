@@ -1,7 +1,7 @@
 <template>
    <div class='bg' :style="{backgroundImage: 'url(' + bgImg + ')'}">
        <div class='down'>
-          <img :src="bgbtn" @click="handleIsPhone(android,ios)" alt=""> 
+          <img id='downApp' :src="bgbtn" @click="handleIsPhone(android,ios)" alt=""> 
        </div> 
    </div>  
 </template>

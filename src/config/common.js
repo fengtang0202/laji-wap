@@ -23,6 +23,8 @@ export function handleIsPhone1(android = 'https://www.lajixs.com/apk/app.apk', i
     var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
     // https: //www.lajixs.com/apk/app.apk
     if (isAndroid) {
+        //友盟统计
+        _czc.push(["_trackEvent", "app ", "下载", "app下载", 1, "downApp"]);
         window.location.href = android
     }
     if (isiOS) {
