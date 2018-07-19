@@ -1,7 +1,7 @@
 <template>
    <div class='bg' :style="{backgroundImage: 'url(' + bgImg + ')'}">
        <div class='down'>
-          <img id='downApp' :src="bgbtn" @click="handleIsPhone(android,ios)" alt=""> 
+          <img id='downApp' :src="bgbtn" @click="handleIsPhone(channelId)" alt=""> 
        </div> 
    </div>  
 </template>
@@ -10,7 +10,7 @@ import cookie from '../../config/cookie'
 import {handleIsPhone1} from '../../config/common'
     export default{
          data(){
-             return{
+             return {
                handleIsPhone:handleIsPhone1
              }
          },
@@ -23,14 +23,11 @@ import {handleIsPhone1} from '../../config/common'
                  type:String,
                  default:''
              },
-             ios:{
-                 type:String,
-                 default:''
-             },
-             android:{
+             channelId:{
                  type:String,
                  default:''
              }
+             
          }
 }
 </script>

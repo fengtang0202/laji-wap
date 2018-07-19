@@ -1,4 +1,5 @@
 // 下载app
+import axios from 'axios'
 export function handleIsPhone(){
     var u = navigator.userAgent;
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
@@ -17,7 +18,7 @@ export function handleIsPhone(){
     }
 }
 //落地页用的下载
-export function handleIsPhone1(android = 'https://www.lajixs.com/apk/app.apk', ios ='"https://itunes.apple.com/cn/app/id1232171775?mt=8"') {
+export function handleIsPhone1(channelId) {
     var u = navigator.userAgent 
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
     var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
@@ -25,10 +26,12 @@ export function handleIsPhone1(android = 'https://www.lajixs.com/apk/app.apk', i
     if (isAndroid) {
         //友盟统计
         _czc.push(["_trackEvent", "app ", "下载", "app下载", 1, "downApp"]);
-        window.location.href = android
+        window.location.href = `https://www.lajixs.com/api/appDownLoad?channelid=${channelId}`
     }
     if (isiOS) {
-        window.location.href = "https://itunes.apple.com/cn/app/id1232171775?mt=8"
+        axios.get(`/api/iosDownLoadAppliactionCheckByIsUserAgentAndIPAddress?channelId=${channelId}&requestType=0`).then(res => {
+            window.location.href = "https://itunes.apple.com/cn/app/id1232171775?mt=8"
+        })
     }
     if (u.indexOf("MicroMessenger") > -1 && isAndroid) {
         window.location.href = 'http://sj.qq.com/myapp/detail.htm?apkName=com.ljfiction.book'

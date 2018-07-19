@@ -36,7 +36,7 @@
 <div class='f_content'>做了一番复杂的心理活动后，方瞳按下了同意键。</div>
        </div>
        <div class='downbtn'>
-          <button @click="handleIsPhone1('https://www.lajixs.com/api/appDownLoad?channelid=LG20180703012')">继续阅读全文,下载辣鸡小说></button>
+          <button @click="handleIsPhone1('LG20180703012')">继续阅读全文,下载辣鸡小说></button>
        </div> 
     </div>
 </template>
