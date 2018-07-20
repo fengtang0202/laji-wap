@@ -29,9 +29,9 @@ export function handleIsPhone1(channelId) {
         window.location.href = `https://www.lajixs.com/api/appDownLoad?channelid=${channelId}`
     }
     if (isiOS) {
-        axios.get(`/api/iosDownLoadAppliactionCheckByIsUserAgentAndIPAddress?channelId=${channelId}&requestType=0`).then(res => {
+        // axios.get(`/api/iosDownLoadAppliactionCheckByIsUserAgentAndIPAddress?channelId=${channelId}&requestType=0`).then(res => {
             window.location.href = "https://itunes.apple.com/cn/app/id1232171775?mt=8"
-        })
+        // })
     }
     if (u.indexOf("MicroMessenger") > -1 && isAndroid) {
         window.location.href = 'http://sj.qq.com/myapp/detail.htm?apkName=com.ljfiction.book'
