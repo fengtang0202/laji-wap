@@ -111,7 +111,7 @@ import { mapActions, mapState } from 'vuex';
                  }
                 Post_formData2(this,options,'/api/stacks-search',res=>{
                     if(res.returnCode==200){
-                        if(res.data.list.length>1){
+                        if(res.data.list.length>1) {
                             this.searchList = this.searchList.concat(res.data.list);
                         }
                          if(res.data.lastPage>this.page){
@@ -142,22 +142,9 @@ import { mapActions, mapState } from 'vuex';
                         }                         
                 })            
             },
-            
             handleHotLabel(res){
               this.keyword=res
             },
-            // handleHostry(){
-            //      this.isShow = true;
-            //      setTimeout(() => {
-            //          this.isShow = false;
-            //      },5000);
-            //      noParam_Get(this,'/api/sys-hotwords',res=>{
-            //             if(res.returnCode==200){
-            //                 this.isShow= false;
-            //                 this.hotwordList = res.data;
-            //           }                         
-            //     })
-            // },
             hanldeDel(item){
                for(let index in this.hotwordList){
                    if(item==this.hotwordList[index]){
@@ -191,7 +178,9 @@ import { mapActions, mapState } from 'vuex';
         },
         watch:{
             keyword(){
-                this.handleSearch();
+                setTimeout(()=>{
+                    this.handleSearch();
+                },500)
             }
         },
         mounted(){

@@ -6,11 +6,9 @@
             <span class='userId' @click='handleTo({path:"/bookRank"})' >排行榜</span>
             <div class='logo_three' >
                 <router-link to='/person'>
-                  <img   v-if='isLogin'     :src="userInfo.userHeadPortraitURL" >
+                  <img   v-if='isLogin' :src="userInfo.userHeadPortraitURL" >
                 </router-link>
-                <router-link to='/Login'>                
-                   <img   v-if='!isLogin' src='../assets/images/user@3x.png' >
-                </router-link>                 
+                <img   v-if='!isLogin' @click='hanldeLogin()' src='../assets/images/user@3x.png' >
             </div>
          </div>
          <div class="bottom" @click='handleTo({path:"/search"})'>
@@ -24,7 +22,7 @@
          </div>
           <keep-alive>
              <router-view style='width:100%;height:100%;'></router-view>
-          </keep-alive>  
+          </keep-alive> 
     </div>
 </template>
 <script>
@@ -52,6 +50,7 @@
            }
         },
         beforeRouteEnter(to,from,next){
+            sessionStorage.removeItem('gc')
             next(vm=>{
                 // Post_formData2(vm,'','/api/person-checkLoginState',res=>{
                 //     if(res.returnCode==400){
@@ -63,7 +62,10 @@
             })
         },
         methods:{
-            ...mapActions(['loginAction','getUserInfo']),
+            ...mapActions(['loginAction','getUserInfo','setshowLoginDate']),
+            hanldeLogin(){
+                this.setshowLoginDate(true)
+            },
             handleGo(res,index){
                 this.$router.push(res);
             },

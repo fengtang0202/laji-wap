@@ -3,7 +3,7 @@
   <div class='wechat'>
       <headerComponent :list='topList'></headerComponent>
       <div class='pay_category_wrap'>
-            <div class='pay_category' :key='index'  v-for="(item,index) in payCategoryList" :class="{isAdd:isAddTo===index}" @click='handelTap(index,item.price)'>
+            <div class='pay_category'  :key='index'  v-for="(item,index) in payCategoryList" :class="{isAdd:isAddTo===index}" @click='handelTap(index,item.price)'>
                  <p class='price'>{{item.price+'元'}}</p>
                  <p class='price'>{{item.price*100+'小辣椒'}}</p>
                  <p class='gift'>{{item.gift}}</p> 
@@ -46,7 +46,6 @@ import { clearInterval } from 'timers';
        isAddTo:0,
        show:false,
        config:'',
-    //    backLink:'',
        payCategoryList:[
            {price:6,gift:''},
            {price:12,gift:''},
@@ -82,26 +81,11 @@ import { clearInterval } from 'timers';
               rechargeChannelId:sessionStorage.getItem('pi')||'LG20180608000',
           }
           if (agent.match(/MicroMessenger/i) != "micromessenger") {
-          Post_formData2(this,options,'/api/WeChatPay/h5WebPayment',res=>{
-              let config=res.data
-              let pay_url=res.data.mweb_url+"&redirect_url="+encodeURIComponent("https://www.lajixs.com/mob/person")
-              window.location.replace(pay_url)
-            //   console.log(pay_url)
-            //   this.$wechat.ready(()=>{
-            //     this.$wechat.chooseWXPay({
-            //     appId:config.appId,
-            //     timestamp: config.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
-            //     nonceStr: config.nonceStr, // 支付签名随机串，不长于 32 位
-            //     package: config.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
-            //     signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-            //     paySign:config.sign, // 支付签名
-            //     success: function (res) {
-            //     // 支付成功后的回调函数
-            //         console.log(res)
-            //     }
-            //     })
-            //   })
-          })
+                Post_formData2(this,options,'/api/WeChatPay/h5WebPayment',res=>{
+                    let config=res.data
+                    let pay_url=res.data.mweb_url+"&redirect_url="+encodeURIComponent("https://www.lajixs.com/mob/person")
+                    window.location.replace(pay_url)
+             })
          }else{
           window.location.replace('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0d80269db309ad18&redirect_uri='+encodeURIComponent("https://www.lajixs.com/mob/wechatPay")+"&response_type=code&scope=snsapi_base&state=wxChat"+this.price+'#wechat_redirect')
          }
@@ -129,8 +113,8 @@ import { clearInterval } from 'timers';
                         }   
                     }
                  )
-         },
-       handleIndex(i){
+          },
+         handleIndex(i){
             switch(i){
                    case '6':
                      this.isAddTo=0;
@@ -151,10 +135,21 @@ import { clearInterval } from 'timers';
                     this.isAddTo=5
                     break;
             } 
-       }
+       },
+    //通过渠道id 来修改起充数
+     changeMoney(){
+         //1获取渠道标识
+         let pi = sessionStorage.getItem('pi')
+         var agent = navigator.userAgent.toLowerCase();
+         //判读是否在微信内部浏览器中 以及渠道id来修改起充数
+          if (agent.match(/MicroMessenger/i) == "micromessenger") {
+              this.payCategoryList=this.payCategoryList.slice(2)
+          }
+      }
   },
  mounted () {
      if(this.isLogin){
+        //  this.changeMoney()
          refshUserInfo()
          if(window.location.href.indexOf("state=wxChat")>0){
             var wxcode = '';
@@ -179,7 +174,7 @@ import { clearInterval } from 'timers';
                        a+=1
                        axios.get('/api/WeChatPay/getPayResultInfo?out_trade_no='+this.config.out_trade_no).then(res=>{
                             if(res.data.returnCode===200&&res.data.data.isOK==1){
-                                window.location.href="https://www.lajixs.com/mob/myWallet"         
+                                this.$router.go(-3)        
                             }
                        })
                        if(a==5){

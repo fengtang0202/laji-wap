@@ -94,6 +94,9 @@
             this.show=true;
          },
          handleLink(res){
+           if(res=='/payMoney'){
+               sessionStorage.setItem('backHref',window.location.href)
+           }
            this.$router.push(res)
          },
          loginOut(){
@@ -128,7 +131,6 @@
            handleGo () {
                this.$router.push("/personInfo")
             },
-
          },
           mounted(){
               if(this.isLogin){

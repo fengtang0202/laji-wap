@@ -23,11 +23,13 @@ import commendItem from '../src/components/common/commendItem'
 import bookRankList from '../src/components/bookRank/bookRankList'
 import Loading from 'vue'
 import bookImg from '../src/components/common/bookImg'
+import loginDateDialog from '../src/components/common/loginDateDialog'
 // 注册全局组件
 Vue.config.productionTip = false
 Vue.use(iView)
 Vue.use(WechatPlugin)
 Vue.use(VueLazyload)
+Vue.component('loginDateDialog', loginDateDialog)
 Vue.component('headerComponent',headerComponent)
 Vue.component('appLoad',Load)
 Vue.component('Swipeout',Swipeout)
@@ -55,7 +57,8 @@ axios.interceptors.response.use(
             store.commit('changeLogin', false)
             store.commit('getUserInfo',null)
             localStorage.removeItem('SESSION')
-            router.push({ path: '/Login', query: { redirect: router.currentRoute.fullPath}})
+            store.commit('setshowLoginDate',true)
+            // router.push({ path: '/Login', query: { redirect: router.currentRoute.fullPath}})
             return response;
         }else if(response.data.returnCode==500){
             return response;
@@ -116,7 +119,7 @@ router.beforeEach((to, from, next) => {
             let href = window.location.href
             let i = href.indexOf('#')
             let chanled =href.substring(i + 1, href.length)
-            if (chanled.length>5){
+            if (chanled.length>3){
                 i === -1 ? str : str = chanled
                 i === -1 || sessionStorage.setItem("pi", str)
             }

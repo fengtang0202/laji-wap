@@ -14,7 +14,7 @@
             <div style='float:right'>
                <img :src='item.img' :style='{width:index==1&&".71rem"||index==2&&".57rem"}' @click='handleFeedTap(index)'  class='pepper' :key='index' v-for='(item,index) in feedList' alt="">
             </div>
-            <div class='black' @click="$router.go(-1)">
+            <div class='black' @click="handleBack()">
               <img  src="../../assets/images/left.png" alt="">
             </div>
     </div>
@@ -83,14 +83,9 @@
                             </p>
                             <p  style='#999;' v-if='isvip==1'>本章是VIP章节，需购买后阅读</p>
                             <p>
-                            <button @click='buyChapter()' style='width:2rem;height:.4rem;color:#fff;margin:.3rem 0;outline:none;border:0;border-radius:.5rem;background-color:#F77583'>登录阅读</button>
+                             <button @click='buyChapter()' style='width:2rem;height:.4rem;color:#fff;margin:.3rem 0;outline:none;border:0;border-radius:.5rem;background-color:#F77583'>登录阅读</button>
                             </p>
-                            <!-- <p @click='handleClickAuto()'>
-                                 <img v-if="!btnShow" style='vertical-align: middle;width:.16rem;height:.16rem;' src="../../assets/images/Combined Shape Copy@3x.png" alt="">
-                                 <img v-if="btnShow" style='vertical-align: middle;width:.16rem;height:.16rem;' src="../../assets/images/Oval 8 Copy@3x.png" alt="">
-                                  <img src="" alt="">
-                                <span>自动购买下一章，不再提醒</span>
-                            </p> -->
+                           
                         </div>
                         <!-- 登录 -->
                     <div v-if='isLogin'>
@@ -138,7 +133,7 @@ import { setTimeout } from 'timers';
      export default{
          data(){
             return{
-                bool:true,
+               bool:true,
                contentHeight:0,
                showDirectory:false, 
                pulldown:true,
@@ -234,22 +229,29 @@ import { setTimeout } from 'timers';
             }
          },
           beforeRouteLeave(to,from,next){
-            //  if(to.path=='/directory'){
-                 if(this.isLogin&&to.path=='/Login'){
-                  this.$router.go(-2)
+                sessionStorage.removeItem('gc')
+                if(this.isLogin&&to.path=='/Login'){
+                   this.$router.go(-2)
                 }
                  document.body.style.backgroundColor ='#fff' 
-            //  }
-             next()
+                 next()
          },
           beforeRouteEnter: (to, from, next) => {
               next(vm=>{
-                to.meta.title=vm.$route.query.bookName
-                document.body.style.backgroundColor = vm.backgroundColor
+                  to.meta.title=vm.$route.query.bookName
+                  document.body.style.backgroundColor = vm.backgroundColor
             })      
          },
          methods:{
-             ...mapActions(['getUserInfo','setBackgroundColor','setFontSize','setFontColor','setfeedPepper']),
+             handleBack(){
+                 let code = sessionStorage.getItem('gc')
+                 if(code=='a'){
+                     this.$router.push('/')
+                 }else{
+                     this.$router.go(-1)
+                 }
+             },
+             ...mapActions(['setshowLoginDate','getUserInfo','setBackgroundColor','setFontSize','setFontColor','setfeedPepper']),
              handleFontSize(res){
                   res===1&&this.handleFontSizeAdd()
                   res===0&&this.handleFontSizeSubtract()
@@ -262,7 +264,7 @@ import { setTimeout } from 'timers';
                         this.$vux.toast.text('字体最大了,保护好眼睛!')
                     }
              },
-              handleFontSizeSubtract (){
+             handleFontSizeSubtract (){
                  if(this.fontSize>1.125){
                      let fontSize=this.fontSize-.1
                      this.setFontSize(fontSize)
@@ -285,7 +287,8 @@ import { setTimeout } from 'timers';
                     index===1&&this.hanldeCloseMinFeedPepper()
                     index===2&&this.handleClosefeed()
                 }else{
-                  this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                                             
+                  this.setshowLoginDate(true)
+                //   this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                                             
                 }
               },
              handleShare(index){
@@ -403,7 +406,7 @@ import { setTimeout } from 'timers';
                     //     this.btnShow&&this.buyChapter()                              
                     // }
                         // !this.btnShow&&this.getBookText()
-                     this.$router.replace({path:'/bookRead',query:{isvip:this.isvip,price:this.price,bookId:this.readBookId,chapterId:this.chapterId}})                       
+                     this.$router.replace({path:'/bookRead',query:{bookId:this.readBookId,chapterId:this.chapterId}})                       
                      this.$refs.content.scrollIntoView();
                     //  window.scrollTo(0,0)                    
                   }else{
@@ -421,7 +424,8 @@ import { setTimeout } from 'timers';
                     // if(this.isLogin){
                     //     this.btnShow&&this.buyChapter()    
                     // }
-                    this.$router.replace({path:'/bookRead',query:{isvip:this.isvip,price:this.price,bookId:this.readBookId,chapterId:this.chapterId}})                       
+                    //参数 isvip:this.isvip,price:this.price
+                    this.$router.replace({path:'/bookRead',query:{bookId:this.readBookId,chapterId:this.chapterId}})                       
                     this.$refs.content.scrollIntoView();
                     // window.scrollTo(0,0)
                  } else {
@@ -436,15 +440,10 @@ import { setTimeout } from 'timers';
                                 this.isBook=!this.isBook 
                                 this.isBook?this.$vux.toast.text('加入成功!'):this.$vux.toast.text('移出成功!')
                                 this.isBook?this.navList[2].text='已在书架':this.navList[2].text='加入书架'                                 
-                            }
-                            //  else if (res.returnCode==400){
-                        //         this.loginAction(false)
-                        //         this.getUserInfo(null)
-                        //         this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})
-                        // }
-                        else{
-                                this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                         
-                      }
+                          }
+                    //    else{
+                    //        this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                         
+                    //   }
                 })
             },
             handleTap(res){
@@ -469,7 +468,8 @@ import { setTimeout } from 'timers';
                      if(this.isLogin){
                          this.addBookRack()  
                      }else{
-                        this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                                                  
+                        this.setshowLoginDate(true)
+                        // this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                                                  
                      }
                  } 
                  res===9&&(this.bottomShow=!this.bottomShow)
@@ -502,7 +502,8 @@ import { setTimeout } from 'timers';
                         this.$Message.info(status?'订阅成功':'订阅取消');
                     },200)
                 }else{
-                  this.$router.push({path:'/Login',query:{redirect:this.$route.fullPath}})                                             
+                    this.setshowLoginDate(true)
+                //  this.$router.push({path:'/Login',query:{redirect:this.$route.fullPath}})                                             
                 }
             },
             handleGo () {

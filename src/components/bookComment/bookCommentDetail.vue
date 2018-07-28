@@ -83,7 +83,7 @@
 </template>
 <script>
 import {Post_formData2} from '@/config/services'
-import {mapState} from 'vuex'
+import {mapState,mapActions} from 'vuex'
 import {Popup,TransferDom} from 'vux'
 import { setTimeout } from 'timers';
     export default {
@@ -121,6 +121,7 @@ import { setTimeout } from 'timers';
             next()
          },
         methods:{
+          ...mapActions(['setshowLoginDate']),
           infiniteHandler($state){
                 this.page+=1
                 Post_formData2(this,{commentid:this.commendId,startPage:this.page},'/api/comm-replyInfo',res=>{
@@ -203,14 +204,16 @@ import { setTimeout } from 'timers';
                    }
               })
                }else{
-                this.$router.push({path:'/Login',query:{redirect:this.$route.fullPath}})
+                this.setshowLoginDate(true)
+                // this.$router.push({path:'/Login',query:{redirect:this.$route.fullPath}})
              }
            },
            handleShow(){
                if(this.isLogin){
                    this.show=!this.show
                }else{
-                  this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId+'&commendId='+this.commendId}})
+                  this.setshowLoginDate(true)                   
+                //   this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId+'&commendId='+this.commendId}})
                }
            }
         },

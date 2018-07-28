@@ -64,8 +64,9 @@
             handleBack(){
                  window.history.go(-1);
             },
+            //参数 isvip:i.chapterIsvip,price:i.price,
             handleToBookRead (i) {
-                  this.$router.push({path:'/bookRead',query:{isvip:i.chapterIsvip,price:i.price,bookId:this.readBookId,chapterId:i.id,bookName:this.bookName}});  
+                  this.$router.push({path:'/bookRead',query:{bookId:this.readBookId,chapterId:i.id,bookName:this.bookName}});  
             },
             handleGetVolumeChapter () {
                 this.isShow=true

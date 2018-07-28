@@ -32,7 +32,7 @@
             </v-touch>
         <v-touch @swipeup='up'>         
          <div class='orderList_wrap'  :style="{'height':direction1?'3.5rem':'0'}">
-             <div class="select" style="height:1.2rem;">          
+             <div class="select" style="height:1.4rem;">          
                 <ul>
                     <li style="font-size:.18rem;color:#333;width:.73rem;">作品类别</li>
                     <li style='margin-bottom:.1rem'  v-for="(item,index) in classList" :key='index' :class="{ red:changeRed == index}" @click="getData(item.id,index,item)"><span v-html="item.classificationName"></span></li>             

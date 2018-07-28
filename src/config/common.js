@@ -4,13 +4,13 @@ export function handleIsPhone(){
     var u = navigator.userAgent;
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
     var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-    // https: //www.lajixs.com/apk/app.apk
+    let pi = sessionStorage.getItem('pi') || 'LG20180608000'
     if (isAndroid) {
-       let pi=sessionStorage.getItem('pi')
-       let href = pi ? `https://www.lajixs.com/api/appDownLoad?channelid=${pi}` : 'https://www.lajixs.com/apk/app.apk'
-       window.location.href = href
+        window.location.href = `https://www.lajixs.com/api/appDownLoad?channelid=${pi}` 
     }
     if (isiOS) {
+        axios.get(`/api/iosDownLoadAppliactionCheckByIsUserAgentAndIPAddress?channelId=${pi}&requestType=0`).then(res => {
+        })
         window.location.href = "https://itunes.apple.com/cn/app/id1232171775?mt=8"
     }
     if (u.indexOf("MicroMessenger") > -1 && isAndroid) {
@@ -22,16 +22,16 @@ export function handleIsPhone1(channelId) {
     var u = navigator.userAgent 
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
     var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-    // https: //www.lajixs.com/apk/app.apk
     if (isAndroid) {
         //友盟统计
         _czc.push(["_trackEvent", "app ", "下载", "app下载", 1, "downApp"]);
-        window.location.href = `https://www.lajixs.com/api/appDownLoad?channelid=${channelId}`
+        axios.post(`/api/updatePromotioninfo?channelid=${channelId}&type=1`)
+        window.location.href = `https://www.lajixs.com/apk/app_${channelId}.apk`
     }
     if (isiOS) {
-        // axios.get(`/api/iosDownLoadAppliactionCheckByIsUserAgentAndIPAddress?channelId=${channelId}&requestType=0`).then(res => {
-            window.location.href = "https://itunes.apple.com/cn/app/id1232171775?mt=8"
-        // })
+        axios.get(`/api/iosDownLoadAppliactionCheckByIsUserAgentAndIPAddress?channelId=${channelId}&requestType=0`).then(res => {
+        })
+        window.location.href = "https://itunes.apple.com/cn/app/id1232171775?mt=8"
     }
     if (u.indexOf("MicroMessenger") > -1 && isAndroid) {
         window.location.href = 'http://sj.qq.com/myapp/detail.htm?apkName=com.ljfiction.book'

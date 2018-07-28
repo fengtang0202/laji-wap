@@ -77,8 +77,13 @@ const bilibili8 = r => require.ensure([], () => r(require('@/components/seo/bili
 const bilibili9 = r => require.ensure([], () => r(require('@/components/seo/bilibili9')), 'bilibili9')
 const bilibilibook = r => require.ensure([], () => r(require('@/components/seo/bilibilibook')), 'bilibilibook')
 const bilibilibook1 = r => require.ensure([], () => r(require('@/components/seo/bilibilibook1')), 'bilibilibook1')
+const bookforweb001 = r => require.ensure([], () => r(require('@/components/seo/bookforweb001')), 'bookforweb001')
 Vue.use(Router)
 let routers=[
+   {
+       path: '/bookforweb001',
+       component: bookforweb001
+   },
     {path: '/bilibilibook1',component: bilibilibook1 },
     {path: '/bilibilibook', component: bilibilibook},
     {path:'/bilibili',component:bilibili},

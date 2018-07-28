@@ -5,7 +5,7 @@
 import {handleIsPhone} from '../../config/common'
      export default{
          data(){
-            return{
+            return {
                 handleIsPhone:handleIsPhone
             }
          },

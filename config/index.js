@@ -23,7 +23,7 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8888,
+    port: 8080,
     autoOpenBrowser: true,
     devtool: 'eval-source-map',
     assetsSubDirectory: 'static',

@@ -31,12 +31,14 @@
              <span>男</span>
            </div>
         </div>
-        <div class="register" @click="handleCheckRegister()">快速注册</div>
+        <div class="register"  @click="handleCheckRegister()">快速注册</div>
    </div>
 </template>
 <script>
     import { Post_formData2, noParam_Get } from '@/config/services'
     import md5  from 'js-md5'  
+    import {userLogin} from '@/config/getData'
+     import { mapActions,mapState } from 'vuex' 
     export default {
         name: 'register',
         data () {
@@ -61,7 +63,11 @@
               return `+${res}`
            }  
         },
+         computed: {
+            ...mapState(['isLogin'])
+        },
         methods:{
+            ...mapActions(['loginAction','getUserInfo','setfeed','setfeedPepper','setminPepper']),
             handleGo(){
                 this.$router.push({path:'/areaCode',query:{type:1}})
             },    
@@ -80,43 +86,8 @@
                    this.sex = 0;
                 }
             },
-            // handleRegister(){
-            //     // let checkPhone = /^1(3|4|5|6|7|8|9)\d{9}$/;
-            //     // let checkPassword = /^.{6,20}$/;
-            //     let checkPassword=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/
-            //     let checkName = /^.{1,20}$/;
-            //         if(checkPassword.test(this.pwd)&&checkName.test(this.name)){
-            //             if (this.sex){
-            //                 console.log(this.sex)
-            //                 noParam_Get(this,'/api/person-checkNickPhone/'+`${this.phone}`,res=>{
-            //                     if(res.returnCode==200){
-            //                         this.handleCheckname();
-            //                     }else{
-            //                         this.$vux.toast.text(res.msg);
-            //                     }
-            //               })
-            //             }else{
-            //                  this.$vux.toast.text('请选择你的性别');
-            //             }
-            //         }else if(!checkPassword.test(this.pwd)){
-            //             this.$vux.toast.text('密码必须有大小写字母和数字且6-18位');
-            //         }else if(!checkName.test(this.name)){
-            //             this.$vux.toast.text('请输入小于20位的昵称');
-            //         }else if(!this.sex){
-            //             this.$vux.toast.text('请选择性别');
-            //         }
-            // },
-            // handleCheckname(){
-            //         noParam_Get(this,'/api/person-checkNickName/'+this.name,res=>{
-            //             if(res.returnCode==200){
-            //                 this.handleCheckRegister();
-            //             }else{
-            //                 this.$vux.toast.text(res.msg);
-            //             }
-            //         })
-            // },
             handleCheckRegister () {
-                let phone = this.areaCode==86?this.phone:this.areaCode+'+'+this.phone
+                var phone = this.areaCode==86?this.phone:this.areaCode+'+'+this.phone
                 let checkpwd=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/  
                 if(!checkpwd.test(this.pwd)){
                      this.$vux.toast.text('密码必须有大小写字母和数字且6-18位');                     
@@ -140,10 +111,28 @@
                     terminal:1 
                 }
                 Post_formData2(this,options,'/api/person-regInfo',res=>{
-                        this.$vux.toast.text(res.msg);
+                    // this.$vux.toast.text(res.msg);
+                    if(res.returnCode==200){
+                      let options={
+                            userName:this.name.Trim(),
+                            userPassword:md5(this.pwd),
+                            terminal:3
+                        }
+                        userLogin(options).then(res=>{
                             if(res.returnCode==200){
-                                this.$router.push({path:'/Login'});
+                               let userInfo=res.data
+                               this.loginAction(true)
+                               this.getUserInfo(userInfo)
+                               this.setfeed(userInfo.userGoldenTicket)
+                               this.setfeedPepper(userInfo.userMoney)
+                               this.setminPepper(userInfo.userRecommendTicket)
+                               this.$vux.toast.text('登录成功!') 
+                               this.$router.go(-2)
                             }else{
+                               this.$vux.toast.text(res.msg)
+                            }
+                        })
+                            } else {
                                 this.$vux.toast.text(res.msg);
                         }
                 })

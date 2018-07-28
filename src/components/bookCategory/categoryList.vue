@@ -33,7 +33,7 @@
            },
          methods: {
              handleToDetail(res,name){
-                this.$router.push({path:'/categoryDetail',query:{categoryId:res,classificationName:name,order:0,word:0,status:0,updateTime:0}})
+                this.$router.push({path:'/categoryDetail',query:{categoryId:res,classificationName:name,order:3,word:0,status:0,updateTime:0}})
              }
           }
        }

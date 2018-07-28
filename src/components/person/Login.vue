@@ -3,15 +3,15 @@
         <app-load></app-load>
         <div class="title">登录</div>
         <input type="text" class="oInput"   placeholder="请输入手机号或用户名" v-model.trim="phone">
-        <input type="password" class="oInput" placeholder="请输入密码"  v-model.trim="password">
+        <input type="password" class="oInput" @keyup.enter="loginIn()" placeholder="请输入密码"  v-model.trim="password">
         <div class="re_radio">
             <img src="../../assets/images/login.png" class="left_d" v-if="show" @click="handleCheck()">
             <img src="../../assets/images/select_login.png" class="left_d" v-if="!show" @click="handleCheck()">
             <p @click="handleCheck()">自动登录</p>
             <div class="right_d" @click="handleRouter({path:'/password',query:{value:86}})">忘记密码</div>
         </div>
-        <div class="login" @click="loginIn()">登录</div>
-        <div class="register" @click="handleRouter({path:'/register',query:{value:86}})">快速注册</div>
+        <div class="login"     @click="loginIn()">登录</div>
+        <div class="register" @click="handleRouter({path:'/register',query:{value:86,redirect:jumpLink}})">快速注册</div>
     </div>
 </template>
 
@@ -21,8 +21,8 @@
     import cookie from '@/config/cookie'
     import { mapActions,mapState } from 'vuex' 
     import md5  from 'js-md5'      
-    import { setTimeout } from 'timers';
     import {userLogin} from '@/config/getData'
+    import axios from 'axios'
     export default {
         name: 'login',
         components: {
@@ -34,7 +34,8 @@
               value:'',
               phone:'',
               password:'',
-              show:true
+              show:true,
+              jumpLink:this.$route.query.redirect
             }
         },
         directives: {
@@ -96,7 +97,8 @@
                                this.setfeedPepper(userInfo.userMoney)
                                this.setminPepper(userInfo.userRecommendTicket)
                                this.$vux.toast.text('登录成功!') 
-                               this.$router.push(this.$route.query.redirect||'/')
+                            // this.$router.push(this.$route.query.redirect||'/')
+                               this.$router.go(-1)
                             }else{
                                this.$vux.toast.text(res.msg)
                             }
@@ -109,9 +111,22 @@
                this.password = cookie.get().userPassword;
                this.show=false;
             }
-            // this.$nextTick(()=>{
-            //     this.$refs.input.focus()
-            // })
+            if(!this.isLogin){
+               var code,LoginState
+               window.location.href.split("?")[1].split("&").forEach((elem)=>{
+                 if(elem.split("=")[0]=="code"){
+                    code = elem.split("=")[1];
+                }
+                if(elem.split("=")[0]=="state"){
+                   LoginState = elem.split("=")[1]
+                }
+             })
+            }
+            if(LoginState=='sina_login'){
+                axios.get(`/person-LaJiXiaoShuoWEBSinaLogin?code=${code}&backurl=https://www.lajixs.com`).then(res=>{
+                    console.log(res)
+                })
+            }
         }
     }
 </script>

@@ -1,71 +1,18 @@
 <template>
-    <div class='content'>
-       <div id='headerbg'>
-          <img src="../../assets/images/bookbg.jpg" style='width:3.75rem;display:block;pointer-events: none; ' alt="">
-       </div>
-       <div class='bookcontent'>
-           <div class='f_content' v-for='(item,index) in content' :key='index'>
-                {{item.trim()}}
-           </div>
-       </div>
-       <div>
-          <img src="../../assets/images/bookbottom.jpg" style='width:3.75rem;display:block;pointer-events: none; ' alt=""> 
-       </div>
-       <div class='downbtn'>
-          <button @click="handleIsPhone1('LG20180703011')">点击查看后续内容></button>
-       </div> 
-    </div>
+    <bbook chandleId='LG20180703011' :bgColor='bgColor' :bgImg='bgImg' chapterId='7362'></bbook>
 </template>
 <script>
-import {handleIsPhone1} from '../../config/common'
-import axios from 'axios'
-export default{
+import bbook from '../seo/bbook'
+export default {
     data(){
-        return{
-           handleIsPhone1:handleIsPhone1 ,
-           content:[]
-        }
-    },
-    created () {
-        let content = "　　陶梓，某直播平台著名恐怖向女？主播，直播内容以恐怖，灵异为主，吸引了大批粉丝，现已成为虎呀直播的热门主播，粉丝数量庞大，且粉丝多为男性。<LG>a923808a-c8ce-4f41-93c4-dca48713440d</LG>　　“哈喽，大家好，我是你们的桃子，今天我穿的水手服哦，是不是很有学生气息，有没有让你想起你的初恋呢？”陶梓用甜甜的声音朝镜头说道。<LG>ecee2db7-e137-4b28-bc15-e6d5e8b90f69</LG>　　<LG>bb3c67ba-3e61-465b-aaf2-a6ce554dcbb6</LG>　　谁也不知道在镜头前灵动可爱滴少女竟然是个裙子底下有怪兽的抠脚大汉，陶梓满意地看着屏幕内像雪花一样多的打赏和评论。<LG>6566fd86-964f-480e-8c8c-d6a02f94b537</LG>　　说起他为什么要女装直播，只要能够赚钱，其他都是王八蛋。节操？那是什么？这年头节操还能当饭吃吗？我能女装我自豪，谁让老子长的漂亮呢。<LG>5d159f07-f28b-440a-9a88-bdd8070050ad</LG>　　“谢谢大家的打赏，今天我来到了一个废弃的老房子，据说这里闹鬼，半夜三更会莫名传出女人的哭声。今天我们就来看看究竟是不是真的。”<LG>a468c1dc-1177-4cd3-80d4-7eec784b2135</LG>　　陶梓把镜头转向远处的废弃老房子，房子破败不堪，窗户都被打破了，门也歪歪斜斜地立着，好像一阵大风就能吹倒，房子是乡下的木头房，有两层楼高，看起来蛮大的。<LG>70a0ee36-2340-4014-beb5-a1994e0c8279</LG>　　<LG>cbf270ed-6699-4ee3-a6cb-217de0afb188</LG>　　观众们都被这个甜甜的笑容治愈了，好可爱的妹纸啊。<LG>a8c330a3-d482-455f-a604-27740f1a4868</LG>　　不过这老房子闹鬼，这么萌的妹子去了还不被吓得哭了。<LG>28a2b854-f8b7-48fc-b092-a70e2764a759</LG>　　有些心疼妹子的观众心里默默地想，还希望这妹纸自求多福了。<LG>a6c24287-1dba-43db-bedf-9afbb0a8ab23</LG>　　陶梓撩起小裙子怕被树枝刮到，没想到不小心露出了一点小内内，看着屏幕的恶狼们纷纷睁大了眼睛仔细瞧着，就差流鼻血了。<LG>d91b7858-f2bc-4b04-9db9-7081982cac38</LG>　　<LG>bc118e5e-a043-4f4a-a23a-55ee8b91371a</LG>　　哇～是粉色，还有蕾丝边耶，老司机们都会心一笑，评论上全是色色的表情。还有人在刷评论。<LG>ad84bf1e-9f50-432c-b545-5dab5fe2a4c4</LG>　　“粉红色”<LG>3e170b1e-6566-444c-9bb9-9c4fee92cc7f</LG>　　“粉红色”<LG>51435151-0e64-4580-94d3-384f215d3d5c</LG>　　“粉红色”<LG>cdd31aff-fe8e-40fe-8bdb-68f392c99ee2</LG>　　“粉红色”<LG>4cf3f384-982c-454e-953d-5cb658a63d3b</LG>　　“粉红色”<LG>cc8e105c-ef05-4ca3-94b2-bce5ff1e3f7d</LG>　　“粉红色”<LG>b6fbe379-2004-450b-ad0c-716ea09f4e78</LG>　　<LG>4c14e62f-bcf7-420b-8767-d4044b25b623</LG>　　可桃子并没有看到这一幕，而是穿过杂草树枝，来到了老房子前。<LG>faac151e-12f4-4f33-bfa3-ffd2d2fecff3</LG>　　房子有些年头了，里面的阴气很重，凭明明是炎热的夏天，而窗户上却有浓重的水汽可以看出来。<LG>2364586b-a6cd-479b-8844-dade05518f7c</LG>　　看来这房子里大有古怪，陶梓心想。<LG>c06f7a4a-418c-42c3-b591-4a8063a4e417</LG>　　<LG>122f152b-720a-466d-95d2-7bcbd8da06c0</LG>　　来到大门前，门前有着绿绿的青苔，门上还贴着村民的告示，上面写着禁止入内。<LG>156b3d20-22d8-42a8-9a4e-ac0b52ba8d2b</LG>　　禁止入内？<LG>fcf5d5aa-9689-4d51-a94a-968564253cc2</LG>　　小爷我偏要进，怕什么，我可是道士，专门收你这鬼怪的。<LG>63a0f04a-2664-457e-ae5c-3c4b79495c92</LG>　　评论上有好多人劝桃子不要进去的，还有人说快点进去看看的。<LG>ef9366fb-ee60-4fc5-809b-90e4a142bba4</LG>　　“唔，大家对桃子很关心呢，谢谢大家啦，但是既然来了不进去看看，难得你们就不好奇吗，桃子可是非常好奇呢，里面到底有没有鬼呢？”<LG>831be1a7-4327-47db-8c74-735bacc5fcaf</LG>　　这话勾起了大家的好奇心，评论渐渐趋向叫桃子进去看看的。<LG>82368b9d-0b07-4a9c-806f-083c8f218f42</LG>　　“好吧，那我就进去看看咯。”陶梓对镜头做了个卖萌的表情。<LG>c648b607-c5b4-41b9-bb02-d42eeee87dfc</LG>　　<LG>ce7e26d9-fc7a-473e-a992-1526b29d89b5</LG>　　好可爱，好想扑倒～男人们心里想着。<LG>a392c875-213b-41b1-844a-50e2425c9740</LG>　　陶梓推开了没上锁的大门，走进了院子里。<LG>3cd2369d-b544-4801-9acb-ca92af632302</LG>　　内堂的走廊上挂着几盏油灯，随着风轻轻晃动，屋檐上也有着绿色的青苔，看来这房子里的阴气真的很重。<LG>bf716bd9-72b6-4a1e-8ff6-3cc358b6afee</LG>　　青苔喜阴凉湿气重的地方，这房子里的阴气给它提供了良好的环境。<LG>cd2e391e-c909-4a5a-a3ea-6063d7b67b6f</LG>　　<LG>1c196795-5cb9-4b0a-b06f-19b6279ca33d</LG>　　陶梓把镜头对准房子里的各处地方，让观众们都看看。<LG>c3a99cac-6995-41eb-a98f-82dac507b91b</LG>　　“我去，这房子也太破了吧，屋檐上都长青苔了。”一个名为“你的老司机”的观众评论道。<LG>8fe72160-3ec1-4d25-b545-c19f191fca9c</LG>　　“姑娘你胆子可真大，这样的房子都敢去，666”一个名为“幸福猪猪”的观众评论道。<LG>b30c6bb2-d7c2-4b62-8a27-3c7eae9977c4</LG>　　然后评论翻下了基本上都是诸如这样的评论，有感叹桃子胆子大的，有觉得房屋破败阴森的，还有评论她长得漂亮的。<LG>6aa2326c-1e83-4e26-a13e-09223d9f1750</LG>　　其中一条评论引起了大家的关注，内容是这样的：你们不觉得，那个窗户后头有人吗？<LG>db0dda78-b1b4-4a4b-b9a5-f61d0037542d</LG>　　这名叫“空白”的观众评论顿时让大家脚底都冒出了一股凉气。<LG>dea4e91a-40d0-4e3b-b3d3-c3a4b624f08d</LG>　　大家纷纷去看回放，发现他说的话确实不假，这时大家心里都毛毛的，那个窗户后面究竟是谁？<LG>c4f85846-2426-4751-8b5c-f4ee49460c45</LG>　　<LG>930c2733-24ec-4a15-918d-825de27687ce</LG>　　陶梓也看到了这条评论，他再定睛一看，那窗户上的人影又消失了。<LG>2e5eac76-a30f-46cb-af02-fbf1c4a91614</LG>　　仿佛从来没出现过，难道那个人影只是摄像机角度的问题吗，可是那个人影那么清晰，他跟大家一样心里都产生了疑问。<LG>0ed08181-a92e-40f3-9b64-4be6d717b59f</LG>　　那个人影究竟是谁？"
-        this.content = content.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
-    },
-}    
-</script>
-<style lang="less" scoped>
-   .content{
-      position: relative;
-  }
-  .bookcontent{
-            padding:.1rem .24rem 0 .24rem;            
-            letter-spacing:.02rem; 
-            text-align: justify;
-            line-height: 2; 
-            background: linear-gradient(to bottom, #B3EAFF, #f6f4fd 50%, #FFF8FF);
-            margin-top:-1rem;
-     }
-  .f_content{
-       text-indent: 2em; 
-       margin-top:.2rem;
-  }
-  .downbtn{
-      width:100%;
-      height:.58rem;
-      background: #fff;
-      color:#fff;
-      position: fixed;
-      bottom:0;
-      padding:.12rem;
-    button {
-        width:3.5rem;
-        height:.34rem;
-        border:0;
-        outline: none;
-        background:#60a0c5; 
-        color:#fff;
-        border-radius: 3px;    
+    return{
+      bgImg:require('../../assets/images/bookbg.jpg') ,
+      bgColor:'linear-gradient(to bottom, #B3EAFF, #f6f4fd 50%, #FFF8FF)'   
     }
-  }
-</style>
-
+    },
+    components: {
+        bbook
+    }
+}
+</script>
 

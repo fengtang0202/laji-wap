@@ -56,7 +56,10 @@ import { Post_formData2} from '@/config/services'
                 this.keyNum = res;
            },
            handleGo(){
+              //由于我需要知道我的充值是从哪个页面过来的我得记录我的当前的充值入口
+              sessionStorage.setItem("backHref",window.location.href)
               this.$router.push('/payMoney')
+
            },
            handleReward() {
                let options={

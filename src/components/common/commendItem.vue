@@ -33,7 +33,7 @@
         </div>
 </template>
 <script>
-    import {mapState} from 'vuex'
+    import {mapState,mapActions} from 'vuex'
     import {Post_formData2} from '../../config/services'
       export default{
           props: {
@@ -46,6 +46,7 @@
           ...mapState(['isLogin'])  
         },
         methods:{
+            ...mapActions(['setshowLoginDate']),
             handleCommentDetail(item){
                 this.$router.push({path:'/bookCommentDetail',query:{bookId:this.$route.query.bookId,commendId:item.id}})
             },
@@ -64,7 +65,8 @@
                    }
                 })
                }else{
-                    this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.$route.query.bookId}})
+                    this.setshowLoginDate(true)
+                    // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.$route.query.bookId}})
                } 
            },
         }

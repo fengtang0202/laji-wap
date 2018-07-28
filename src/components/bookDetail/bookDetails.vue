@@ -152,7 +152,6 @@
          },
          beforeRouteLeave(to, from, next){
              if(this.isLogin&&to.path=='/Login'){
-                //  this.$router.push('/')
                 this.$router.go(-2)
              }
              next(vm=>{
@@ -171,7 +170,7 @@
           ...mapState(['userInfo','isLogin']),
         },
         methods:{
-            ...mapActions(['setReadCommentInfo','loginAction','getUserInfo']),
+            ...mapActions(['setReadCommentInfo','loginAction','getUserInfo','setshowLoginDate']),
             handleRead (index) {
                  this.isActive = index;
                   if(index===0){
@@ -182,7 +181,8 @@
                      index===1&&this.handleIsAuto()
                      index===2&&this.handleBookRack()
                  }else{
-                    this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 
+                    this.setshowLoginDate(true)
+                    // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 
                  }
            },
             //由于之前考虑了直接看书是从目录一个地方跳转到bookRead 
@@ -227,7 +227,7 @@
              handleToAndChapter(_router){
                   if(this.isLogin){
                    this.handleImmediatelyReadChapter().then(res=>{
-                      this.$router.replace({path:_router,query:{bookId:this.readBookId,chapterId:res,bookName:this.rewordParam.bookName}})
+                      this.$router.push({path:_router,query:{bookId:this.readBookId,chapterId:res,bookName:this.rewordParam.bookName}})
                  },res=>{
                       this.$router.push({path:_router,query:{bookId:this.readBookId,chapterId:res,bookName:this.rewordParam.bookName}})                     
                  })
@@ -251,21 +251,24 @@
                 if(this.isLogin){
                     this.$refs.child.handleClose();
                 }else{
-                    this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
+                    // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
+                    this.setshowLoginDate(true)
                 }
             },
             handleClosefeedpepper(){
                 if(this.isLogin){
                     this.$refs.childfeedpepper.handleClosepepper();
                 }else{
-                    this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
+                    this.setshowLoginDate(true)
+                    // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
                 }
             },
             handleCloseMinFeedPepper(){
                 if(this.isLogin){
                     this.$refs.minfeedpepper.handleClose()
                 }else{
-                    this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 
+                    this.setshowLoginDate(true)
+                    // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 
                 }
             },
             handleGo(res){
@@ -402,7 +405,7 @@
              this.handleInit();
              this.handleComments(); 
             if(this.isLogin){
-               refshUserInfo()
+              refshUserInfo()
               this.handleIsAuto('search')
               this.isBookRack()
               Post_formData2(this,{userid:this.userInfo.userId,startpage:1},'/api/person-UserBookReadRecord',res=>{

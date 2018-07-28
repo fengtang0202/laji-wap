@@ -85,6 +85,7 @@ export default {
       ...mapState(['userInfo','isLogin'])  
     },
     methods:{
+        ...mapActions(['setshowLoginDate']),
             canlce(){
                this.show=false;
             },
@@ -131,8 +132,8 @@ export default {
                              this.newCommentList.unshift(options)
                             //  this.$router.go(0)
                             this.replyText=''
-                         }else if(res.returnCode==400){
-                             this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})                             
+                        //  }else if(res.returnCode==400){
+                            //  this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})                             
                         }else{
                            this.$vux.toast.text(res.msg)  
                         }
@@ -196,7 +197,8 @@ export default {
                if(this.isLogin){
                    this.show=!this.show
                }else{
-                this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
+                this.setshowLoginDate(true)
+                // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
                }
         },
          reload () {

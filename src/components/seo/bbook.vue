@@ -1,13 +1,14 @@
 <template>
     <div class='content'>
        <div>
-          <img src="../../assets/images/book.png" style='width:3.75rem;display:block;pointer-events: none; ' alt="">
+          <img :src="bgImg" style='width:100%;display:block;pointer-events: none; ' alt="">
        </div>
-       <div class='bookcontent'>
+       <div class='bookcontent' :style="{background: bgColor}">
            <div class='f_content' v-for='(item,index) in content' :key='index'>
                 {{item.trim()}}
            </div>
        </div>
+          <img @click="handleIsPhone1(chandleId)" src="../../assets/images/bgbottom.jpg" style='width:100%;display:block; ' alt="">
        <div class='downbtn'>
           <button @click="handleIsPhone1(chandleId)">继续阅读全文,下载辣鸡小说></button>
        </div> 
@@ -31,7 +32,15 @@ export default{
        chapterId:{
            type:String,
            default:''
-       }
+       },
+        bgImg:{
+           type:String,
+           default:''
+      },
+      bgColor:{
+          type:String,
+          default:''
+      }
     },
     created() {
         axios.post(`/api/book-read?chapterId=${this.chapterId}`).then(res=>{

@@ -17,12 +17,13 @@
                     <p style='font-size:.15rem;line-height:.25rem;'>辣鸡小说客户端</p>
                     <p style='font-size:.12rem;line-height:.25rem;'>最萌二次元宅文生产基地</p>
                 </div>
-                <div style='float:right;margin-right:.1rem;height:.6rem;'>
-                    <button @click="handleIsPhone()" style='width:.92rem;height:.34rem;color:#FB5E6F;background:#fff;border:0;outline:0;border-radius:.04rem;margin-top:.13rem;margin-right:.15rem;'>客户端下载</button> 
+                <div style='float:right;margin-right:.05rem;height:.6rem;'>
+                    <button @click="handleIsPhone()" style='width:.92rem;height:.34rem;color:#FB5E6F;background:#fff;border:0;outline:0;border-radius:.04rem;font-size:.16rem;margin-top:.13rem;margin-right:.15rem;'>客户端下载</button> 
                     <img @click="closedown()" src="./assets/images/closeDown.png" style='width:.3rem;height:.3rem; vertical-align:middle;' alt=""> 
                 </div>
             </div>
       </popup>
+          <loginDateDialog></loginDateDialog> 
     </div>
   </div>
 </template>

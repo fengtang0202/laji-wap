@@ -68,7 +68,10 @@ import {refshUserInfo} from '../../config/getData'
          methods: {
              ...mapActions(['getUserInfo','setfeed','setfeedPepper','setminPepper']),
              handleGo(res) {
-               this.$router.push(res)
+               if(res=='/payMoney'){
+                   sessionStorage.setItem('backHref',window.location.href)
+                }
+              this.$router.push(res)
              },
              getUserMoney(){
                       Post_formData2(this,'','/api/person-info',res=>{
@@ -77,7 +80,6 @@ import {refshUserInfo} from '../../config/getData'
                                 this.setfeed(res.data.userGoldenTicket)
                                 this.setfeedPepper(res.data.userMoney)
                                 this.setminPepper(res.data.userRecommendTicket)
-
                             }
                       })
                  }

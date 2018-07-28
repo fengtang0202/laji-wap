@@ -3,12 +3,11 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex);
     const state={
+        showLoginDate:false,
         showConnect:false,
         token:'',
         userInfo:null,
         isLogin:false,
-        // bookRack:[],
-        // readCommentInfo:{},
         feed:0,
         feedPepper:0,
         minPepper:0,
@@ -21,6 +20,9 @@ Vue.use(Vuex);
         fontColor: '#685640',
     }
     const mutations = {
+        setshowLoginDate(state, showLoginDate) {
+             state.showLoginDate = showLoginDate
+        },
         setfeed(state,feed){
             state.feed=feed
         },
@@ -67,15 +69,9 @@ Vue.use(Vuex);
         setFllows(state,fllows){
             state.fllows=fllows
         },
-        // setBookRack(state,bookRack){
-        //     state.bookRack=bookRack
-        // },
         setChapterId(state,chapterId){
             state.chapterId=chapterId
         },
-        // setReadCommentInfo(state,readCommentInfo){
-        //     state.readCommentInfo=readCommentInfo
-        // }
     }
     const actions = {
         setfeed({commit},feed){
@@ -102,6 +98,9 @@ Vue.use(Vuex);
         setUserCode({commit},code){
            commit('setUserCode',code)
         },
+        setshowLoginDate({commit},status){
+           commit('setshowLoginDate', status)
+        },
         loginAction({commit},status){
             commit('changeLogin',status)
         },
@@ -117,9 +116,6 @@ Vue.use(Vuex);
         setChapterId({commit},chapterId){
             commit('setChapterId',chapterId)
         },
-        // setReadCommentInfo({commit},readCommentInfo){
-        //     commit('setReadCommentInfo',readCommentInfo)
-        // },
         getUserInfo({commit},userInfo){
             commit('getUserInfo',userInfo)
         }
