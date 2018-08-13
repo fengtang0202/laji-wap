@@ -5,6 +5,7 @@ import store from './store'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css';   
 import axios from 'axios'
+import cookie from './config/cookie'
 import FastClick from 'fastclick'
 import VueTouch from 'vue-touch';
 import  VueLazyload from 'vue-lazyload'
@@ -24,11 +25,13 @@ import bookRankList from '../src/components/bookRank/bookRankList'
 import Loading from 'vue'
 import bookImg from '../src/components/common/bookImg'
 import loginDateDialog from '../src/components/common/loginDateDialog'
+import bindPhone from '../src/components/common/bindPhone'
 // 注册全局组件
 Vue.config.productionTip = false
 Vue.use(iView)
 Vue.use(WechatPlugin)
 Vue.use(VueLazyload)
+Vue.component('bindPhone', bindPhone)
 Vue.component('loginDateDialog', loginDateDialog)
 Vue.component('headerComponent',headerComponent)
 Vue.component('appLoad',Load)
@@ -98,6 +101,13 @@ axios.get(`/api/weChartShareSign?URL=${encodeURIComponent(window.location.href.s
 })
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
+    var agent = navigator.userAgent.toLowerCase();
+    let cook = cookie.get().isFirst
+    if (agent.match(/MicroMessenger/i) == "micromessenger"&&!cook) {
+          if (!store.state.isLogin){
+              store.commit('setshowLoginDate', true)
+          }
+      }
            setTimeout(() => {
                 var _hmt = _hmt || [];
                 (function () {

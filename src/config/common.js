@@ -5,6 +5,9 @@ export function handleIsPhone(){
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
     var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
     let pi = sessionStorage.getItem('pi') || 'LG20180608000'
+    if(pi.indexOf('xll')!=-1){
+        pi = 'LG20180608000'
+    }
     if (isAndroid) {
         window.location.href = `https://www.lajixs.com/api/appDownLoad?channelid=${pi}` 
     }

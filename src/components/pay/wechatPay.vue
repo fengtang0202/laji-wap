@@ -143,13 +143,13 @@ import { clearInterval } from 'timers';
          var agent = navigator.userAgent.toLowerCase();
          //判读是否在微信内部浏览器中 以及渠道id来修改起充数
           if (agent.match(/MicroMessenger/i) == "micromessenger") {
-              this.payCategoryList=this.payCategoryList.slice(2)
+              this.payCategoryList=this.payCategoryList.slice(1)
           }
       }
   },
  mounted () {
      if(this.isLogin){
-        //  this.changeMoney()
+         this.changeMoney()
          refshUserInfo()
          if(window.location.href.indexOf("state=wxChat")>0){
             var wxcode = '';

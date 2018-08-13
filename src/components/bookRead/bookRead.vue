@@ -249,9 +249,12 @@ import { setTimeout } from 'timers';
                      this.$router.push('/')
                  }else{
                      this.$router.go(-1)
+                     setTimeout(()=>{
+                         this.$router.push({path:'/bookDetails',query:{bookId:this.readBookId}})
+                     },2000)
                  }
              },
-             ...mapActions(['setshowLoginDate','getUserInfo','setBackgroundColor','setFontSize','setFontColor','setfeedPepper']),
+             ...mapActions(['setshowLoginDate','setShowBindPhone','setshowLoginDate','getUserInfo','setBackgroundColor','setFontSize','setFontColor','setfeedPepper']),
              handleFontSize(res){
                   res===1&&this.handleFontSizeAdd()
                   res===0&&this.handleFontSizeSubtract()
@@ -284,11 +287,17 @@ import { setTimeout } from 'timers';
               handleFeedTap(index){
                 if(this.isLogin){
                     index===0&&this.handleClosefeedpepper()
-                    index===1&&this.hanldeCloseMinFeedPepper()
-                    index===2&&this.handleClosefeed()
+                        index===2&&this.handleClosefeed()
+                      if(index===1){
+                          if(this.userInfo.userPhone!='9527'){
+                           this.hanldeCloseMinFeedPepper()
+                        }else{
+                           this.setShowBindPhone(true)
+                        }
+                    }
                 }else{
                   this.setshowLoginDate(true)
-                //   this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                                             
+                //this.$router.push({path:'/Login',query:{redirect: `${this.$route.path}?bookId=${this.readBookId}&isvip=${this.isvip}&price=${this.price}&chapterId=${this.chapterId}`}})                                             
                 }
               },
              handleShare(index){
@@ -550,7 +559,10 @@ import { setTimeout } from 'timers';
                   })
                 }else{
                     // this.$router.push({path:'/Login',query:{redirect:'/bookRead'}})
-                     this.$router.push({path:'/Login',query:{redirect:`/bookRead?isvip=${this.isvip}&price=${this.price}&bookId=${this.readBookId}&chapterId=${this.chapterId}`}})                    
+                    this.dialogshow=false
+                    this.setshowLoginDate(true)
+
+                    //  this.$router.push({path:'/Login',query:{redirect:`/bookRead?isvip=${this.isvip}&price=${this.price}&bookId=${this.readBookId}&chapterId=${this.chapterId}`}})                    
                 }
             },
             handleIsAuto (type='update') {

@@ -52,12 +52,6 @@
         beforeRouteEnter(to,from,next){
             sessionStorage.removeItem('gc')
             next(vm=>{
-                // Post_formData2(vm,'','/api/person-checkLoginState',res=>{
-                //     if(res.returnCode==400){
-                //         vm.loginAction(false)
-                //         vm.getUserInfo(null)
-                //     }
-                // })
                 vm.$refs.home.scrollIntoView()
             })
         },
@@ -88,6 +82,15 @@
         },
         mounted () {
             this.getIndex()
+            var isPageHide = false;
+            window.addEventListener('pageshow', function () {
+                if (isPageHide) {
+                    window.location.reload();
+                }
+            });
+            window.addEventListener('pagehide', function () {
+                isPageHide = true;
+            });
         }
     }
 </script>

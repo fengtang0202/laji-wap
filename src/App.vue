@@ -24,6 +24,7 @@
             </div>
       </popup>
           <loginDateDialog></loginDateDialog> 
+          <bindPhone></bindPhone>
     </div>
   </div>
 </template>
@@ -31,8 +32,7 @@
 import {Param_Get_Resful } from '@/config/services'
 import { Popup,TransferDom } from 'vux'
 import cookie from './config/cookie'
-import {handleIsPhone} from './config/common'
-
+import {handleIsPhone} from './config/common' 
 // var wx = require('weixin-js-sdk'); 
 export default {
   name: 'app',

@@ -4,7 +4,7 @@
         <loading :show="isShow"></loading>
         <swiper auto :aspect-ratio='i' dots-position="center">
            <swiper-item v-for='(item,index) in pictureList' :key='index' >
-                <img  :src="item.bookImage" style='width:100%;' @click='handleGo(item.bookId)'>
+                <img  :src="item.activityImgURL" style='width:100%;' @click='handleGo(item)'>
            </swiper-item>
        </swiper>
         <div class="edit">
@@ -91,7 +91,7 @@
                         if(res.returnCode==200){
                             this.showContent=true
                             this.bookList = res.data.HostXiaoBianRecommend;
-                            this.pictureList = res.data.pictureCarousel;
+                            this.pictureList=res.data.pictureCarouselVersionTow
                         }else{
                             // this.$vux.toast.text(res.msg);
                         }
@@ -134,15 +134,19 @@
                             }
                               this.lastPage=res.data.lastPage
                           }else{
-                            // this.$vux.toast.text(res.msg);
-                        }
+                            //this.$vux.toast.text(res.msg);
+                      }
                 })
             },
-            handleMore(){
+            handleMore() {
                 this.$router.push({path:"/editorRecommend"});
             },
-            handleGo(id){
-                 this.$router.push({path:'/bookDetails',query:{bookId:id}});
+            handleGo(item){
+                 if(item.bookId!=0){
+                    this.$router.push({path:'/bookDetails',query:{bookId:item.bookId}});
+                 }else{
+                    window.location.href=item.detailsImgAndPageURL
+                 }
             }
         },
         mounted(){

@@ -50,6 +50,19 @@
          computed: {
             ...mapState(['isLogin'])
         },
+         beforeRouteLeave(to, from, next) {
+            if (to.path == "/"||to.path=='/bookDetails') {
+                    to.meta.keepAlive = false;
+                }else {
+                    to.meta.keepAlive = true;
+                }
+            next();
+        },
+        beforeRouteEnter(to, from, next){
+               next(vm=>{
+                   
+               })
+        },
         methods:{
             ...mapActions(['loginAction','getUserInfo','setfeed','setfeedPepper','setminPepper']),
             handleRouter(res){
@@ -82,7 +95,7 @@
                 var self = this;
                 // let checkPhone=/^1(3|4|5|6|7|8|9)\d{9}$/;
                 // let checkPassword = /^.{6,20}$/;
-                    // if (checkPhone.test(this.phone)) {
+                // if (checkPhone.test(this.phone)) {
                         let options={
                             userName:this.phone,
                             userPassword:this.password.length>20?this.password:md5(this.password),
@@ -97,7 +110,6 @@
                                this.setfeedPepper(userInfo.userMoney)
                                this.setminPepper(userInfo.userRecommendTicket)
                                this.$vux.toast.text('登录成功!') 
-                            // this.$router.push(this.$route.query.redirect||'/')
                                this.$router.go(-1)
                             }else{
                                this.$vux.toast.text(res.msg)
@@ -111,26 +123,96 @@
                this.password = cookie.get().userPassword;
                this.show=false;
             }
-            if(!this.isLogin){
+          if (!this.isLogin) {
                var code,LoginState
-               window.location.href.split("?")[1].split("&").forEach((elem)=>{
-                 if(elem.split("=")[0]=="code"){
-                    code = elem.split("=")[1];
-                }
-                if(elem.split("=")[0]=="state"){
-                   LoginState = elem.split("=")[1]
-                }
-             })
-            }
-            if(LoginState=='sina_login'){
-                axios.get(`/person-LaJiXiaoShuoWEBSinaLogin?code=${code}&backurl=https://www.lajixs.com`).then(res=>{
-                    console.log(res)
+               let href=window.location.href
+               var userCode=sessionStorage.getItem('pi')||'LG20180608000'
+            if(href.indexOf("state=qq_login")>0||href.indexOf("state=weixin_login")>0||href.indexOf("state=sina_login")>0){
+                href.split("?")[1].split("&").forEach((elem)=>{
+                    if(elem.split("=")[0]=="code"){
+                        code = elem.split("=")[1];
+                    }
+                    if(elem.split("=")[0]=="state"){
+                        LoginState = elem.split("=")[1]
+                    }
                 })
             }
+            console.log('当前登录是:'+LoginState)
+            if(LoginState=='sina_login'){ 
+                if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad)/i))) { // 来自移动端 
+                     Post_formData2(this,{
+                        code:code,
+                        userCode:userCode,terminal:1,backurl:"https://www.lajixs.com/mob/Login"},'/api/person-LaJiXiaoShuoWEBSinaLogin',res=>{
+                        if(res.returnCode==200){
+                            let userInfo=res.data
+                            this.loginAction(true)
+                            this.getUserInfo(userInfo)
+                            this.setfeed(userInfo.userGoldenTicket)
+                            this.setfeedPepper(userInfo.userMoney)
+                            this.setminPepper(userInfo.userRecommendTicket)
+                        }else{
+                            this.$vux.toast.text('请重新登录')
+                       }
+                        if(res.data.loginCount==1){
+                            this.$router.go(-2) 
+                        }else{
+                            this.$router.go(-1)
+                        }
+                   }) 
+                 }else{
+                    window.location.href="https://www.lajixs.com/index?code="+code+"&state=sina_login"
+                }
+            }
+            // qq登录
+            if(LoginState=='qq_login'){
+                console.log('qq登录')
+                Post_formData2(this,{
+                    code:code,
+                    userCode:userCode,terminal:1,backurl:"https://www.lajixs.com/mob/Login"},
+                    '/api/person-LaJiXiaoShuoPCQQLogin',res=>{
+                    if(res.returnCode==200){
+                        var userInfo=res.data
+                        this.loginAction(true)
+                        this.getUserInfo(userInfo)
+                        this.setfeed(userInfo.userGoldenTicket)
+                        this.setfeedPepper(userInfo.userMoney)
+                        this.setminPepper(userInfo.userRecommendTicket)  
+                    }else{
+                        this.$vux.toast.text('请重新登录')
+                    } 
+                        this.$router.go(-2)
+                })                    
+            }
+            // 微信登录
+            if(LoginState=="weixin_login"){
+                let options={
+                    code:code,
+                    userCode:userCode,
+                    terminal:1
+                }
+                Post_formData2(this,options,'/api/person-LaJiXiaoShuoWAPWeChatLogin',res=>{
+                   if(res.returnCode==200) {
+                        let userInfo=res.data
+                        this.loginAction(true)
+                        this.getUserInfo(userInfo)
+                        this.setfeed(userInfo.userGoldenTicket)
+                        this.setfeedPepper(userInfo.userMoney)
+                        this.setminPepper(userInfo.userRecommendTicket)
+                    }else{
+                        this.$vux.toast.text('请重新登录')
+                    }
+                     this.$router.go(-1)
+                     window.addEventListener("popstate", function(e){
+                            this.$router.go(0)   
+                    }, false); 
+                })
+            }
+          }else{
+              this.$router.go(-1)
+          }
         }
     }
 </script>
-
 <style lang="less" scoped>
    #Login{
         width:100%;

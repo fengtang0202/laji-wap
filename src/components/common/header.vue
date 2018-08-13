@@ -16,6 +16,14 @@ import {mapActions} from 'vuex'
                }
            },
            props:["list"],
+           methods:{
+             hanldeIndex(){
+                 setTimeout(()=>{
+                    //  this.$router.push('/')
+                    console.log('没有history')
+                 },500)
+             }
+           },
            mounted () {
               
            }

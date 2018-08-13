@@ -27,6 +27,7 @@
     <meta name="apple-mobile-web-app-title" content='辣鸡小说'>
     <title>辣鸡小说</title>
 	<link rel="icon" href="./favicon.ico" type="image/x-icon" />
+	</head>
 	<script>
         // window.onload = function () {
         //     var oHtml = document.getElementsByTagName("html")[0];
@@ -80,15 +81,21 @@
 })(375, 750);
 </script>
 <style>
+	/* 浏览器报错 css 在ios 没有问题但是在安卓回导致页面不能滚动*/
+ /* * { touch-action: none; } */
 	body,html{
 		height: 100%;
+	}
+	.webo img{
+		width:68px;
+		height:16px;
 	}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <!-- built files will be auto injected -->
-<script type="text/javascript" >
+<script type="text/javascript">
     var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
  document.write(unescape("%3Cspan   style='display:none;' id='cnzz_stat_icon_1274061160'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol
 +"s19.cnzz.com/stat.php%3Fid%3D1274061160%26show%3Dpic' async defer='defer' type='text/javascript'%3E%3C/script%3E"));

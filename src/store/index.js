@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex);
     const state={
+        bindPhone:false,
         showLoginDate:false,
         showConnect:false,
         token:'',
@@ -20,6 +21,9 @@ Vue.use(Vuex);
         fontColor: '#685640',
     }
     const mutations = {
+        setShowBindPhone(state,bindPhone){
+              state.bindPhone=bindPhone
+        },
         setshowLoginDate(state, showLoginDate) {
              state.showLoginDate = showLoginDate
         },
@@ -74,6 +78,9 @@ Vue.use(Vuex);
         },
     }
     const actions = {
+        setShowBindPhone({commit},bindPhone){
+           commit('setShowBindPhone',bindPhone)
+        },
         setfeed({commit},feed){
             commit('setfeed',feed)
         },

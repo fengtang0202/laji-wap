@@ -86,7 +86,7 @@ export default{
                   this.sessionId=res.data.sessionId
                   localStorage.setItem('SESSION',this.sessionId)
                   this.show=true
-                //   refshUserInfo()
+                //refshUserInfo()
                }
            })
       },

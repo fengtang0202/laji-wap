@@ -179,7 +179,7 @@
                 border-radius: 50%;
             }
             .person_info_detail{
-                width:1.42rem;
+                // width:1.42rem;
                 margin-left:.2rem;
                 padding:.01rem .1rem ;
                 .user_sex{

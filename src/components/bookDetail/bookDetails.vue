@@ -170,7 +170,7 @@
           ...mapState(['userInfo','isLogin']),
         },
         methods:{
-            ...mapActions(['setReadCommentInfo','loginAction','getUserInfo','setshowLoginDate']),
+            ...mapActions(['setShowBindPhone','setReadCommentInfo','loginAction','getUserInfo','setshowLoginDate']),
             handleRead (index) {
                  this.isActive = index;
                   if(index===0){
@@ -265,7 +265,11 @@
             },
             handleCloseMinFeedPepper(){
                 if(this.isLogin){
-                    this.$refs.minfeedpepper.handleClose()
+                    if(this.userInfo.userPhone!='9527'){
+                        this.$refs.minfeedpepper.handleClose()
+                    }else{
+                        this.setShowBindPhone(true)
+                    }
                 }else{
                     this.setshowLoginDate(true)
                     // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 
