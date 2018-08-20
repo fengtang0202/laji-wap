@@ -182,7 +182,6 @@
                      index===2&&this.handleBookRack()
                  }else{
                     this.setshowLoginDate(true)
-                    // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 
                  }
            },
             //由于之前考虑了直接看书是从目录一个地方跳转到bookRead 
@@ -251,7 +250,6 @@
                 if(this.isLogin){
                     this.$refs.child.handleClose();
                 }else{
-                    // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
                     this.setshowLoginDate(true)
                 }
             },
@@ -260,7 +258,6 @@
                     this.$refs.childfeedpepper.handleClosepepper();
                 }else{
                     this.setshowLoginDate(true)
-                    // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}})
                 }
             },
             handleCloseMinFeedPepper(){

@@ -1,14 +1,14 @@
 <template>
     <div class='content'>
        <div>
-          <img src="../../assets/images/nsbg.jpg" style='width:100%;display:block;pointer-events: none; ' alt="">
+          <img src="../../assets/images/bookbggc.jpg" style='width:100%;display:block;pointer-events: none; ' alt="">
        </div>
        <div class='bookcontent'>
            <div class='f_content' v-for='(item,index) in content' :key='index'>
                 {{item.trim()}}
            </div>
        </div>
-          <img src="../../assets/images/nsbottom.jpg" style='width:100%;display:block; ' alt="">
+          <!-- <img src="../../assets/images/nsbottom.jpg" style='width:100%;display:block; ' alt=""> -->
        <ul class='downbtn'>
            <li v-for="(btn,index) in btns" :key=index>
                <button  @click="handleGo(btn.link)">{{btn.text}}</button>
@@ -26,13 +26,12 @@ export default{
            handleIsPhone1:handleIsPhone1 ,
            content:[],
            btns:[
-               {text:'上一章',link:'/bookRead?bookId=3625&chapterId=15788'},
+               {text:'上一章',link:'/bookRead?bookId=16828&chapterId=159588'},
                {text:'回到首页',link:'/'},
-               {text:'下一章',link:'/bookRead?bookId=3625&chapterId=15979'}
+               {text:'下一章',link:'/bookRead?bookId=16828&chapterId=160322'}
            ]
         }
     },
-    //书籍 bookId=3625&chapterId=15788
     methods: {
       async  getBookText(chapterIdArray) {
              var str=''
@@ -48,7 +47,7 @@ export default{
         }  
     },
     created() {
-       this.getBookText([15788,15793])
+       this.getBookText([160320,160321])
        sessionStorage.setItem('gc','a')
     },
 }    
@@ -63,9 +62,8 @@ export default{
             letter-spacing:.05rem; 
             text-align: justify;
             line-height: 2; 
-            background: linear-gradient( #fbfaf6 0%, #bed0d4 100%);
+            background: linear-gradient( #fbfaf8 0%, #ddd9d6 100%);
             min-height:5rem;
-            margin-top:-.8rem;
   }
   .f_content{
        text-indent: 2em; 

@@ -546,23 +546,14 @@ import { setTimeout } from 'timers';
                          this.isLogin&&(this.dialogshow=false)
                          let feedPepper=this.feedPepper-this.price
                          this.setfeedPepper(feedPepper)
-                        //  this.refreshuserInfo()
-                        //  this.btnShow&&this.$vux.toast.show('购买成功!')
                     }else if(res.returnCode===300){
                         this.$vux.toast.show({text:res.msg})
                         this.btn=false
                     }
-                    // else if(res.returnCode===400){
-                    //     // this.$vux.toast.show({text:res.msg})  
-                    //     this.$router.push({path:'/Login',query:{redirect:`/bookRead?isvip=${this.isvip}&price=${this.price}&bookId=${this.readBookId}&chapterId=${this.chapterId}`}})
-                    //   }
                   })
                 }else{
-                    // this.$router.push({path:'/Login',query:{redirect:'/bookRead'}})
                     this.dialogshow=false
                     this.setshowLoginDate(true)
-
-                    //  this.$router.push({path:'/Login',query:{redirect:`/bookRead?isvip=${this.isvip}&price=${this.price}&bookId=${this.readBookId}&chapterId=${this.chapterId}`}})                    
                 }
             },
             handleIsAuto (type='update') {

@@ -78,8 +78,19 @@ const bilibili9 = r => require.ensure([], () => r(require('@/components/seo/bili
 const bilibilibook = r => require.ensure([], () => r(require('@/components/seo/bilibilibook')), 'bilibilibook')
 const bilibilibook1 = r => require.ensure([], () => r(require('@/components/seo/bilibilibook1')), 'bilibilibook1')
 const bookforweb001 = r => require.ensure([], () => r(require('@/components/seo/bookforweb001')), 'bookforweb001')
+//ios h5支付
+const iosAlipay = r => require.ensure([], () => r(require('@/components/iosPay/iosAlipay')), 'iosAlipay')
+const iosWeChatPay = r => require.ensure([], () => r(require('@/components/iosPay/iosWeChatPay')), 'iosWeChatPay')
 Vue.use(Router)
 let routers=[
+    {
+      path: '/iosWeChatPay',
+      component: iosWeChatPay
+    },
+    {
+      path:'/iosAlipay',
+      component: iosAlipay
+    },
    {
        path: '/bookforweb001',
        component: bookforweb001

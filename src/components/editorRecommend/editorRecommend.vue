@@ -28,6 +28,7 @@
                 Post_formData2(this,{},'/api/book-xiaobiantuijian',res=>{
                     if(res.returnCode==200){
                            this.moreList = res.data;
+                        //    console.log(JSON.stringify(res.data))
                     }else{
                         // this.$vux.toast.text(res.msg);
                     }

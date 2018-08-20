@@ -117,7 +117,6 @@
                   index==2&&this.handle('/payMoney')
                   index==3&&handleIsPhone()
                   index==4&&this.$router.push('/contactUs')
-                //   index==5&&(window.location.href='https://www.lajisx.com')
                 if(index==5){
                     window.location.href='https://www.lajixs.com#fromapp'
                 }

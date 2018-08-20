@@ -23,9 +23,9 @@
                      <span>{{item.replyCount}}</span>
                      </p>
                       <p @click='handelLike(item)'>
-                     <img v-if='item.isthumbs===0'    src="../../assets/images/zan@3x.png" alt="">
-                     <img v-if='item.isthumbs===1'   src="../../assets/images/goodzan@3x.png" alt="">
-                     <span>{{item.thumbsCount}}</span>
+                        <img v-if='item.isthumbs===0'   src="../../assets/images/zan@3x.png" alt="">
+                        <img v-if='item.isthumbs===1'   src="../../assets/images/goodzan@3x.png" alt="">
+                        <span>{{item.thumbsCount}}</span>
                      </p>
                  </div>             
               </div>
