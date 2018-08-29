@@ -3,7 +3,7 @@
        <div>
           <img :src="bgImg" style='width:100%;display:block;pointer-events: none; ' alt="">
        </div>
-       <div class='bookcontent' :style="{background: bgColor}">
+       <div class='bookcontent' :style="{background: bgColor,marginTop:btnImg?'0':'-1rem'}">
            <div class='f_content' v-for='(item,index) in content' :key='index'>
                 {{item.trim()}}
            </div>
