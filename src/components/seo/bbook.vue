@@ -8,9 +8,11 @@
                 {{item.trim()}}
            </div>
        </div>
-          <img @click="handleIsPhone1(chandleId)" src="../../assets/images/bgbottom.jpg" style='width:100%;display:block; ' alt="">
+          <img @click="handleIsPhone1(chandleId)" src="../../assets/images/hslyBottom.jpg" style='width:100%;display:block; ' alt="">
        <div class='downbtn'>
-          <button @click="handleIsPhone1(chandleId)">继续阅读全文,下载辣鸡小说></button>
+          <button @click="handleIsPhone1(chandleId)" :style="{backgroundImage: 'url(' + btnImg + ')',}">
+            <span v-if="!btnImg">继续阅读全文,下载辣鸡小说></span>
+          </button>
        </div> 
     </div>
 </template>
@@ -38,6 +40,10 @@ export default{
            default:''
       },
       bgColor:{
+          type:String,
+          default:''
+      },
+      btnImg:{
           type:String,
           default:''
       }

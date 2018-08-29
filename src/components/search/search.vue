@@ -10,7 +10,7 @@
                 <div class="label">
                     <p class="label_p">大家热搜</p>
                     <div class="label_text">
-                        <span @click='handleHotLabel(item.bookLableName)' v-for="(item,index) in labelList" :key='index' v-html="item.bookLableName" :style="{color:item.bookColor}"></span>
+                        <span @click='handleHotLabel(item.hotWords)' v-if='item.hotWords.length!=0' v-for="(item,index) in labelList" :key='index' >{{item.hotWords}}</span>
                     </div>
                 </div>
                 <div class="line">
@@ -135,7 +135,7 @@ import { mapActions, mapState } from 'vuex';
                  setTimeout(() => {
                      this.isShow = false;
                  },5000);
-                 noParam_Get(this,'/api/stacks-hotLable',res=>{
+                 noParam_Get(this,'/api/sys-hotwords',res=>{
                         if(res.returnCode==200){
                             this.isShow= false;
                             this.labelList = res.data;

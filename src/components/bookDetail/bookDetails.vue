@@ -10,7 +10,7 @@
               <div class="con">
                  <p class="p_one"><span>{{infoList.bookName|str(14)}}</span></p>
                  <p class="p_two"><span>作者:</span><span class="l_d" v-html="infoList.writerName"></span></p>
-                 <p class="p_two"><span>字数:</span><span  class="l_d" v-html="infoList.bookWorldCount">wwww</span></p>
+                 <p class="p_two"><span>字数:</span><span  class="l_d" v-html="infoList.bookWorldCount"></span></p>
                  <div class="p_two">
                     <span>分类:</span>
                     <span  class="l_d" v-html="infoList.classificationName"></span>
@@ -19,7 +19,7 @@
                     <span v-if="infoList.bookStatus==1">已完结</span>
                  </div>
                  <div class="p_two">
-                    <span class="title"  :key='index' v-for="(item,index) in labelList" v-html="item.bookLableName" :style="{color:item.bookColor}"></span>
+                    <span class="title"  :key='index' v-for="(item,index) in labelList.slice(0,3)"  :style="{color:item.bookColor}">{{item.bookLableName}}</span>
                  </div> 
               </div>
                  <img src="../../assets/images/qinyue.png"  v-if='isQ&&!infoList.collectionDocuments==1' class='qianyue' alt="">
@@ -266,7 +266,7 @@
                         this.$refs.minfeedpepper.handleClose()
                     }else{
                         this.setShowBindPhone(true)
-                    }
+                  }
                 }else{
                     this.setshowLoginDate(true)
                     // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 

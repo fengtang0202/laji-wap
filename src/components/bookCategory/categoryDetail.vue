@@ -24,35 +24,35 @@
          <div class='orderList_wrap'  :style="{'height':direction?'1.3rem':'0'}">
           <div class="select" style="height:1.1rem;">          
            <ul>
-              <li style="font-size:.18rem;color:#333;width:.73rem;margin-top:.16rem;">排行榜</li>
-              <li  style='margin-top:.16rem;' :style='{"margin-left":index==0?".08rem":".17rem;"}' v-for = '(item,index) in category' :class="{ red:categoryRed == index}" :key='index' @click="getCategory(item.key,index)"><span v-html="item.name"></span></li>        
+              <!-- <li style="font-size:.18rem;color:#333;width:.73rem;margin-top:.16rem;">排行榜</li> -->
+              <li  id='ph'  v-for = '(item,index) in category' :class="{ red:categoryRed == index}" :key='index' @click="getCategory(item.key,index)"><span v-html="item.name"></span></li>        
            </ul>
         </div>
          </div>
             </v-touch>
         <v-touch @swipeup='up'>         
-         <div class='orderList_wrap'  :style="{'height':direction1?'3.5rem':'0'}">
-             <div class="select" style="height:1.4rem;">          
+         <div class='orderList_wrap'  :style="{'height':direction1?'3.55rem':'0'}">
+             <!-- <div class="select" style="height:1.4rem;">          
                 <ul>
                     <li style="font-size:.18rem;color:#333;width:.73rem;">作品类别</li>
                     <li style='margin-bottom:.1rem'  v-for="(item,index) in classList" :key='index' :class="{ red:changeRed == index}" @click="getData(item.id,index,item)"><span v-html="item.classificationName"></span></li>             
                 </ul>
-             </div>
-            <div class="select" style="height:.8rem;">          
+             </div> -->
+            <div class="select" style="height:1.25rem;">          
+              <div class='type'>作品字数</div>
            <ul>
-              <li style="font-size:.18rem;color:#333;">作品字数</li>
               <li style='margin-bottom:.1rem' v-for="(item,index) in words" :key='index' :class="{ red:numRed == index}" @click="getWords(item.key,index)"><span v-html="item.name"></span></li>
            </ul>
           </div>
-          <div class="select" style="height:.5rem;">          
+          <div class="select" style="height:1.05rem;">          
+              <div class='type'>作品状态</div>
            <ul>
-              <li style="font-size:.18rem;color:#333;">作品状态</li>
               <li style='margin-bottom:.1rem' v-for="(item,index) in status" :key='index' :class="{ red:statusRed == index}" @click="getStutas(item.key,index)"><span v-html="item.name"></span></li>        
            </ul>
          </div>
-        <div class="select" style="height:.8rem;">          
+        <div class="select" style="height:1.25rem;">          
+              <div class='type'>更新时间</div>
            <ul>
-              <li style="font-size:.18rem;color:#333;">更新时间</li>
               <li style='margin-bottom:.1rem' v-for="(item,index) in time" :key='index' :class="{ red:timeRed == index}" @click="getTime(item.key,index)"><span v-html="item.name"></span></li>
            </ul>
         </div>
@@ -120,7 +120,7 @@ import {mapActions} from 'vuex'
                 searchBarFixed:false,
                 classList:[],
                 category:[ 
-                    {name:"不限",key:0},
+                    // {name:"",key:0},
                     {name:"金椒榜",key:1},
                     {name:"推荐榜",key:2},
                     {name:"点击榜",key:3},
@@ -131,7 +131,7 @@ import {mapActions} from 'vuex'
                     {name:"打赏榜",key:8}
                 ],
                  words:[
-                    {name:"不限",key:0},
+                    {name:"不限字数",key:0},
                     {name:"30万以下",key:1},
                     {name:"30-50万",key:2},
                     {name:"50-100万",key:3},
@@ -139,12 +139,12 @@ import {mapActions} from 'vuex'
                     {name:"200万以上",key:5}
                 ],
                  status:[
-                    {name:"不限",key:0},
+                    {name:"不限状态",key:0},
                     {name:"连载中",key:0},
                     {name:"已完结",key:2},
                 ],
                 time:[
-                    {name:"不限",key:0},
+                    {name:"不限时间",key:0},
                     {name:"本日",key:1},
                     {name:"三日",key:2},
                     {name:"七日",key:3},
@@ -164,7 +164,7 @@ import {mapActions} from 'vuex'
                 }
                 // 分类
                 // if (this.worksClass) {
-                    options.bookClassificationid = this.worksClass;
+                    options.bookLabid = this.worksClass;
                 // }
                 // 字数
                 // if(this.worksNum){
@@ -263,7 +263,7 @@ import {mapActions} from 'vuex'
                 }
                 // 分类
                 // if (this.worksClass) {
-                    options.bookClassificationid = this.worksClass;
+                    options.bookLabid = this.worksClass;
                 // }
                 // 字数
                 // if(this.worksNum){
@@ -334,7 +334,7 @@ import {mapActions} from 'vuex'
         mounted(){
             // this.handleFilter()
             this.handleClass()
-            this.categoryRed = this.worksCategory
+            this.categoryRed = this.worksCategory-1
             this.statusRed = this.worksStatus
             this.numRed = this.worksNum
             this.timeRed = this.worksTime
@@ -346,4 +346,17 @@ import {mapActions} from 'vuex'
 </script>
 <style lang='less' scoped>
    @import '../../css/categoryDetail';
+   #ph{
+       margin-top:.16rem;
+       margin-right:.52rem;
+       margin-left:0;
+   }
+   #ph:nth-child(4n){
+       margin-right:0;
+   }
+   .type{
+       font-size:.18rem;
+       color:#333;
+       margin:.1rem 0 .15rem .18rem;
+   }
 </style>

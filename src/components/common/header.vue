@@ -1,7 +1,7 @@
 <template>
      <div class='header'>
          <div @click="$router.go(-1)">
-             <img src="../../assets/images/back@2x.png" style='width:.4rem;heigh:.4rem;vertical-align: middle;' alt="">
+             <img  src="../../assets/images/back@2x.png" style='width:.4rem;heigh:.4rem;vertical-align: middle;' alt="">
          </div>    
          <div class='title_1'>{{list.title_1}}</div>
          <router-link class='title_2' @click='hanldeIndex()' :to='list.link'>{{list.title_2}}</router-link>
@@ -49,4 +49,5 @@ import {mapActions} from 'vuex'
             margin:auto .1rem;       
           }
         }
+      
 </style>
