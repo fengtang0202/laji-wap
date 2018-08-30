@@ -19,7 +19,6 @@
 <script>
 import {handleIsPhone1} from '../../config/common'
 import axios from 'axios'
-import { setTimeout } from 'timers';
 export default{
     data(){
         return{

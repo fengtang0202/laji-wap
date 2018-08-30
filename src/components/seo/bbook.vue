@@ -32,8 +32,8 @@ export default{
            default:''
        },
        chapterId:{
-           type:String,
-           default:''
+           type:Array,
+           default:[]
        },
         bgImg:{
            type:String,
@@ -46,12 +46,28 @@ export default{
       btnImg:{
           type:String,
           default:''
+      },
+      p:{
+          type:Number,
+          default:0
       }
     },
+    methods:{
+       async  getBookText(chapterIdArray) {
+             var str=''
+              for(let i=0;i<chapterIdArray.length;i++) {
+                await  axios.post(`/api/book-read?chapterId=${chapterIdArray[i]}`).then(res=>{
+                      str+=res.data.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<br>\s*<br>/ig,'<br>')
+                 }) 
+              }
+         this.content=str.split('<br>')
+          if(this.p!=0){
+            this.content=this.content.slice(0,-this.p)
+          }  
+        }
+    },
     created() {
-        axios.post(`/api/book-read?chapterId=${this.chapterId}`).then(res=>{
-           this.content=res.data.data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
-       })
+      this.getBookText(this.chapterId)
     },
 }    
 </script>
