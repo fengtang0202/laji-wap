@@ -126,6 +126,7 @@ import AppFeed from '@/components/feed/feed.vue'
 import AppFeedpepper from '@/components/feed/feedPepper.vue' 
 import AppMinpepper from '@/components/feed/minPepper'
 import {refshUserInfo} from '../../config/getData'        
+import { setInterval, clearInterval } from 'timers';
      export default{
          data(){
             return{
@@ -204,14 +205,15 @@ import {refshUserInfo} from '../../config/getData'
                    {img:require('../../assets/images/Combined Shape1@3x.png'),text:'设置',key:9,css:'p3'},
                    {img:require('../../assets/images/nextCopy@3x.png'),text:'下一章',key:10,css:'p4'}
                ],
-               readChapterIndex:1
+               readChapterIndex:1,
+               fromPath:''
             }
          },
          components:{
              Confirm,XDialog,AppFeed,AppFeedpepper,AppMinpepper,Popup
         },
          computed: {
-             ...mapState(['userInfo','isLogin','backgroundColor','fontSize','fontColor','feedPepper']),              
+             ...mapState(['showLoginDate','userInfo','isLogin','backgroundColor','fontSize','fontColor','feedPepper']),              
          },
          directives: {
              TransferDom
@@ -235,6 +237,7 @@ import {refshUserInfo} from '../../config/getData'
          },
           beforeRouteEnter: (to, from, next) => {
               next(vm=>{
+                  vm.fromPath=from.path
                   to.meta.title=vm.$route.query.bookName
                   document.body.style.backgroundColor = vm.backgroundColor
             })      
@@ -244,12 +247,11 @@ import {refshUserInfo} from '../../config/getData'
                  let code = sessionStorage.getItem('gc')
                  if(code=='a'){
                      this.$router.push('/')
-                 }else{
+                 }else if(this.fromPath=='/directory'){
                      this.$router.go(-1)
-                     setTimeout(()=>{
-                         this.$router.push({path:'/bookDetails',query:{bookId:this.readBookId}})
-                     },2000)
-                 }
+                }else{
+                    this.$router.push({path:'/bookDetails',query:{bookId:this.readBookId}})
+                }
              },
              ...mapActions(['setshowLoginDate','setShowBindPhone','setshowLoginDate','getUserInfo','setBackgroundColor','setFontSize','setFontColor','setfeedPepper']),
              handleFontSize(res){
@@ -405,8 +407,8 @@ import {refshUserInfo} from '../../config/getData'
                    let n=this.chapterList.length
                    this.chapterIdNum++ 
                    this.readChapterIndex++
-                   if(this.readChapterIndex%3==0){
-                       if(!this.isLogin){
+                   if(this.readChapterIndex%4==0){
+                       if(!this.isLogin&&!this.showLoginDate){
                            this.setshowLoginDate(true)
                        }
                    }
