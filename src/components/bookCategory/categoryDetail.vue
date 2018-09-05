@@ -140,7 +140,7 @@ import {mapActions} from 'vuex'
                 ],
                  status:[
                     {name:"不限状态",key:0},
-                    {name:"连载中",key:0},
+                    {name:"连载中",key:1},
                     {name:"已完结",key:2},
                 ],
                 time:[

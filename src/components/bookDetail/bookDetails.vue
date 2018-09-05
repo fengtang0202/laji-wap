@@ -315,7 +315,6 @@
                         this.classId = res.data.bookListInfo.bookClassificationId;
                         this.labelList = res.data.bookLable;
                         this.swiperList=res.data.similarRecommendation
-                        // let squ=this.res.data.similarRecommendation.bookAuthorization
                         this.swiperList.forEach(value=>{
                           if(value.bookAuthorization==1||value.bookAuthorization==2){
                               value.check=true

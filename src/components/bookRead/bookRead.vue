@@ -126,10 +126,6 @@ import AppFeed from '@/components/feed/feed.vue'
 import AppFeedpepper from '@/components/feed/feedPepper.vue' 
 import AppMinpepper from '@/components/feed/minPepper'
 import {refshUserInfo} from '../../config/getData'        
-import { setTimeout } from 'timers';
-
-//   import BScroll from 'better-scroll'
-//   import Directory from '../directory/directory'
      export default{
          data(){
             return{
@@ -207,7 +203,8 @@ import { setTimeout } from 'timers';
                    {img:require('../../assets/images/Combined Shape@3x.png'),text:'目录',key:8,css:'p2'},
                    {img:require('../../assets/images/Combined Shape1@3x.png'),text:'设置',key:9,css:'p3'},
                    {img:require('../../assets/images/nextCopy@3x.png'),text:'下一章',key:10,css:'p4'}
-               ]
+               ],
+               readChapterIndex:1
             }
          },
          components:{
@@ -407,6 +404,12 @@ import { setTimeout } from 'timers';
                    this.confirmKey=0
                    let n=this.chapterList.length
                    this.chapterIdNum++ 
+                   this.readChapterIndex++
+                   if(this.readChapterIndex%3==0){
+                       if(!this.isLogin){
+                           this.setshowLoginDate(true)
+                       }
+                   }
                   if(this.chapterIdNum<n){
                     // this.getNowChapterId()                 
                     // this.setChapterId(this.chapterList[this.chapterIdNum].id)

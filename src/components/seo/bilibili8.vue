@@ -2,7 +2,7 @@
     <bbook chandleId='LG20180703010' :p=p :btnImg=btnImg :bgImg=bgImg :bgColor=bgColor :chapterId=chapterId></bbook>
 </template>
 <script>
-import bbook from '../seo/bbook'
+  import bbook from '../seo/bbook'
 export default {
     data(){
         return{
@@ -14,7 +14,7 @@ export default {
         }
     },
     components: {
-        bbook
+        bbook,
     }
 }
 </script>
