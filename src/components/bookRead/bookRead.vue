@@ -538,7 +538,7 @@ import { setInterval, clearInterval } from 'timers';
             buyChapter () {
                 if(this.isLogin){
                     let options={
-                        userName:this.userInfo.userName,
+                        userName:this.userInfo.pseudonym,
                         bookId:this.readBookId,
                         bookName:this.bookName,
                         bookChapterId:this.chapterId,

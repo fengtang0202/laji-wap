@@ -81,8 +81,13 @@ const bookforweb001 = r => require.ensure([], () => r(require('@/components/seo/
 //ios h5支付
 const iosAlipay = r => require.ensure([], () => r(require('@/components/iosPay/iosAlipay')), 'iosAlipay')
 const iosWeChatPay = r => require.ensure([], () => r(require('@/components/iosPay/iosWeChatPay')), 'iosWeChatPay')
+const appShare = r => require.ensure([], () => r(require('@/components/appShare/appShare')), 'appShare')
 Vue.use(Router)
 let routers=[
+    {
+    path:'/appShare',
+    component: appShare
+    },
     {
       path: '/iosWeChatPay',
       component: iosWeChatPay

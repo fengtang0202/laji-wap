@@ -32,8 +32,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable:  {
         '/api': {
-            // target:'http://192.168.0.136:8081/api',
-            target:'https://www.lajixs.com/api',
+            target:'http://192.168.0.136:8081/api',
+            // target:'https://www.lajixs.com/api',
             // target:'https://118.31.187.224/api',
             changeOrigin: true,
             pathRewrite: {
@@ -41,9 +41,9 @@ module.exports = {
             }
              ,
              secure: false,
-             headers: {
-               Referer: 'https://www.lajixs.com/api'
-           }
+          //    headers: {
+          //      Referer: 'https://www.lajixs.com/api'
+          //  }
         }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
