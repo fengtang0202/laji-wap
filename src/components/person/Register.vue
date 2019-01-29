@@ -18,7 +18,14 @@
              <button  class='code' :disabled='iscode' @click="getCode()">{{word}}</button>
         </div>
         <input type="password" class="oInput" placeholder="请输入密码" v-model.trim="pwd">
-        <input type="text" class="oInput" placeholder="请输入昵称" v-model.trim="name">
+        <input type="text" class="oInput" placeholder="请输入昵称" v-model="name">
+         <!-- <div class="codeInput">
+            <div>
+               <input type="text"  placeholder="请输入图片验证码" v-model.trim="imgVerificationCode">
+            </div>
+            <img :src="imgCode" alt="" @click='handleImg()' style="width:1.1rem;height:.4rem">
+        </div> -->
+        <div id='hdyz' style="width:3.04rem;margin:0 auto;"></div>
         <div class="sex">
            <div class="sex_img_l">
              <img src="../../assets/images/w.png" class="oImg" v-if="women" @click="handleWomen()">
@@ -37,6 +44,7 @@
 <script>
     import { Post_formData2, noParam_Get } from '@/config/services'
     import md5  from 'js-md5'  
+    import axios from 'axios'
     import {userLogin} from '@/config/getData'
      import { mapActions,mapState } from 'vuex' 
     export default {
@@ -55,7 +63,14 @@
                word:'获取验证码',
                isOvertime: false,
                verificationCode:'',
-               iscode:false
+               iscode:false,
+               imgCode:'',
+               timer:'',
+               imgVerificationCode:'',
+               isImgHd:false,
+               geetest_challenge:'',
+               geetest_validate:'',
+               geetest_seccode:''
             }
         },
         filters: {
@@ -70,7 +85,7 @@
             ...mapActions(['loginAction','getUserInfo','setfeed','setfeedPepper','setminPepper']),
             handleGo(){
                 this.$router.push({path:'/areaCode',query:{type:1}})
-            },    
+            },  
             // 0 男 1女
             handleWomen(){
                 this.women = !this.women;
@@ -86,7 +101,7 @@
                    this.sex = 0;
                 }
             },
-            handleCheckRegister () {
+            handleCheckRegister(geetest_challenge,geetest_validate,geetest_seccode) {
                 var phone = this.areaCode==86?this.phone:this.areaCode+'+'+this.phone
                 let checkpwd=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/  
                 if(!checkpwd.test(this.pwd)){
@@ -100,24 +115,46 @@
                 if(this.sex==null){
                     this.$vux.toast.text('请选择性别');                     
                      return;
-                } 
-                let options = {
-                    code:this.verificationCode,
-                    pseudonym:this.name.Trim(),
-                    userPassword:md5(this.pwd),
-                    userSex:this.sex,
-                    userPhone:phone,
-                    userCode : sessionStorage.getItem('pi')||'LG20180608000',
-                    terminal:1 
                 }
-                Post_formData2(this,options,'/api/person-regInfo',res=>{
-                    // this.$vux.toast.text(res.msg);
-                    if(res.returnCode==200){
-                      let options={
-                            userName:this.name.Trim(),
-                            userPassword:md5(this.pwd),
-                            terminal:3
-                        }
+                let imgParam={
+                        client_type:'h5',
+                        phoneId:this.phone
+                }
+                Post_formData2(this,imgParam,'/api/verification/person-ExtremeTestCode',res=>{
+                        if(res.returnCode==200){
+                            let config=JSON.parse(res.data)
+                            initGeetest({
+                                gt:config.gt,
+                                challenge: config.challenge,
+                                offline: !config.success,
+                                new_captcha: true,
+                                product: 'bind',
+                            },captchaObj =>{
+                                captchaObj.onReady(()=>{
+                                    captchaObj.verify(); 
+                                })
+                               captchaObj.onSuccess(()=>{
+                                var result = captchaObj.getValidate();
+                                let options = {
+                                code:this.verificationCode,
+                                pseudonym:this.name.Trim(),
+                                userPassword:md5(this.pwd),
+                                userSex:this.sex,
+                                userPhone:phone,
+                                userCode : sessionStorage.getItem('pi')||'LG20180608000',
+                                terminal:1 ,
+                                client_type:'h5',
+                                fn_geetest_challenge:result.geetest_challenge,
+                                fn_geetest_validate: result.geetest_validate,
+                                fn_geetest_seccode:result.geetest_seccode,
+                            }
+                        Post_formData2(this,options,'/api/person-regInfo',res=>{
+                        if(res.returnCode==200){
+                            let options={
+                                userName:this.name.Trim(),
+                                userPassword:md5(this.pwd),
+                                terminal:3
+                            }
                         userLogin(options).then(res=>{
                             if(res.returnCode==200){
                                let userInfo=res.data
@@ -126,17 +163,22 @@
                                this.setfeed(userInfo.userGoldenTicket)
                                this.setfeedPepper(userInfo.userMoney)
                                this.setminPepper(userInfo.userRecommendTicket)
+                                localStorage.setItem('SESSION',userInfo.token)
                                this.$vux.toast.text('登录成功!') 
-                               this.$router.go(-2)
+                               this.$router.push('/')
                             }else{
                                this.$vux.toast.text(res.msg)
-                            }
-                        })
-                            } else {
-                                this.$vux.toast.text(res.msg);
+                                    }
+                                })
+                                } else {
+                                    this.$vux.toast.text(res.msg);
+                                     }
+                                  })
+                               })
+                            })
                         }
                 })
-            },
+                },
             sendMessage(){
                 if(this.isOvertime){
                     return false;
@@ -178,7 +220,7 @@
                     let options={
                         userMob:phone,
                         type:this.areaCode==86?'RegisterPwd':"International"
-                        // type:"RegisterPwd"
+                        //type:"RegisterPwd"
                     }
                     Post_formData2(this,options,'/api/verification/sys-getShortMessage',res=>{
                         // this.showMessage(res,()=>{
@@ -190,8 +232,19 @@
                         // })
                     })
                 }
+            },
+            handleImg(){
+                axios.get('/api/verification/getCode', {responseType: 'arraybuffer'}).then(response => {
+                    this.imgCode = 'data:image/png;base64,' + btoa(new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+                })
+            },
+            handleCheckImg(){
+              
             }
-        }
+        },
+        mounted() {
+            // this.handleImg()
+        },
     }
 </script>
 <style lang="less" scoped>

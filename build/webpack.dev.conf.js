@@ -8,6 +8,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 // friendly-errors-webpack-plugin用于更友好地输出webpack的警告、错误等信息
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 var path = require('path')
+var BundleAnalyzerPlugin=require('webpack-bundle-analyzer')
 
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
@@ -21,6 +22,7 @@ module.exports = merge(baseWebpackConfig, {
     // cheap-module-eval-source-map is faster for development
     devtool: '#cheap-module-eval-source-map',
     plugins: [
+        // new BundleAnalyzerPlugin(),
         new webpack.DefinePlugin({
             'process.env': config.dev.env
         }),

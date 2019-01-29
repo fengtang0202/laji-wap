@@ -106,7 +106,7 @@
                             localStorage.removeItem('SESSION')
                                 setTimeout(()=>{
                                  this.loginAction(false)
-                                 this.getUserInfo(null)       
+                                 this.getUserInfo(null)  
                                  this.$router.push(this.$route.query.redirect||'/')
                           },1000)
                      }

@@ -2,14 +2,15 @@
   "name": "laji-wap",
   "version": "2.0.0",
   "description": "A Vue.js project",
-  "author": "wuchao",
+  "author": "haru",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
-    "build": "node build/build.js",
+    "build": "node build/build.js ",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run e2e"
+
   },
   "dependencies": {
     "axios": "^0.16.2",

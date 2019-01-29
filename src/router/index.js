@@ -349,10 +349,8 @@ const router = new Router({
        }
      },0)
     },
+     base: '/mob',
      routes: routers,
-     base:'/mob',
      mode:'history',
-    
-
 })
 export default router

@@ -78,6 +78,9 @@ Vue.use(Vuex);
         },
     }
     const actions = {
+        checkToken({commit},token){
+            commit("checkToken",token)
+        },
         setShowBindPhone({commit},bindPhone){
            commit('setShowBindPhone',bindPhone)
         },

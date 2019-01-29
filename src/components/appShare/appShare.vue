@@ -61,8 +61,6 @@
 <script>
 import {Post_formData2,Param_Get_Resful} from '@/config/services'
 import {mapState,mapActions} from 'vuex'
-import { resolve } from 'url';
-import { rejects } from 'assert';
     export default{
         data(){
             return{
@@ -82,11 +80,14 @@ import { rejects } from 'assert';
             ...mapState(['userInfo','isLogin'])  
         },
         methods:{
+            ...mapActions(['setshowLoginDate']),
             handleReadHistory(){
                     return new Promise((resolve,reject)=>{
                         Post_formData2(this,{bookId:this.bookId,userid:this.userInfo.userId},'/api/person-UserBookReadRecordByUserIDAndBookId',res=>{
                            if(res.returnCode==200){
                                resolve(res.data.chapterId)
+                           }else{
+                               resolve(this.chapterId)
                            }
                        })
                     })
@@ -95,18 +96,22 @@ import { rejects } from 'assert';
                 if(this.isLogin){
                   this.chapterId = await this.handleReadHistory()
                 }
-                this.$router.push({path:'bookRead',query:{bookId:this.bookId,chapterId:this.chapterId}})
+                this.$router.push({path:'/bookRead',query:{bookId:this.bookId,chapterId:this.chapterId}})
             },
             handleAddBookRack(){
-                 Post_formData2(this,{userName:this.userInfo.pseudonym,bookId:this.bookId,bookName:this.bookInfo.bookName},'/api/bookshelf-adduserbookshelf',res=>{
-                     if(res.returnCode==200){
-                         if(this.collectionStatus==0){
-                                this.collectionStatus=1
-                         }else{
-                             this.collectionStatus=0
-                         }
-                     }
-                 })
+                if(this.isLogin){
+                    Post_formData2(this,{userName:this.userInfo.pseudonym,bookId:this.bookId,bookName:this.bookInfo.bookName},'/api/bookshelf-adduserbookshelf',res=>{
+                        if(res.returnCode==200){
+                            if(this.collectionStatus==0){
+                                   this.collectionStatus=1
+                            }else{
+                                this.collectionStatus=0
+                            }
+                        }
+                    })
+                }else{
+                   this.setshowLoginDate(true)
+                }
             },
             handleMakeComment () {
               let fontCountLength = this.replyText.length
@@ -158,6 +163,8 @@ import { rejects } from 'assert';
         },
         mounted(){
             this.getTime()
+            this.setshowLoginDate(false)
+            sessionStorage.setItem('pi',this.userCode)
             Post_formData2(this,{bookid:this.bookId},'/api/book-bookInfo',res=>{
                 if(res.returnCode==200){
                     this.bookInfo=res.data.bookListInfo
@@ -209,6 +216,7 @@ import { rejects } from 'assert';
         color:#fff;
         font-size:.14rem;
         margin-right:.3rem; 
+        outline: none;
     }
     .content{
         text-indent: 2em;

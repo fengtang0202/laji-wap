@@ -261,16 +261,17 @@
                 }
             },
             handleCloseMinFeedPepper(){
-                if(this.isLogin){
-                    if(this.userInfo.userPhone!='9527'){
-                        this.$refs.minfeedpepper.handleClose()
-                    }else{
-                        this.setShowBindPhone(true)
-                  }
-                }else{
-                    this.setshowLoginDate(true)
-                    // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 
-                }
+                this.$vux.toast.text('前往应用商店下载辣鸡小说App,投喂小米椒');
+                // if(this.isLogin){
+                //     if(this.userInfo.userPhone!='9527'){
+                //         this.$refs.minfeedpepper.handleClose()
+                //     }else{
+                //         this.setShowBindPhone(true)
+                //   }
+                // }else{
+                //     this.setshowLoginDate(true)
+                //     // this.$router.push({path:'/Login',query:{redirect: this.$route.path+'?bookId='+this.readBookId}}) 
+                // }
             },
             handleGo(res){
                  this.$router.push(res);

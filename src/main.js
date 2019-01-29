@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import iView from 'iview'
+// import iView from 'iview'
 import 'iview/dist/styles/iview.css';   
 import axios from 'axios'
 import cookie from './config/cookie'
@@ -28,7 +28,7 @@ import loginDateDialog from '../src/components/common/loginDateDialog'
 import bindPhone from '../src/components/common/bindPhone'
 // 注册全局组件
 Vue.config.productionTip = false
-Vue.use(iView)
+// Vue.use(iView)
 Vue.use(WechatPlugin)
 Vue.use(VueLazyload)
 Vue.component('bindPhone', bindPhone)
@@ -53,7 +53,14 @@ Vue.component('articleItem', articleItem)
 Vue.use(VueTouch, {name: 'v-touch'})
 Vue.use(ToastPlugin,Cell,Group)
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+axios.defaults.headers.common['VisitType'] = 'wapPVUVStatistics';
 axios.defaults.withCredentials = true
+axios.interceptors.request.use(config => {
+    if (localStorage.getItem("SESSION")){
+        config.headers.common['token'] = localStorage.getItem("SESSION")
+    }
+    return config;
+})
 axios.interceptors.response.use(
     response => {
         if (response.data.returnCode === 400&&store.state.isLogin){
@@ -134,9 +141,9 @@ router.beforeEach((to, from, next) => {
                 i === -1 || sessionStorage.setItem("pi", str)
             }
         }
-        axios.get(`/api/wapPVUVStatistics?ax001=9527&pi=${str}`).then(res=>{
-        // console.log(res.data)
-       }) 
+    //     axios.get(`/api/wapPVUVStatistics?ax001=9527&pi=${str}`).then(res=>{
+    //     // console.log(res.data)
+    //    }) 
     if (to.meta.title) {
         document.title = to.meta.title
     }

@@ -52,7 +52,7 @@ export default {
   mounted () {  
     //初始化这个裁剪框 
     // refshUserInfo()
-    this.headerImage=this.userInfo.userHeadPortraitURL      
+    this.headerImage=this.userInfo&&this.userInfo.userHeadPortraitURL      
     var self = this;  
     var image = document.getElementById('image');  
     this.cropper = new Cropper(image, {  

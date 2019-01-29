@@ -67,6 +67,7 @@
  </div>
 </template>
 <script>
+    import {mapState,mapActions} from 'vuex'
      export default{
          data(){
              return{
@@ -80,7 +81,9 @@
                  homeIndex:0,              
             }
         },
+       
         methods:{
+            ...mapActions(['setshowLoginDate']),
             changeIndex(){
                     let jump = document.querySelectorAll('.a')
                     let distance = document.documentElement.scrollTop || document.body.scrollTop
@@ -166,11 +169,11 @@
          },
          mounted () {
              this.getIndex()
+             this.setshowLoginDate(false)
              window.addEventListener("scroll",this.changeIndex)
          },
          destroyed () {
-             window.removeEventListener("scroll",this.changeIndex)
-             
+             window.removeEventListener("scroll",this.changeIndex)   
          }
      }
 </script>

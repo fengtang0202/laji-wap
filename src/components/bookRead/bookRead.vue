@@ -37,7 +37,7 @@
                  <li class='m' @click='handleFontSize(1)' style='font-size:.2rem;'>A+</li>
                  <li>自动订阅</li>
                  <li>
-                     <i-switch  v-model="btnShow" @on-change="change"></i-switch>                     
+                     <x-switch title="" v-model="btnShow" @on-change="change"></x-switch>                     
                  </li>
              </ul>
          </div>
@@ -119,7 +119,7 @@
 </template>
 <script>
 import { Post_formData2, noParam_Get,Param_Get_Resful } from '@/config/services'
-import {TransferDomDirective as TransferDom,Confirm, XDialog,Popup} from 'vux'
+import {TransferDomDirective as TransferDom,Confirm, XDialog,Popup,XSwitch} from 'vux'
 import {mapState,mapActions} from 'vuex'
 import soshm from 'soshm'
 import AppFeed from '@/components/feed/feed.vue'
@@ -210,7 +210,7 @@ import { setInterval, clearInterval } from 'timers';
             }
          },
          components:{
-             Confirm,XDialog,AppFeed,AppFeedpepper,AppMinpepper,Popup
+             Confirm,XDialog,AppFeed,AppFeedpepper,AppMinpepper,Popup,XSwitch 
         },
          computed: {
              ...mapState(['showLoginDate','userInfo','isLogin','backgroundColor','fontSize','fontColor','feedPepper']),              
@@ -288,11 +288,12 @@ import { setInterval, clearInterval } from 'timers';
                     index===0&&this.handleClosefeedpepper()
                         index===2&&this.handleClosefeed()
                       if(index===1){
-                          if(this.userInfo.userPhone!='9527'){
-                           this.hanldeCloseMinFeedPepper()
-                        }else{
-                           this.setShowBindPhone(true)
-                        }
+                        // if(this.userInfo.userPhone!='9527'){
+                        //    this.hanldeCloseMinFeedPepper()
+                        // }else{
+                        //    this.setShowBindPhone(true)
+                        // }
+                        this.$vux.toast.text('前往应用商店下载辣鸡小说App,投喂小米椒');
                     }
                 }else{
                   this.setshowLoginDate(true)

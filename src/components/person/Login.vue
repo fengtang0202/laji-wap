@@ -109,6 +109,7 @@
                                this.setfeed(userInfo.userGoldenTicket)
                                this.setfeedPepper(userInfo.userMoney)
                                this.setminPepper(userInfo.userRecommendTicket)
+                                localStorage.setItem('SESSION',userInfo.token)
                                this.$vux.toast.text('登录成功!') 
                                this.$router.go(-1)
                             }else{
@@ -137,7 +138,7 @@
                     }
                 })
             }
-            console.log('当前登录是:'+LoginState)
+            console.log('当前登录是:'+(LoginState||'手机号登陆'))
             if(LoginState=='sina_login'){ 
                 if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad)/i))) { // 来自移动端 
                      Post_formData2(this,{
@@ -147,6 +148,7 @@
                             let userInfo=res.data
                             this.loginAction(true)
                             this.getUserInfo(userInfo)
+                            localStorage.setItem('SESSION',userInfo.token)
                             this.setfeed(userInfo.userGoldenTicket)
                             this.setfeedPepper(userInfo.userMoney)
                             this.setminPepper(userInfo.userRecommendTicket)
@@ -176,11 +178,13 @@
                         this.getUserInfo(userInfo)
                         this.setfeed(userInfo.userGoldenTicket)
                         this.setfeedPepper(userInfo.userMoney)
-                        this.setminPepper(userInfo.userRecommendTicket)  
+                        this.setminPepper(userInfo.userRecommendTicket)
+                        localStorage.setItem('SESSION',userInfo.token)
+                        this.$router.push('/')
                     }else{
                         this.$vux.toast.text('请重新登录')
                     } 
-                        this.$router.go(-2)
+                        this.$router.push('/')
                 })                    
             }
             // 微信登录
@@ -197,6 +201,7 @@
                         this.getUserInfo(userInfo)
                         this.setfeed(userInfo.userGoldenTicket)
                         this.setfeedPepper(userInfo.userMoney)
+                        localStorage.setItem('SESSION',userInfo.token)
                         this.setminPepper(userInfo.userRecommendTicket)
                     }else{
                         this.$vux.toast.text('请重新登录')
